@@ -193,7 +193,7 @@ MonoBehaviour:
   Log: {fileID: 1241131467}
   OpCode: {fileID: 2044128765}
   SendTimePacketBtn: {fileID: 1506369944}
-  SendBlackPacketABtn: {fileID: 192161527}
+  SendBlankPacketBtn: {fileID: 192161527}
 --- !u!1 &136021481
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 192161528}
   - component: {fileID: 192161527}
   m_Layer: 5
-  m_Name: SendBlankPacketABtn
+  m_Name: SendBlankPacketBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

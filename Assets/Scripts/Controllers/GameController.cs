@@ -1,5 +1,4 @@
-﻿using System;
-using Models;
+﻿using Models;
 using Services;
 using Zenject;
 
@@ -71,7 +70,7 @@ namespace Controllers
         {
             _packetController.SubscribeToOnTimestampPongReceived(_guiController.OnLatencyReceived);
             _packetController.SubscribeToOnBlankPacketReceived(_guiController.OnBlankPacketReceived);
-            _packetController.SubscribeToOnTimestampPingReceived((pingTime) => { _packetController.SendTimestampPongpacket(pingTime); });
+            _packetController.SubscribeToOnTimestampPingReceived(pingTime => { _packetController.SendTimestampPongpacket(pingTime); });
         }
 
         private RtSession _rtSession;

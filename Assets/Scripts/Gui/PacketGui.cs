@@ -10,28 +10,12 @@ namespace Gui
         public Text Log;
         public InputField OpCode;
         public Button SendTimePacketBtn;
-        public Button SendBlackPacketABtn;
+        public Button SendBlankPacketBtn;
         
-        public void Initialize(Action onSendTimePacket, Action<int> onSendBlackPacket)
+        public void Initialize(Action onSendTimePacket, Action<int> onSendBlankPacket)
         {
-            SendTimePacketBtn.onClick.AddListener(() =>
-            {
-                Log.text = "Sending...\n";
-                onSendTimePacket();
-                Log.text += "Sent...\n";
-            });
-            SendBlackPacketABtn.onClick.AddListener(() =>
-            {
-                int y;
-                if (OpCode.text == string.Empty || !int.TryParse(OpCode.text, out y) || y <= 0)
-                {
-                    Log.text = "Please enter an OpCode e.g. 1 - 1000\n";
-                    return;
-                }
-                Log.text = "Sending...\n";
-                onSendBlackPacket(y);
-                Log.text += "Sent...\n";
-            });
+            InitSendTimePacketBtn(onSendTimePacket);
+            InitSendBlankPacketBtn(onSendBlankPacket);
         }
         
         public void OnBlackPacketARecieved(PacketDetails details)
@@ -43,6 +27,32 @@ namespace Gui
         {
             Log.text = GetLatencyDetails(latency);
             Log.text += GetPacketDetails(details);
+        }
+
+        private void InitSendTimePacketBtn(Action onSendTimePacket)
+        {
+            SendTimePacketBtn.onClick.AddListener(() =>
+            {
+                Log.text = "Sending...\n";
+                onSendTimePacket();
+                Log.text += "Sent...\n";
+            });
+        }
+
+        private void InitSendBlankPacketBtn(Action<int> onSendBlankPacket)
+        {
+            SendBlankPacketBtn.onClick.AddListener(() =>
+            {
+                int n;
+                if (OpCode.text == string.Empty || !int.TryParse(OpCode.text, out n) || n <= 0)
+                {
+                    Log.text = "Please enter an OpCode e.g. 1 - 1000\n";
+                    return;
+                }
+                Log.text = "Sending...\n";
+                onSendBlankPacket(n);
+                Log.text += "Sent...\n";
+            });
         }
 
         private static string GetPacketDetails(PacketDetails details)

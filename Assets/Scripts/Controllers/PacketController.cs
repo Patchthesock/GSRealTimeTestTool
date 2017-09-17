@@ -30,22 +30,6 @@ namespace Controllers
         {
             SendPacket((int) OpCode.TimestampPong, _settings.Protocol, PacketService.GetTimestampPongPacket(pingTime));
         }
-        
-        public void OnPacketReceived(RTPacket packet)
-        {
-            switch (packet.OpCode)
-            {
-                case (int)OpCode.TimestampPing:
-                    OnReceivedTimestampPingPacket(packet);
-                    break;
-                case (int)OpCode.TimestampPong:
-                    OnReceivedTimestampPongPacket(packet);
-                    break;
-                default:
-                    OnReceivedBlankPacket(packet);
-                    break;
-            }
-        }
 
         public void SubscribeToOnTimestampPingReceived(Action<long> onTimestampPingReceived)
         {
@@ -63,6 +47,22 @@ namespace Controllers
         {
             if (_onTimestampPongReceivedListeners.Contains(onTimestampPongReceived)) return;
             _onTimestampPongReceivedListeners.Add(onTimestampPongReceived);
+        }
+        
+        public void OnPacketReceived(RTPacket packet)
+        {
+            switch (packet.OpCode)
+            {
+                case (int)OpCode.TimestampPing:
+                    OnReceivedTimestampPingPacket(packet);
+                    break;
+                case (int)OpCode.TimestampPong:
+                    OnReceivedTimestampPongPacket(packet);
+                    break;
+                default:
+                    OnReceivedBlankPacket(packet);
+                    break;
+            }
         }
         
         private void OnReceivedBlankPacket(RTPacket packet)

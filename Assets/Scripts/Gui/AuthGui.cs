@@ -22,6 +22,18 @@ namespace Gui
             Action<RegistrationResponse> onReg,
             Action<AuthenticationResponse> onAuth)
         {
+            InitDeviceAuthBtn(sparkService, onAuth);
+            InitLogoutBtn(sparkService, onEndSession);
+            InitLoginBtn(sparkService, onReg, onAuth);
+        }
+        
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
+        }
+
+        private void InitLogoutBtn(SparkService sparkService, Action onEndSession)
+        {
             LogoutBtn.gameObject.SetActive(false);
             LogoutBtn.onClick.AddListener(() =>
             {
@@ -35,6 +47,29 @@ namespace Gui
                     }
                 });
             });
+        }
+
+        private void InitDeviceAuthBtn(SparkService sparkService, Action<AuthenticationResponse> onAuth)
+        {
+            DeviceAuthenticationBtn.onClick.AddListener(() =>
+            {
+                sparkService.DeviceAuthenticateUser(authResponse =>
+                {
+                    if (authResponse.HasErrors) Log.text = GetError(authResponse.Errors);
+                    else
+                    {
+                        onAuth(authResponse);
+                        LogoutBtn.gameObject.SetActive(true);
+                    }
+                });
+            });
+        }
+
+        private void InitLoginBtn(
+            SparkService sparkService,
+            Action<RegistrationResponse> onReg,
+            Action<AuthenticationResponse> onAuth)
+        {
             LoginBtn.onClick.AddListener(() =>
             {
                 sparkService.AuthenticateUser(UserNameInput.text, PasswordInput.text, authResponse =>
@@ -61,23 +96,6 @@ namespace Gui
                     }
                 });
             });
-            DeviceAuthenticationBtn.onClick.AddListener(() =>
-            {
-                sparkService.DeviceAuthenticateUser(authResponse =>
-                {
-                    if (authResponse.HasErrors) Log.text = GetError(authResponse.Errors);
-                    else
-                    {
-                        onAuth(authResponse);
-                        LogoutBtn.gameObject.SetActive(true);
-                    }
-                });
-            });
-        }
-
-        public void SetActive(bool state)
-        {
-            gameObject.SetActive(state);
         }
 
         private static string GetError(GSData error)

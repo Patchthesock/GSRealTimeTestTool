@@ -42,3 +42,6 @@ sysinfo.txt
 
 # Max files
 *.max
+
+# GameSparks Settings
+Assets/GameSparks/Resources/GameSparksSettings.asset
