@@ -7,7 +7,9 @@ namespace Services
     {
         public static RTData GetEmptyPacket()
         {
-            return new RTData();
+            var data = new RTData();
+            data.SetInt(1, 1); // Fixes WebGL, can't send blank data.
+            return data;
         }
         
         public static RTData GetTimestampPingPacket()
