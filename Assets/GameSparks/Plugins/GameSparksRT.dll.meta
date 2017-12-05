@@ -79,6 +79,9 @@ PluginImporter:
     tvOS:
       enabled: 1
       settings: {}
+    Tizen:
+      enabled: 1
+      settings: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

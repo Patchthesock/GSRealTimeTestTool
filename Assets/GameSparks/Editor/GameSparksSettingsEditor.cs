@@ -109,7 +109,7 @@ namespace GameSparks.Editor
         [InitializeOnLoadMethod]
         private static void FixSDK()
 		{
-			bool update = false;
+			//bool update = false;
 
             if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
 			{
@@ -117,7 +117,7 @@ namespace GameSparks.Editor
 			}
 		
 			try {
-				string[] oldFiles1 = {
+				/*string[] oldFiles1 = {
 					"Assets/GameSparks/Platforms/IOS",
 
 					"Assets/Plugins/GameSparks.Api.dll.mdb.meta",
@@ -205,14 +205,14 @@ namespace GameSparks.Editor
 							break;
 						}
 					}
-				}
+				}*/
 
-				if (update || !EditorPrefs.GetBool(PlayerSettings.productName + "_GameSparksPopUpSeen", false) ||
+				if (/*update ||*/ !EditorPrefs.GetBool(PlayerSettings.productName + "_GameSparksPopUpSeen", false) ||
 					!EditorPrefs.GetString(PlayerSettings.productName + "_GameSparksVersion").Equals(GameSparks.Core.GS.Version)) {
 					EditorPrefs.SetBool(PlayerSettings.productName + "_GameSparksPopUpSeen", true);
 					EditorPrefs.SetString (PlayerSettings.productName + "_GameSparksVersion", GameSparks.Core.GS.Version);
 
-					string baseDir = "Plugins";
+					/*string baseDir = "Plugins";
 					string targetDir = "Assets/GameSparks/Plugins";
 					DirectoryInfo dirInfo = new DirectoryInfo (targetDir);
 					DirectoryInfo dirInfo2 = new DirectoryInfo ("Assets/" + baseDir);
@@ -250,11 +250,11 @@ namespace GameSparks.Editor
 							}
 						} catch {             
 						}
-					}
+					}*/
 			            
 					AssetDatabase.Refresh ();
 
-					RecursiveDeleteFolders (dirInfo2);
+					//RecursiveDeleteFolders (dirInfo2);
 
 					var assembly = Assembly.GetAssembly (typeof(UnityEditor.ActiveEditorTracker));
 #if UNITY_2017_1_OR_NEWER

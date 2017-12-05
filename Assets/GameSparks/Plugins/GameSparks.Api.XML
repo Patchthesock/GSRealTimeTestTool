@@ -234,6 +234,11 @@
             
             </summary>
         </member>
+        <member name="M:GameSparks.Core.GSData.GetBooleanList(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:GameSparks.Core.GSData.GetIntList(System.String)">
             <summary>
             

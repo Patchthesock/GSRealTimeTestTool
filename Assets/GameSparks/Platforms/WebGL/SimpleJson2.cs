@@ -517,7 +517,7 @@ namespace SimpleJson2
 
         private static readonly char[] EscapeTable;
         private static readonly char[] EscapeCharacters = new char[] { '"', '\\', '\b', '\f', '\n', '\r', '\t' };
-        private static readonly string EscapeCharactersString = new string(EscapeCharacters);
+        //private static readonly string EscapeCharactersString = new string(EscapeCharacters);
 
         static SimpleJson2()
         {

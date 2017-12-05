@@ -218,8 +218,8 @@ namespace GameSparks.Platforms
 			GS.Initialise(this);
 
 			DontDestroyOnLoad (this);
-
 		}
+		
 		private List<Action> _actions = new List<Action>();
 		List<Action> _currentActions = new List<Action>();
 
@@ -233,7 +233,6 @@ namespace GameSparks.Platforms
 		}
 
 		virtual protected void Update(){
-
 			lock (_actions)
 			{
 				if (_actions.Count > 0) {
@@ -275,14 +274,40 @@ namespace GameSparks.Platforms
 			}
 		}
 
+#if !UNITY_EDITOR
+		private bool _allowQuitting = false;
+#endif
+
 		virtual protected void OnApplicationQuit(){
+#if UNITY_EDITOR
 			GS.Disconnect();
+#else
+			GS.ShutDown();
+		
+            StartCoroutine("DelayedQuit");
+
+			if (!_allowQuitting)
+			{
+				Application.CancelQuit();
+			}
+#endif
 		}
 
-		virtual protected void OnDestroy () {
-			Update();
-			GS.ShutDown();
+#if !UNITY_EDITOR
+		IEnumerator DelayedQuit()
+		{
+        	yield return new WaitForSeconds(1.0f);
+			
+			while (GS.Available) 
+			{
+				yield return new WaitForSeconds(0.1f);
+			}
+
+			_allowQuitting = true;
+
+			Application.Quit(); 
 		}
+#endif
 
 		public String DeviceOS {
 			get{
