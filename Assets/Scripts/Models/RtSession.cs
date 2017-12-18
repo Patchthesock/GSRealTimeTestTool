@@ -5,11 +5,11 @@ namespace Models
 {
     public class RtSession
     {
-        public int PortId { get; private set; }
-        public string HostUrl { get; private set; }
-        public string MatchId { get; private set; }
-        public string AcccessToken { get; private set; }
-        public List<RtPlayer> PlayerList { get; private set; }
+        public readonly int PortId;
+        public readonly string HostUrl;
+        public readonly string MatchId;
+        public readonly string AcccessToken;
+        public readonly List<RtPlayer> PlayerList;
 
         public RtSession(MatchFoundMessage message)
         {
@@ -23,10 +23,10 @@ namespace Models
 
         public class RtPlayer
         {
-            public string DisplayName { get; private set; }
-            public string Id { get; private set; }
-            public int PeerId { get; private set; }
-
+            public readonly string Id;
+            public readonly int PeerId;
+            public readonly string DisplayName;
+            
             public RtPlayer(string displayName, string id, int peerId)
             {
                 Id = id;

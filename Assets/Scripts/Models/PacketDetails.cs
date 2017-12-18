@@ -4,10 +4,10 @@ namespace Models
 {
     public class PacketDetails
     {
-        public int Size { get; private set; }
-        public int OpCode { get; private set; }
-        public int Sender { get; private set; }
-        public int StreamLength { get; private set; }
+        public readonly int Size;
+        public readonly int OpCode;
+        public readonly int Sender;
+        public readonly int StreamLength;
         
         public PacketDetails(RTPacket p)
         {

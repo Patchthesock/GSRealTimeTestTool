@@ -4,6 +4,12 @@ namespace Models
 {
     public class Latency
     {
+        public readonly double Lag;
+        public readonly double RoundTrip;
+        public readonly DateTime PingTime;
+        public readonly DateTime PongTime;
+        public readonly DateTime CurrentTime;
+        
         public Latency(long pingTime, long pongTime)
         {
             CurrentTime = DateTime.UtcNow;
@@ -12,11 +18,5 @@ namespace Models
             Lag = TimeSpan.FromTicks(pongTime - pingTime).TotalSeconds;
             RoundTrip = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - pingTime).TotalSeconds;
         }
-
-        public double Lag { get; private set; }
-        public double RoundTrip { get; private set; }
-        public DateTime PingTime { get; private set; }
-        public DateTime PongTime { get; private set; }
-        public DateTime CurrentTime { get; private set; }
     }
 }
