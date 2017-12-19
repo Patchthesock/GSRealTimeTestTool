@@ -11,22 +11,40 @@ namespace Gui
         public InputField OpCode;
         public Button SendTimePacketBtn;
         public Button SendBlankPacketBtn;
+        public Button PacketThroughputTestBtn;
         
+        /**
+         * <summary>Initialize the PacketGui</summary>
+         **/
         public void Initialize(Action onSendTimePacket, Action<int> onSendBlankPacket)
         {
             InitSendTimePacketBtn(onSendTimePacket);
             InitSendBlankPacketBtn(onSendBlankPacket);
         }
         
-        public void OnBlackPacketARecieved(PacketDetails details)
+        /**
+         * <summary>On Blank Packet Received</summary>
+         **/
+        public void OnBlankPacketRecieved(PacketDetails details)
         {
             Log.text = GetPacketDetails(details);
         }
         
+        /**
+         * <summary>On Latency Received</summary>
+         **/
         public void OnLatencyReceived(Latency latency, PacketDetails details)
         {
             Log.text = GetLatencyDetails(latency);
             Log.text += GetPacketDetails(details);
+        }
+        
+        /**
+         * <summary>On Throughput Packet Received</summary>
+         **/
+        public void OnThroughputPacketReceived(PacketDetails details)
+        {
+            Log.text = GetPacketDetails(details);
         }
 
         private void InitSendTimePacketBtn(Action onSendTimePacket)

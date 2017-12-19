@@ -16,39 +16,36 @@ namespace Controllers
             _sparkRtService = sparkRtService;
         }
         
+        /**
+         * <summary>Send Blank Packet</summary>
+         * <param name="opCode">OpCode to send the blank packet with</param>
+         **/
         public void SendBlankPacket(int opCode)
         {
             SendPacket(opCode, _settings.Protocol, PacketService.GetEmptyPacket());
         }
         
+        /**
+         * <summary>Send Timestamp Ping Packet</summary>
+         **/
         public void SendTimestampPingPacket()
         {
             SendPacket((int) OpCode.TimestampPing, _settings.Protocol, PacketService.GetTimestampPingPacket());
         }
 
+        /**
+         * <summary>Send Timestamp Pong Packet</summary>
+         * <param name="pingTime">Ping time from initial ping packet</param>
+         **/
         public void SendTimestampPongpacket(long pingTime)
         {
             SendPacket((int) OpCode.TimestampPong, _settings.Protocol, PacketService.GetTimestampPongPacket(pingTime));
         }
 
-        public void SubscribeToOnTimestampPingReceived(Action<long> onTimestampPingReceived)
-        {
-            if (_onTimestampPingReceivedListeners.Contains(onTimestampPingReceived)) return;
-            _onTimestampPingReceivedListeners.Add(onTimestampPingReceived);
-        }
-        
-        public void SubscribeToOnBlankPacketReceived(Action<PacketDetails> onBlankPacketAReceived)
-        {
-            if (_onBlankPacketReceivedListeners.Contains(onBlankPacketAReceived)) return;
-            _onBlankPacketReceivedListeners.Add(onBlankPacketAReceived);
-        }
-
-        public void SubscribeToOnTimestampPongReceived(Action<Latency, PacketDetails> onTimestampPongReceived)
-        {
-            if (_onTimestampPongReceivedListeners.Contains(onTimestampPongReceived)) return;
-            _onTimestampPongReceivedListeners.Add(onTimestampPongReceived);
-        }
-        
+        /**
+         * <summary>On Packet Received</summary>
+         * <param name="packet">RTPacket Received</param>
+         **/
         public void OnPacketReceived(RTPacket packet)
         {
             switch (packet.OpCode)
@@ -64,6 +61,39 @@ namespace Controllers
                     break;
             }
         }
+        
+        #region Subscriptions
+        
+        /**
+         * <summary>Subscribe To On Timestamp Ping Received</summary>
+         * <param name="onTimestampPingReceived">Delegate Action with long param</param>
+         **/
+        public void SubscribeToOnTimestampPingReceived(Action<long> onTimestampPingReceived)
+        {
+            if (_onTimestampPingReceivedListeners.Contains(onTimestampPingReceived)) return;
+            _onTimestampPingReceivedListeners.Add(onTimestampPingReceived);
+        }
+        
+        /**
+         * <summary>Subscribe To On Blank Packet Received</summary>
+         * <param name="onBlankPacketReceived">Delegate Action with PacketDetails param</param>
+         **/
+        public void SubscribeToOnBlankPacketReceived(Action<PacketDetails> onBlankPacketReceived)
+        {
+            if (_onBlankPacketReceivedListeners.Contains(onBlankPacketReceived)) return;
+            _onBlankPacketReceivedListeners.Add(onBlankPacketReceived);
+        }
+
+        /**
+         * <summary>Subscribe To On Timestamp Pong Received</summary>
+         * <param name="onTimestampPongReceivied">Delegate Action with Latency and PacketDetails params</param>
+         **/
+        public void SubscribeToOnTimestampPongReceived(Action<Latency, PacketDetails> onTimestampPongReceived)
+        {
+            if (_onTimestampPongReceivedListeners.Contains(onTimestampPongReceived)) return;
+            _onTimestampPongReceivedListeners.Add(onTimestampPongReceived);
+        }
+        #endregion
         
         private void OnReceivedBlankPacket(RTPacket packet)
         {

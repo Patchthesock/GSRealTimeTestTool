@@ -9,32 +9,50 @@ namespace Gui
         public Text UserId;
         public Text ConnectionStatus;
 
+        /**
+         * <summary>Initialize the UserInfoGui</summary>
+         **/
         public void Initialize()
         {
             UserId.text = "No User Logged In...";
             ConnectionStatus.text = "Connecting To GameSparks...";
         }
         
-        public void OnGsAvailable(bool isAvailable)
+        /**
+         * <summary>On GS Available</summary>
+         * <param name="state">The Gs availabity state</param>
+         **/
+        public void OnGsAvailable(bool state)
         {
-            ConnectionStatus.text = isAvailable ? "GameSparks Connected..." : "GameSparks Disconnected...";
+            ConnectionStatus.text = state ? "GameSparks Connected..." : "GameSparks Disconnected...";
         }
 
+        /**
+         * <summary>On End Session</summary>
+         **/
         public void OnEndSession()
         {
             UserId.text = "No User Logged In...";
             ConnectionStatus.text = "GameSparks Connected...";
         }
         
-        public void OnRegistration(RegistrationResponse resp)
+        /**
+         * <summary>On Registration, display reg details</summary>
+         * <param name="r">RegistrationResponse received</param>
+         **/
+        public void OnRegistration(RegistrationResponse r)
         {
-            UserId.text = resp.DisplayName + " (" + resp.UserId + ")";
+            UserId.text = r.DisplayName + " (" + r.UserId + ")";
             ConnectionStatus.text = "New User Registered...";
         }
 
-        public void OnAuthentication(AuthenticationResponse resp)
+        /**
+         * <summary>On Authentication, display auth details</summary>
+         * <param name="r">AuthenticationResponse received</param>
+         **/
+        public void OnAuthentication(AuthenticationResponse r)
         {
-            UserId.text = resp.DisplayName + " (" + resp.UserId + ")";
+            UserId.text = r.DisplayName + " (" + r.UserId + ")";
             ConnectionStatus.text = "User Authenticated...";
         }
     }

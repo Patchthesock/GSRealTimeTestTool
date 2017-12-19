@@ -16,7 +16,7 @@ namespace Installers
             InstallServices(Container);
             InstallGui(Container, GameSettings.GuiSettings);
             InstallPacketController(Container, GameSettings.PacketControllerSettings);
-            InstallGameController(Container);
+            InstallApp(Container);
         }
 
         private static void InstallGsRt(DiContainer container, GameSparksRTUnity gs)
@@ -46,10 +46,10 @@ namespace Installers
             container.Bind<PacketController>().AsSingle();
         }
 
-        private static void InstallGameController(DiContainer container)
+        private static void InstallApp(DiContainer container)
         {
-            container.Bind<IInitializable>().To<GameController>().AsSingle();
-            container.Bind<GameController>().AsSingle();
+            container.Bind<IInitializable>().To<App>().AsSingle();
+            container.Bind<App>().AsSingle();
         }
 
         [Serializable]

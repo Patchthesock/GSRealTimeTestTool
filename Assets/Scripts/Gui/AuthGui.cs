@@ -16,6 +16,13 @@ namespace Gui
         public InputField PasswordInput;
         public Button DeviceAuthenticationBtn;
 
+        /**
+         * <summary>Initialize the AuthGui</summary>
+         * <param name="sparkService">SparkService instance</param>
+         * <param name="onEndSession">Delegate Action, On End Session</param>
+         * <param name="onReg">Delegate Action, On Registration with RegistrationResponse param</param>
+         * <param name="onAuth">Delegate Action, On Authentication with AuthenticationResponse param</param>
+         **/
         public void Initialize(
             SparkService sparkService,
             Action onEndSession,
@@ -27,6 +34,10 @@ namespace Gui
             InitLoginBtn(sparkService, onReg, onAuth);
         }
         
+        /**
+         * <summary>AuthGui active state</summary>
+         * <param name="state">The state to set AuthGui</param>
+         **/
         public void SetActive(bool state)
         {
             gameObject.SetActive(state);
