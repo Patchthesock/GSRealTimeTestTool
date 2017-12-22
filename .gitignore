@@ -21,8 +21,8 @@ ExportedObj/
 *.booproj
 *.svd
 *.DS_Store
-.csv
-.csv.meta
+*.csv
+*.csv.meta
 
 # Rider IDE
 .idea

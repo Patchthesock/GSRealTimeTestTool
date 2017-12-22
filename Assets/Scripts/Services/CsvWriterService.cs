@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Models;
 using UnityEngine;
 
@@ -6,10 +7,15 @@ namespace Services
 {
     public class CsvWriterService
     {
-        public void CreateFile(string filepath)
+        public CsvWriterService()
         {
-            _filepath = filepath;
-            Debug.Log("Writing to path: " + filepath);
+            _path = Application.dataPath + "/Log/";
+            _filename = DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
+        }
+        
+        public void CreateFile()
+        {
+            Debug.Log("Creating: " + _path + _filename);
             WriteLine("Message,Direction,Size,OpCode,Sender,Stream Length,"
                 + "Lag,Round Trip Time,Ping Time,Pong Time,Created At\r");
         }
@@ -21,8 +27,10 @@ namespace Services
 
         private void WriteLine(string l)
         {
-            if (string.IsNullOrEmpty(_filepath)) return;
-            var writer = new StreamWriter(_filepath, true);
+            if (string.IsNullOrEmpty(_path)) return;
+            if (string.IsNullOrEmpty(_filename)) return;
+            if (!Directory.Exists(_path)) Directory.CreateDirectory(_path);
+            var writer = new StreamWriter(_path + _filename, true);
             writer.WriteLine(l);
             writer.Close();
         }
@@ -43,6 +51,7 @@ namespace Services
             return s + l.CreatedAt + "\r";
         }
 
-        private string _filepath;
+        private readonly string _path;
+        private readonly string _filename;
     }
 }

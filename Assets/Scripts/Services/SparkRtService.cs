@@ -24,6 +24,10 @@ namespace Services
         public void LeaveSession()
         {
             _gameSparksRtUnity.Disconnect();
+            OnLogEntryReceived(new LogEntry(
+                "Disconnected From Session", null,
+                LogEntry.Directions.Outbound,
+                new PacketDetails(0, 0, 0, 0)));
         }
         
         /**
@@ -109,6 +113,10 @@ namespace Services
                 
                 state => // OnRtReady Callback
                 {
+                    OnLogEntryReceived(new LogEntry(
+                        "Real Time Ready: " + state, null,
+                        LogEntry.Directions.Inbound,
+                        new PacketDetails(0, 0, 0, 0)));
                     foreach (var l in _onRtReady) l(state);
                 },
                 
@@ -154,6 +162,10 @@ namespace Services
             SendPacket(
                 (int) OpCode.TimestampPong,
                 _settings.Protocol, PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
+            OnLogEntryReceived(new LogEntry(
+                "Sending Pong Packet", null,
+                LogEntry.Directions.Outbound,
+                new PacketDetails((int) OpCode.TimestampPong, 0, 0, 0)));
         }
         
         private void OnReceivedBlankPacket(RTPacket packet)
@@ -172,7 +184,7 @@ namespace Services
             if (p == null) return;
             
             OnLogEntryReceived(LogEntryFactory.Create(
-                "Ping Timestamp Received",
+                "Ping Packet Received",
                 new PacketDetails(packet),
                 LogEntry.Directions.Inbound));
             SendTimestampPongpacket((int) r, (long) p);
@@ -185,7 +197,7 @@ namespace Services
             if (l == null || j == null) return;
             
             OnLogEntryReceived(LogEntryFactory.Create(
-                "Pong Timestamp Received",
+                "Pong Packet Received",
                 new PacketDetails(packet),
                 new Latency((long) l, (long) j),
                 LogEntry.Directions.Inbound));

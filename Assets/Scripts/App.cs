@@ -45,8 +45,7 @@ public class App : IInitializable
 
     private void WriteLog()
     {
-        _csvWriterService.CreateFile(Application.dataPath + "/Log/"
-         + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv");
+        _csvWriterService.CreateFile();
         _sparkRtService.SubscribeToOnLogEntryReceived(_csvWriterService.WriteLogEntry);
     }
 
