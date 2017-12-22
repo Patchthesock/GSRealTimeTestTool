@@ -2,7 +2,6 @@
 using Controllers;
 using Gui;
 using Services;
-using UnityEngine;
 using Zenject;
 
 namespace Installers
@@ -15,39 +14,42 @@ namespace Installers
         {
             InstallServices(Container, GameSettings.GameSparksRtUnity, GameSettings.RtServiceSettings);
             InstallGui(Container, GameSettings.GuiSettings);
-            InstallApp(Container);
+            InstallApp(Container, GameSettings.AppSettings);
         }
 
         private static void InstallServices(
-            DiContainer container,
+            DiContainer c,
             GameSparksRTUnity gs,
             SparkRtService.Settings s)
         {
-            container.Bind<PrefabBuilder>().AsSingle();
-            container.Bind<SparkRtService>().AsSingle();
-            container.Bind<SparkRtService.Settings>().FromInstance(s).AsSingle();
-            container.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
+            c.Bind<PrefabBuilder>().AsSingle();
+            c.Bind<SparkRtService>().AsSingle();
+            c.Bind<CsvWriterService>().AsSingle();
+            c.Bind<SparkRtService.Settings>().FromInstance(s).AsSingle();
+            c.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
         }
 
-        private static void InstallGui(DiContainer container, Settings.Gui gui)
+        private static void InstallGui(DiContainer c, Settings.Gui g)
         {
-            container.Bind<AuthGui>().FromInstance(gui.AuthGui).AsSingle();
-            container.Bind<MatchGui>().FromInstance(gui.MatchGui).AsSingle();
-            container.Bind<SessionGui>().FromInstance(gui.SessionGui).AsSingle();
-            container.Bind<ConnectionGui>().FromInstance(gui.ConnectionGui).AsSingle();
-            container.Bind<GuiController>().AsSingle();
+            c.Bind<AuthGui>().FromInstance(g.AuthGui).AsSingle();
+            c.Bind<MatchGui>().FromInstance(g.MatchGui).AsSingle();
+            c.Bind<SessionGui>().FromInstance(g.SessionGui).AsSingle();
+            c.Bind<ConnectionGui>().FromInstance(g.ConnectionGui).AsSingle();
+            c.Bind<GuiController>().AsSingle();
         }
 
-        private static void InstallApp(DiContainer container)
+        private static void InstallApp(DiContainer c, App.Settings s)
         {
-            container.Bind<IInitializable>().To<App>().AsSingle();
-            container.Bind<App>().AsSingle();
+            c.Bind<App.Settings>().FromInstance(s).AsSingle();
+            c.Bind<IInitializable>().To<App>().AsSingle();
+            c.Bind<App>().AsSingle();
         }
 
         [Serializable]
         public class Settings
         {
             public Gui GuiSettings;
+            public App.Settings AppSettings;
             public GameSparksRTUnity GameSparksRtUnity;
             public SparkRtService.Settings RtServiceSettings;
 

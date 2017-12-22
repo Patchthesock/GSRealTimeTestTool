@@ -154,11 +154,11 @@ namespace Services
             if (r == null) return;
             if (p == null) return;
             
-            SendTimestampPongpacket((int) r, (long) p);
             OnLogEntryReceived(LogEntryFactory.Create(
                 "Ping Timestamp Received",
                 new PacketDetails(packet),
                 LogEntry.Directions.Inbound));
+            SendTimestampPongpacket((int) r, (long) p);
         }
         
         private void OnReceivedTimestampPongPacket(RTPacket packet)

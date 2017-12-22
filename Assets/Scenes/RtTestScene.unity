@@ -2593,8 +2593,10 @@ MonoBehaviour:
       MatchGui: {fileID: 1877298949}
       SessionGui: {fileID: 1548980308}
       ConnectionGui: {fileID: 1546482915}
+    AppSettings:
+      WriteLogFile: 1
     GameSparksRtUnity: {fileID: 1146904261}
-    PacketServiceSettings:
+    RtServiceSettings:
       Protocol: 0
 --- !u!114 &1146904259
 MonoBehaviour:

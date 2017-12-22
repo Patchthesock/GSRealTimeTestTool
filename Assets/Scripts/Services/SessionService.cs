@@ -60,22 +60,22 @@ namespace Services
             return s;
         }
         
-        private static string GetPacketDetails(PacketDetails details)
+        private static string GetPacketDetails(PacketDetails d)
         {
-            var s = "OpCode: " + details.OpCode + "\n";
-            s += "Packet Size: " + details.Size + "\n";
-            s += "Sender: Player " + details.Sender + "\n";
-            s += "Stream Length: " + details.StreamLength + "\n\n";
+            var s = "OpCode: " + d.OpCode + "\n";
+            s += "Packet Size: " + d.Size + "\n";
+            s += "Sender: Player " + d.Sender + "\n";
+            s += "Stream Length: " + d.StreamLength + "\n\n";
             return s;
         }
 
-        private static string GetLatencyDetails(Latency latency)
+        private static string GetLatencyDetails(Latency l)
         {
-            var s = "Ping Time: " + latency.PingTime + "\n";
-            s += "Pong Time: " + latency.PongTime + "\n";
-            s += "Current Time: " + latency.CurrentTime + "\n";
-            s += "Latency: " + latency.Lag + "\n";
-            s += "Round Trip Time: " + latency.RoundTrip + "\n\n";
+            var s = "Ping Time: " + l.PingTime + "\n";
+            s += "Pong Time: " + l.PongTime + "\n";
+            s += "Current Time: " + l.CreatedAt + "\n";
+            s += "Latency: " + l.Lag + "\n";
+            s += "Round Trip Time: " + l.RoundTrip + "\n\n";
             return s;
         }
 
