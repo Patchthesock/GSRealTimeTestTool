@@ -4,6 +4,7 @@ using GameSparks.Api.Responses;
 using GameSparks.Core;
 using GameSparks.RT;
 using Models;
+using UnityEngine;
 
 namespace Services
 {
@@ -21,26 +22,36 @@ namespace Services
         public void ConnectSession(RtSession s)
         {
             /**
-             * In order to create a new RT game we need a 'FindMatchResponse'
-             * This would usually come from the server directly after a sucessful MatchRequest
-             * However, in our case, we want the game to be created only when the first player decides using a button
-             * therefore, the details from the response is passed in from the gameInfo and a mock-up of a FindMatchResponse
-             * is passed in. In normal operation this mock-response may not be needed
-             **/
-            var mockedResponse = new FindMatchResponse(new GSRequestData()  // construct a dataset from the game-details
-            .AddNumber("port", (double)s.PortId)
-            .AddString("host", s.HostUrl)
-            .AddString("accessToken", s.AcccessToken));
-            /**
-             * Create a match-response from that data and pass it into the game-config
-             * So in the game-config method we pass in the response which gives the instance its connection settings
-             * In this example i use a lambda expression to pass in actions for 
-             * OnPlayerConnect, OnPlayerDisconnect, OnReady and OnPacket actions
-             * These methods are self-explanitory, but the important one is the OnPacket Method
-             * this gets called when a packet is received
+             * In order to create a new RtSession we need a 'FindMatchResponse'
+             * In our case, we wanted to capture these details and have them passed in
+             * this offers us greater flexibility.
             **/
-            _gameSparksRtUnity.Configure(mockedResponse, OnPlayerConnected, OnPlayerDisconnected, OnRtReady, OnPacketReceived);
-            _gameSparksRtUnity.Connect(); // when the config is set, connect the game
+            
+            _gameSparksRtUnity.Configure(
+                new FindMatchResponse(new GSRequestData()  // Construct a FindMatchResponse 
+                .AddNumber("port", (double)s.PortId)       // that we can then us to configure
+                .AddString("host", s.HostUrl)              // a Real Time Session from
+                .AddString("accessToken", s.AcccessToken)),
+
+                (peerId) => // OnPlayerConnected Callback
+                {
+                    Debug.Log("Player " + peerId + " Connected");
+                    foreach (var l in _onPlayerConnectedListeners) l(peerId);
+                },
+                (peerId) => // OnPlayerDisconnected Callback
+                {
+                    Debug.Log("Player " + peerId + " Disconnected");
+                    foreach (var l in _onPlayerDisconnectedListeners) l(peerId);
+                },
+                (state) => // OnRtReady Callback
+                {
+                    foreach (var l in _onRtReady) l(state);
+                },
+                (packet) => // OnPacketReceived Callback
+                {
+                    foreach (var l in _onPacketReceivedListeners) l(packet);
+                });
+            _gameSparksRtUnity.Connect(); // Connect
         }
 
         /**
@@ -100,26 +111,6 @@ namespace Services
         {
             if (_onPlayerDisconnectedListeners.Contains(onPlayerDisconnected)) return;
             _onPlayerDisconnectedListeners.Add(onPlayerDisconnected);
-        }
-
-        private void OnRtReady(bool state)
-        {
-            foreach (var l in _onRtReady) l(state);
-        }
-        
-        private void OnPacketReceived(RTPacket p)
-        {
-            foreach (var l in _onPacketReceivedListeners) l(p);
-        }
-
-        private void OnPlayerConnected(int peerId)
-        {
-            foreach (var l in _onPlayerConnectedListeners) l(peerId);
-        }
-
-        private void OnPlayerDisconnected(int peerId)
-        {
-            foreach (var l in _onPlayerDisconnectedListeners) l(peerId);
         }
 
         private readonly GameSparksRTUnity _gameSparksRtUnity;

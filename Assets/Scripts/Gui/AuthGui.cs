@@ -1,7 +1,4 @@
 ﻿using System;
-using GameSparks.Api.Responses;
-using GameSparks.Core;
-using Services;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,102 +13,48 @@ namespace Gui
         public InputField PasswordInput;
         public Button DeviceAuthenticationBtn;
 
-        /**
-         * <summary>Initialize the AuthGui</summary>
-         * <param name="sparkService">SparkService instance</param>
-         * <param name="onEndSession">Delegate Action, On End Session</param>
-         * <param name="onReg">Delegate Action, On Registration with RegistrationResponse param</param>
-         * <param name="onAuth">Delegate Action, On Authentication with AuthenticationResponse param</param>
-         **/
-        public void Initialize(
-            SparkService sparkService,
-            Action onEndSession,
-            Action<RegistrationResponse> onReg,
-            Action<AuthenticationResponse> onAuth)
+        public void Initialize(            
+            Action onEndSessionRequestReceived,
+            Action onDeviceAuthenticationRequestReceived,
+            Action<string, string> onAuthenticationRequestReceived)
         {
-            InitDeviceAuthBtn(sparkService, onAuth);
-            InitLogoutBtn(sparkService, onEndSession);
-            InitLoginBtn(sparkService, onReg, onAuth);
+            ClearLog();
+            InitLogoutBtn(onEndSessionRequestReceived);
+            InitLoginBtn(onAuthenticationRequestReceived);
+            InitDeviceAuthBtn(onDeviceAuthenticationRequestReceived);
+        }
+
+        /**
+         * <summary>Clear Log</summary>
+         **/
+        public void ClearLog()
+        {
+            Log.text = "";
         }
         
         /**
-         * <summary>AuthGui active state</summary>
-         * <param name="state">The state to set AuthGui</param>
+         * <summary>Add Log Entry</summary>
+         * <param name="msg">The log message to add</param>
          **/
-        public void SetActive(bool state)
+        public void AddLogEntry(string msg)
         {
-            gameObject.SetActive(state);
+            Log.text += msg + "\n";
         }
-
-        private void InitLogoutBtn(SparkService sparkService, Action onEndSession)
+        
+        private void InitLogoutBtn(Action onClick)
         {
             LogoutBtn.gameObject.SetActive(false);
-            LogoutBtn.onClick.AddListener(() =>
-            {
-                sparkService.EndUserSession(endSessResponse =>
-                {
-                    if (endSessResponse.HasErrors) Log.text = GetError(endSessResponse.Errors);
-                    else
-                    {
-                        onEndSession();
-                        LogoutBtn.gameObject.SetActive(false);
-                    }
-                });
-            });
+            LogoutBtn.onClick.AddListener(() => { onClick(); });
         }
 
-        private void InitDeviceAuthBtn(SparkService sparkService, Action<AuthenticationResponse> onAuth)
+        private void InitDeviceAuthBtn(Action onClick)
         {
-            DeviceAuthenticationBtn.onClick.AddListener(() =>
-            {
-                sparkService.DeviceAuthenticateUser(authResponse =>
-                {
-                    if (authResponse.HasErrors) Log.text = GetError(authResponse.Errors);
-                    else
-                    {
-                        onAuth(authResponse);
-                        LogoutBtn.gameObject.SetActive(true);
-                    }
-                });
-            });
+            DeviceAuthenticationBtn.onClick.AddListener(() => { onClick(); });
         }
 
-        private void InitLoginBtn(
-            SparkService sparkService,
-            Action<RegistrationResponse> onReg,
-            Action<AuthenticationResponse> onAuth)
+        private void InitLoginBtn(Action<string, string> onClick)
         {
-            LoginBtn.onClick.AddListener(() =>
-            {
-                sparkService.AuthenticateUser(UserNameInput.text, PasswordInput.text, authResponse =>
-                {
-                    if (!authResponse.HasErrors)
-                    {
-                        Log.text = "";
-                        onAuth(authResponse);
-                        LogoutBtn.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        Log.text = GetError(authResponse.Errors);
-                        sparkService.RegisterUser(UserNameInput.text, PasswordInput.text, regResponse =>
-                        {
-                            if (regResponse.HasErrors) Log.text += GetError(regResponse.Errors);
-                            else
-                            {
-                                Log.text = "";
-                                onReg(regResponse);
-                                LogoutBtn.gameObject.SetActive(true);
-                            }
-                        });
-                    }
-                });
-            });
-        }
-
-        private static string GetError(GSData error)
-        {
-            return error.JSON + "\n";
+            LoginBtn.onClick.AddListener(() => { onClick(UserNameInput.text, PasswordInput.text); });
         }
     }
 }

@@ -2,6 +2,7 @@
 using Controllers;
 using Gui;
 using Services;
+using UnityEngine;
 using Zenject;
 
 namespace Installers
@@ -12,38 +13,32 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            InstallGsRt(Container, GameSettings.GameSparksRtUnity);
-            InstallServices(Container);
+            InstallServices(Container, GameSettings.GameSparksRtUnity);
             InstallGui(Container, GameSettings.GuiSettings);
-            InstallPacketController(Container, GameSettings.PacketControllerSettings);
+            InstallPacketController(Container, GameSettings.PacketServiceSettings);
             InstallApp(Container);
         }
 
-        private static void InstallGsRt(DiContainer container, GameSparksRTUnity gs)
+        private static void InstallServices(DiContainer container, GameSparksRTUnity gs)
         {
-            container.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
-        }
-
-        private static void InstallServices(DiContainer container)
-        {
-            container.Bind<SparkService>().AsSingle();
+            container.Bind<PrefabBuilder>().AsSingle();
             container.Bind<SparkRtService>().AsSingle();
+            container.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
         }
 
         private static void InstallGui(DiContainer container, Settings.Gui gui)
         {
-            container.Bind<AuthGui>().FromInstance(gui.AuthGui);
-            container.Bind<PacketGui>().FromInstance(gui.PacketGui);
-            container.Bind<UserInfoGui>().FromInstance(gui.UserInfoGui);
-            container.Bind<RtSessionGui>().FromInstance(gui.RtSessionGui);
-            container.Bind<MatchDetailsGui>().FromInstance(gui.MatchDetailGui);
+            container.Bind<AuthGui>().FromInstance(gui.AuthGui).AsSingle();
+            container.Bind<MatchGui>().FromInstance(gui.MatchGui).AsSingle();
+            container.Bind<SessionGui>().FromInstance(gui.SessionGui).AsSingle();
+            container.Bind<ConnectionGui>().FromInstance(gui.ConnectionGui).AsSingle();
             container.Bind<GuiController>().AsSingle();
         }
 
-        private static void InstallPacketController(DiContainer container, PacketController.Settings settings)
+        private static void InstallPacketController(DiContainer container, PacketService.Settings settings)
         {
-            container.Bind<PacketController.Settings>().FromInstance(settings).AsSingle();
-            container.Bind<PacketController>().AsSingle();
+            container.Bind<PacketService.Settings>().FromInstance(settings).AsSingle();
+            container.Bind<PacketService>().AsSingle();
         }
 
         private static void InstallApp(DiContainer container)
@@ -57,16 +52,15 @@ namespace Installers
         {
             public Gui GuiSettings;
             public GameSparksRTUnity GameSparksRtUnity;
-            public PacketController.Settings PacketControllerSettings;
+            public PacketService.Settings PacketServiceSettings;
 
             [Serializable]
             public class Gui
             {
                 public AuthGui AuthGui;
-                public PacketGui PacketGui;
-                public UserInfoGui UserInfoGui;
-                public RtSessionGui RtSessionGui;
-                public MatchDetailsGui MatchDetailGui;
+                public MatchGui MatchGui;
+                public SessionGui SessionGui;
+                public ConnectionGui ConnectionGui;
             }
         }
     }

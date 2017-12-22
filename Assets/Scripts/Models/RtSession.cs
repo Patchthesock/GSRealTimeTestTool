@@ -18,7 +18,9 @@ namespace Models
             PlayerList = new List<RtPlayer>();
             AcccessToken = message.AccessToken;
             if (message.Port != null) PortId = (int) message.Port;
-            foreach (var p in message.Participants) if (p.PeerId != null) PlayerList.Add(new RtPlayer(p.DisplayName, p.Id, (int) p.PeerId));
+            foreach (var p in message.Participants)
+                if (p.PeerId != null)
+                    PlayerList.Add(new RtPlayer(p.DisplayName, p.Id, (int) p.PeerId));
         }
 
         public class RtPlayer

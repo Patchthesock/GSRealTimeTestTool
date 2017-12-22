@@ -1,20 +1,29 @@
 ﻿using Controllers;
-using Models;
 using Services;
 using Zenject;
 
 public class App : IInitializable
 {
+    /**
+     * Steve Callaghan (stephen.callaghan@gamesparks.com)
+     * https://github.com/Patchthesock/GSRealTimeTestTool
+     * Created: 2017/09 (September, 2017)
+     *
+     * Features to add
+     * * Write Log to file
+     * * Rapid packet test
+     * * Throughput Limiter
+     * * Check if already authenticated
+     **/
+    
     public App(
-        SparkService sparkService,
         GuiController guiController,
-        SparkRtService sparkRtService,
-        PacketController packetController)
+        PacketService packetService,
+        SparkRtService sparkRtService)
     {
-        _sparkService = sparkService;
         _guiController = guiController;
+        _packetService = packetService;
         _sparkRtService = sparkRtService;
-        _packetController = packetController;
     }
 
     /**
@@ -22,66 +31,22 @@ public class App : IInitializable
      **/
     public void Initialize()
     {
-        SetUpListeners();
-        _sparkService.Initialize();
+        //_sparkRtService.SubscribeToOnPlayerConnected();
+        //_sparkRtService.SubscribeToOnPlayerDisconnected();
+        _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
+        _sparkRtService.SubscribeToOnPacketReceived(_packetService.OnPacketReceived);
+        
+        _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
+        _guiController.SubscribeToOnSendBlankPacket(_packetService.SendBlankPacket);
+        _guiController.SubscribeToOnStartSession(r => { _sparkRtService.ConnectSession(r); });
+        _guiController.SubscribeToOnSendTimestampPacket(_packetService.SendTimestampPingPacket);
+        
+        _packetService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
+        
         _guiController.Initialize();
     }
 
-    private void SetUpListeners()
-    {
-        SetUpRtListeners();
-        SetUpGuiListeners();
-        SetUpPacketListeners();
-        SetUpMatchFoundListeners();
-        SetUpGsAvailableListeners();
-        SetUpMatchNotFoundListeners();
-    }
-        
-    private void SetUpGsAvailableListeners()
-    {
-        _sparkService.SubscribeOnGsAvailable(_guiController.OnGsAvailable);
-    }
-        
-    private void SetUpMatchFoundListeners()
-    {
-        _sparkService.SubscribeOnMatchFound(_guiController.OnMatchFound);
-        _sparkService.SubscribeOnMatchFound(m => { _rtSession = ModelFactory.CreateRtSession(m); });
-    }
-        
-    private void SetUpMatchNotFoundListeners()
-    {
-        _sparkService.SubscribeOnMatchNotFound(_guiController.OnMatchNotFound);   
-    }
-        
-    private void SetUpRtListeners()
-    {
-        _sparkRtService.SubscribeToOnRtReady(_guiController.OnRtReady);
-        _sparkRtService.SubscribeToOnPlayerConnected(_guiController.OnPlayerConnected);
-        _sparkRtService.SubscribeToOnPacketReceived(_packetController.OnPacketReceived);
-        _sparkRtService.SubscribeToOnPlayerDisconnected(_guiController.OnPlayerDisconnected);
-    }
-
-    private void SetUpGuiListeners()
-    {
-        _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
-        _guiController.SubscribeToOnSendBlankPacket(_packetController.SendBlankPacket);
-        _guiController.SubscribeToOnSendTimestampPacket(_packetController.SendTimestampPingPacket);
-        _guiController.SubscribeToOnStartSession(() => { _sparkRtService.ConnectSession(_rtSession); });
-    }
-
-    private void SetUpPacketListeners()
-    {
-        _packetController.SubscribeToOnTimestampPongReceived(_guiController.OnLatencyReceived);
-        _packetController.SubscribeToOnBlankPacketReceived(_guiController.OnBlankPacketReceived);
-        _packetController.SubscribeToOnTimestampPingReceived(pingTime =>
-        {
-            _packetController.SendTimestampPongpacket(pingTime);
-        });
-    }
-
-    private RtSession _rtSession;
-    private readonly SparkService _sparkService;
     private readonly GuiController _guiController;
+    private readonly PacketService _packetService;
     private readonly SparkRtService _sparkRtService;
-    private readonly PacketController _packetController;
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using GameSparks.Api.Messages;
-using GameSparks.Api.Responses;
 using Gui;
 using Models;
 using Services;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -12,118 +11,52 @@ namespace Controllers
     {
         public GuiController(
             AuthGui authGui,
-            PacketGui packetGui,
-            UserInfoGui userInfoGui,
-            SparkService sparkService,
-            RtSessionGui rtSessionGui,
-            MatchDetailsGui matchDetailsGui)
+            MatchGui matchGui,
+            SessionGui sessionGui,
+            ConnectionGui connectionGui,
+            PrefabBuilder prefabBuilder)
         {
-            _authGui = authGui;
-            _packetGui = packetGui;
-            _userInfoGui = userInfoGui;
-            _sparkService = sparkService;
-            _rtSessionGui = rtSessionGui;
-            _matchDetailsGui = matchDetailsGui;
+            _authService = new AuthService(authGui);
+            _matchService = new MatchService(matchGui);
+            _connectionService = new ConnectionService(connectionGui);
+            _sessionService = new SessionService(sessionGui, prefabBuilder);
         }
 
-        /**
-         * <summary>Initialize GUI Controller</summary>
-         **/
         public void Initialize()
         {
-            _authGui.SetActive(true);
-            _userInfoGui.Initialize();
-            _rtSessionGui.SetActive(false);
-            _matchDetailsGui.SetActive(false);
-            _rtSessionGui.Initialize(OnStopRtSession);
-            _packetGui.Initialize(OnSendTimestampPacket, OnSendBlankPacket);
-            _authGui.Initialize(_sparkService, OnUserEndSession, OnRegistrationResponseReceived, OnAuthenticationResponseReceived);
-            _matchDetailsGui.Initialize(OnStartRtSession, (skill, matchName) => { _sparkService.FindMatch(matchName, skill, OnMatchMakingResponseReceived); });
+            _connectionService.Initialize();
+            _matchService.Initialize(OnStartRtSession);
+            _authService.Initialize(
+                OnUserEndSession,
+                (name, userId) => { OnAuthenticationResponseReceived(name, userId, true); },
+                (name, userId) => { OnAuthenticationResponseReceived(name, userId); },
+                (name, userId) => { OnAuthenticationResponseReceived(name, userId); });
+            _sessionService.Initialize(OnStopRtSession, OnSendTimestampPacket, OnSendBlankPacket);
+            
+            // Initial Screen Order
+            _authService.SetActive(true);
+            _matchService.SetActive(false);
+            _sessionService.SetActive(false);
         }
 
-        #region GameSparks Connection
+        /**
+         * <summary>On Log Entry Received</summary>
+         * <param name="l">LogEntry</param>
+         **/
+        public void OnLogEntryReceived(LogEntry l)
+        {
+            _sessionService.OnLogEntryReceived(l);
+        }
         
-        /**
-         * <summary>On GameSparks Available</summary>
-         * <param name="state">GameSparks isAvailable state</param>
-         **/
-        public void OnGsAvailable(bool state)
-        {
-            _userInfoGui.OnGsAvailable(state);
-        }
-        #endregion
-
-        #region GameSpark Match
-        
-        /**
-         * <summary>On Match Found Received</summary>
-         * <param name="message">MatchFoundMessage</param>
-         **/
-        public void OnMatchFound(MatchFoundMessage message)
-        {
-            _matchDetailsGui.OnMatchFoundReceived(message);
-        }
-
-        /**
-         * <summary>On Match Not found Recevied</summary>
-         * <param name="message">MatchNotFoundMessage</param>
-         **/
-        public void OnMatchNotFound(MatchNotFoundMessage message)
-        {
-            _matchDetailsGui.OnMatchNotFoundReceived(message);
-        }
-        #endregion
-
         #region GameSpark General Realtime
         
         /**
-         * <summary>On Real Time Session Ready</summary>
+         * <summary>Set Real Time Gui Active</summary>
          * <param name="state">Real Time Session isReady state</param>
          **/
-        public void OnRtReady(bool state)
+        public void SetRealTimeActive(bool state)
         {
-            if (!state) return;
-            _rtSessionGui.SetActive(true);
-        }
-        
-        /**
-         * <summary>On Real Time Player Connected</summary>
-         * <param name="peerId">Connected player peerId</param>
-         **/
-        public void OnPlayerConnected(int peerId)
-        {
-            _rtSessionGui.OnPlayerConnect(peerId);
-        }
-    
-        /**
-         * <summary>On Real Time Player Disconnected</summary>
-         * <param name="peerId">Disconnected player peerId</param>
-         **/
-        public void OnPlayerDisconnected(int peerId)
-        {
-            _rtSessionGui.OnPlayerDisconnect(peerId);
-        }
-        #endregion
-
-        #region Packets Received
-        
-        /**
-         * <summary>On Latency Received</summary>
-         * <param name="l">Latency</param>
-         * <param name="d>Packet Details</param>
-         **/
-        public void OnLatencyReceived(Latency l, PacketDetails d)
-        {
-            _packetGui.OnLatencyReceived(l, d);
-        }
-
-        /**
-         * <summary>On Blank Packet Received</summary>
-         * <param name="p">Packet Details</param>
-         **/
-        public void OnBlankPacketReceived(PacketDetails p)
-        {
-            _packetGui.OnBlankPacketRecieved(p);
+            _sessionService.SetActive(true);
         }
         #endregion
         
@@ -143,7 +76,7 @@ namespace Controllers
          * <summary>Subscribe To On Start Real Time Session</summary>
          * <param name="onStartSession">Delegate Action</param>
          **/
-        public void SubscribeToOnStartSession(Action onStartSession)
+        public void SubscribeToOnStartSession(Action<RtSession> onStartSession)
         {
             if (_startSessionListeners.Contains(onStartSession)) return;
             _startSessionListeners.Add(onStartSession);
@@ -179,45 +112,34 @@ namespace Controllers
             _throughputPacketTestListeners.Add(onThroughputPacketTest);
         }
         #endregion
-
-        private void OnStopRtSession()
-        {
-            _rtSessionGui.SetActive(false);
-            _matchDetailsGui.SetActive(true);
-            foreach (var l in _stopSessionListeners) l();
-        }
         
-        private void OnStartRtSession()
+        private void OnAuthenticationResponseReceived(string name, string userId, bool isReg = false)
         {
-            foreach (var l in _startSessionListeners) l();
-        }
-        
-        private void OnRegistrationResponseReceived(RegistrationResponse response)
-        {
-            _authGui.SetActive(false);
-            _matchDetailsGui.SetActive(true);
-            _userInfoGui.OnRegistration(response);
-        }
-        
-        private void OnMatchMakingResponseReceived(MatchmakingResponse response)
-        {
-            if (response.HasErrors) _matchDetailsGui.OnMatchmakingErrorReceived(response.Errors);
-        }
-        
-        private void OnAuthenticationResponseReceived(AuthenticationResponse response)
-        {
-            _authGui.SetActive(false);
-            _matchDetailsGui.SetActive(true);
-            _userInfoGui.OnAuthentication(response);
+            _authService.SetActive(false);
+            _matchService.SetActive(true);
+            if (isReg) _connectionService.OnRegistration(name, userId);
+            else _connectionService.OnAuthentication(name, userId);
         }
         
         private void OnUserEndSession()
         {
             OnStopRtSession();
-            _authGui.SetActive(true);
-            _userInfoGui.OnEndSession();
-            _rtSessionGui.SetActive(false);
-            _matchDetailsGui.SetActive(false);
+            _authService.SetActive(true);
+            _matchService.SetActive(false);
+            _sessionService.SetActive(false);
+            _connectionService.OnEndSession();
+        }
+        
+        private void OnStopRtSession()
+        {
+            _matchService.SetActive(true);
+            _sessionService.SetActive(false);
+            foreach (var l in _stopSessionListeners) l();
+        }
+        
+        private void OnStartRtSession(RtSession s)
+        {
+            foreach (var l in _startSessionListeners) l(s);
         }
         
         private void OnSendBlankPacket(int opCode)
@@ -229,17 +151,22 @@ namespace Controllers
         {
             foreach (var l in _sendTimestampPacketListeners) l();
         }
-        
-        private readonly AuthGui _authGui;
-        private readonly PacketGui _packetGui;
-        private readonly UserInfoGui _userInfoGui;
-        private readonly SparkService _sparkService;
-        private readonly RtSessionGui _rtSessionGui;
-        private readonly MatchDetailsGui _matchDetailsGui;
+
+        private readonly AuthService _authService;
+        private readonly MatchService _matchService;
+        private readonly SessionService _sessionService;
+        private readonly ConnectionService _connectionService;
         private readonly List<Action> _stopSessionListeners = new List<Action>();
-        private readonly List<Action> _startSessionListeners = new List<Action>();
         private readonly List<Action> _sendTimestampPacketListeners = new List<Action>();
         private readonly List<Action> _throughputPacketTestListeners = new List<Action>();
         private readonly List<Action<int>> _sendBlankPacketListeners = new List<Action<int>>();
+        private readonly List<Action<RtSession>> _startSessionListeners = new List<Action<RtSession>>();
+        
+        [Serializable]
+        public class Settings
+        {
+            public GameObject LogContainer;
+            public GameObject LogEntryPrefab;
+        }
     }
 }
