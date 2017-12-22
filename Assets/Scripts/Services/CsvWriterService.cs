@@ -35,12 +35,12 @@ namespace Services
             s += l.PacketDetail.OpCode + ",";
             s += l.PacketDetail.Sender + ",";
             s += l.PacketDetail.StreamLength + ",";
-            if (l.LatencyDetail == null) return s + "\r";
+            if (l.LatencyDetail == null) return s + ",,,," + l.CreatedAt + "\r";
             s += l.LatencyDetail.Lag + ",";
             s += l.LatencyDetail.RoundTrip + ",";
             s += l.LatencyDetail.PingTime + ",";
             s += l.LatencyDetail.PongTime + ",";
-            return s + l.LatencyDetail.CreatedAt + "\r";
+            return s + l.CreatedAt + "\r";
         }
 
         private string _filepath;

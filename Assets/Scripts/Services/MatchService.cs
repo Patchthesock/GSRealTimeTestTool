@@ -40,6 +40,7 @@ namespace Services
             if (state) return;
             _matchGui.SkillIpt.text = "";
             _matchGui.MatchNameIpt.text = "";
+            _matchGui.MatchDetails.text = "";
         }
         
         private void OnFindMatchReceived(int skill, string shortCode)

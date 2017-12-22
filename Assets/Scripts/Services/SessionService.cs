@@ -73,7 +73,6 @@ namespace Services
         {
             var s = "Ping Time: " + l.PingTime + "\n";
             s += "Pong Time: " + l.PongTime + "\n";
-            s += "Current Time: " + l.CreatedAt + "\n";
             s += "Latency: " + l.Lag + "\n";
             s += "Round Trip Time: " + l.RoundTrip + "\n\n";
             return s;

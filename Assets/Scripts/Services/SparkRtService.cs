@@ -5,7 +5,6 @@ using GameSparks.Api.Responses;
 using GameSparks.Core;
 using GameSparks.RT;
 using Models;
-using UnityEngine;
 
 namespace Services
 {
@@ -34,6 +33,10 @@ namespace Services
         public void SendBlankPacket(int opCode)
         {
             SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty());
+            OnLogEntryReceived(new LogEntry(
+                "Sending Blank Packet", null,
+                LogEntry.Directions.Outbound,
+                new PacketDetails(opCode, 0, 0, 0)));
         }
         
         /**
@@ -44,6 +47,10 @@ namespace Services
             SendPacket(
                 (int) OpCode.TimestampPing,
                 _settings.Protocol, PacketDataFactory.GetTimestampPing(GetNextRequestId()));
+            OnLogEntryReceived(new LogEntry(
+                "Sending Ping Packet", null,
+                LogEntry.Directions.Outbound,
+                new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
         }
         
         /**
@@ -84,19 +91,28 @@ namespace Services
                 .AddString("host", s.HostUrl)              // a Real Time Session from
                 .AddString("accessToken", s.AcccessToken)),
 
-                (peerId) => // OnPlayerConnected Callback
+                peerId => // OnPlayerConnected Callback
                 {
-                    Debug.Log("Player " + peerId + " Connected");
+                    OnLogEntryReceived(new LogEntry(
+                        "Player " + peerId + " Connected", null,
+                        LogEntry.Directions.Inbound,
+                        new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
                 },
-                (peerId) => // OnPlayerDisconnected Callback
+                
+                peerId => // OnPlayerDisconnected Callback
                 {
-                    Debug.Log("Player " + peerId + " Disconnected");
+                    OnLogEntryReceived(new LogEntry(
+                        "Player " + peerId + " Disconnected", null,
+                        LogEntry.Directions.Inbound,
+                        new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
                 },
-                (state) => // OnRtReady Callback
+                
+                state => // OnRtReady Callback
                 {
                     foreach (var l in _onRtReady) l(state);
                 },
-                (packet) => // OnPacketReceived Callback
+                
+                packet => // OnPacketReceived Callback
                 {
                     switch (packet.OpCode)
                     {
@@ -111,6 +127,7 @@ namespace Services
                             break;
                     }
                 });
+            
             _gameSparksRtUnity.Connect(); // Connect
         }
         

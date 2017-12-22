@@ -1,4 +1,3 @@
-/[Ll]og/*
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -22,6 +21,8 @@ ExportedObj/
 *.booproj
 *.svd
 *.DS_Store
+.csv
+.csv.meta
 
 # Rider IDE
 .idea

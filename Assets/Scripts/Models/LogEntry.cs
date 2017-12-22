@@ -4,8 +4,8 @@ namespace Models
 {
     public class LogEntry
     {
-        public readonly DateTime Time;
         public readonly string Message;
+        public readonly DateTime CreatedAt;
         public readonly Directions Direction;
         public readonly Latency LatencyDetail;
         public readonly PacketDetails PacketDetail;
@@ -17,9 +17,9 @@ namespace Models
             PacketDetails packetDetail)
         {
             Message = message;
-            Time = DateTime.Now;
             Direction = direction;
             LatencyDetail = latency;
+            CreatedAt = DateTime.Now;
             PacketDetail = packetDetail;
         }
 

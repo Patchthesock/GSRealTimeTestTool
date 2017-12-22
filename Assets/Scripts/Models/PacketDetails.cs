@@ -11,11 +11,19 @@ namespace Models
         public readonly int StreamLength;
         
         public PacketDetails(RTPacket p)
-        {
+        {            
             OpCode = p.OpCode;
             Sender = p.Sender;
             Size = p.PacketSize;
             StreamLength = p.StreamLength;
+        }
+
+        public PacketDetails(int opCode, int sender, int size, int streamLength)
+        {
+            Size = size;
+            OpCode = opCode;
+            Sender = sender;
+            StreamLength = streamLength;
         }
     }
 }

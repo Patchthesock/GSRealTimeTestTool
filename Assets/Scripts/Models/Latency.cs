@@ -8,11 +8,9 @@ namespace Models
         public readonly double RoundTrip;
         public readonly DateTime PingTime;
         public readonly DateTime PongTime;
-        public readonly DateTime CreatedAt;
         
         public Latency(long pingTime, long pongTime)
         {
-            CreatedAt = DateTime.UtcNow;
             PingTime = new DateTime(pingTime);
             PongTime = new DateTime(pongTime);
             Lag = TimeSpan.FromTicks(pongTime - pingTime).TotalSeconds;
