@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Factory;
 using GameSparks.Api.Responses;
 using GameSparks.Core;
 using GameSparks.RT;
@@ -10,9 +11,59 @@ namespace Services
 {
     public class SparkRtService
     {
-        public SparkRtService(GameSparksRTUnity gameSparksRtUnity)
+        public SparkRtService(
+            Settings settings,
+            GameSparksRTUnity gameSparksRtUnity)
         {
+            _settings = settings;
             _gameSparksRtUnity = gameSparksRtUnity;
+        }
+        
+        /**
+         * <summary>Leave the Real Time Session</summary>
+         **/
+        public void LeaveSession()
+        {
+            _gameSparksRtUnity.Disconnect();
+        }
+        
+        /**
+         * <summary>Send Blank Packet</summary>
+         * <param name="opCode">OpCode to send the blank packet with</param>
+         **/
+        public void SendBlankPacket(int opCode)
+        {
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty());
+        }
+        
+        /**
+         * <summary>Send Timestamp Ping Packet</summary>
+         **/
+        public void SendTimestampPingPacket()
+        {
+            SendPacket(
+                (int) OpCode.TimestampPing,
+                _settings.Protocol, PacketDataFactory.GetTimestampPing(GetNextRequestId()));
+        }
+        
+        /**
+         * <summary>Subscribe to on Real Time Session ready</summary>
+         * <param name="onRtReady">Delegate Action with a bool state param</param>
+         **/
+        public void SubscribeToOnRtReady(Action<bool> onRtReady)
+        {
+            if (_onRtReady.Contains(onRtReady)) return;
+            _onRtReady.Add(onRtReady);
+        }
+        
+        /**
+         * <summary>Subscribe To On LogEntry Received</summary>
+         * <param name="onTimestampPingReceived">Delegate Action with LogEntry param</param>
+         **/
+        public void SubscribeToOnLogEntryReceived(Action<LogEntry> onLogEntryReceived)
+        {
+            if (_onLogEntryReceivedListeners.Contains(onLogEntryReceived)) return;
+            _onLogEntryReceivedListeners.Add(onLogEntryReceived);
         }
         
         /**
@@ -36,12 +87,10 @@ namespace Services
                 (peerId) => // OnPlayerConnected Callback
                 {
                     Debug.Log("Player " + peerId + " Connected");
-                    foreach (var l in _onPlayerConnectedListeners) l(peerId);
                 },
                 (peerId) => // OnPlayerDisconnected Callback
                 {
                     Debug.Log("Player " + peerId + " Disconnected");
-                    foreach (var l in _onPlayerDisconnectedListeners) l(peerId);
                 },
                 (state) => // OnRtReady Callback
                 {
@@ -49,74 +98,97 @@ namespace Services
                 },
                 (packet) => // OnPacketReceived Callback
                 {
-                    foreach (var l in _onPacketReceivedListeners) l(packet);
+                    switch (packet.OpCode)
+                    {
+                        case (int)OpCode.TimestampPing:
+                            OnReceivedTimestampPingPacket(packet);
+                            break;
+                        case (int)OpCode.TimestampPong:
+                            OnReceivedTimestampPongPacket(packet);
+                            break;
+                        default:
+                            OnReceivedBlankPacket(packet);
+                            break;
+                    }
                 });
             _gameSparksRtUnity.Connect(); // Connect
         }
-
-        /**
-         * <summary>Send Packet will send a packet to the Real Time Session</summary>
-         * <param name="opCode">The OpCode of the packet being sent</param>
-         * <param name="intent">The Protocol of the packet (TCP/UDP) being sent</param>
-         * <param name="data">The RTData of the packet being sent</param>
-         **/
-        public void SendPacket(int opCode, GameSparksRT.DeliveryIntent intent, RTData data)
+        
+        private enum OpCode
+        {
+            TimestampPing = 998,
+            TimestampPong = 999
+        }
+        
+        private void SendPacket(int opCode, GameSparksRT.DeliveryIntent intent, RTData data)
         {
             _gameSparksRtUnity.SendData(opCode, intent, data);
         }
-
-        /**
-         * <summary>Leave the Real Time Session</summary>
-         **/
-        public void LeaveSession()
+        
+        private int GetNextRequestId()
         {
-            _gameSparksRtUnity.Disconnect();
-        }
-
-        /**
-         * <summary>Subscribe to on Real Time Session ready</summary>
-         * <param name="onRtReady">Delegate Action with a bool state param</param>
-         **/
-        public void SubscribeToOnRtReady(Action<bool> onRtReady)
-        {
-            if (_onRtReady.Contains(onRtReady)) return;
-            _onRtReady.Add(onRtReady);
-        }
-
-        /**
-         * <summary>Subscribe to on Packet Received</summary>
-         * <param name="onPacketReceived">Delegate Action with an RTPacket param</param>
-         **/
-        public void SubscribeToOnPacketReceived(Action<RTPacket> onPacketReceived)
-        {
-            if (_onPacketReceivedListeners.Contains(onPacketReceived)) return;
-            _onPacketReceivedListeners.Add(onPacketReceived);
+            _requestIdCounter++;
+            if (_requestIdCounter >= int.MaxValue - 1) _requestIdCounter = 0;
+            return _requestIdCounter;
         }
         
-        /**
-         * <summary>Subscribe to on Player Connected</summary>
-         * <param name="onPlayerConnected">Delegate Action with an int player peerId param</param>
-         **/
-        public void SubscribeToOnPlayerConnected(Action<int> onPlayerConnected)
+        private void SendTimestampPongpacket(int pingRequestId, long pingTime)
         {
-            if (_onPlayerConnectedListeners.Contains(onPlayerConnected)) return;
-            _onPlayerConnectedListeners.Add(onPlayerConnected);
+            SendPacket(
+                (int) OpCode.TimestampPong,
+                _settings.Protocol, PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
+        }
+        
+        private void OnReceivedBlankPacket(RTPacket packet)
+        {
+            OnLogEntryReceived(LogEntryFactory.Create(
+                "Blank Packet Received",
+                new PacketDetails(packet),
+                LogEntry.Directions.Inbound));
+        }
+        
+        private void OnReceivedTimestampPingPacket(RTPacket packet)
+        {
+            var r = packet.Data.GetInt(1);
+            var p = packet.Data.GetLong(2);
+            if (r == null) return;
+            if (p == null) return;
+            
+            SendTimestampPongpacket((int) r, (long) p);
+            OnLogEntryReceived(LogEntryFactory.Create(
+                "Ping Timestamp Received",
+                new PacketDetails(packet),
+                LogEntry.Directions.Inbound));
+        }
+        
+        private void OnReceivedTimestampPongPacket(RTPacket packet)
+        {
+            var l = packet.Data.GetLong(2);
+            var j = packet.Data.GetLong(3);
+            if (l == null || j == null) return;
+            
+            OnLogEntryReceived(LogEntryFactory.Create(
+                "Pong Timestamp Received",
+                new PacketDetails(packet),
+                new Latency((long) l, (long) j),
+                LogEntry.Directions.Inbound));
+        }
+        
+        private void OnLogEntryReceived(LogEntry e)
+        {
+            foreach (var l in _onLogEntryReceivedListeners) l(e);
         }
 
-        /**
-         * <summary>Subscribe to on Player Disconnected</summary>
-         * <param name="onPlayerDisconnected">Delegate Aciton with an int player peerId param</param>
-         **/
-        public void SubscribeToOnPlayerDisconnected(Action<int> onPlayerDisconnected)
-        {
-            if (_onPlayerDisconnectedListeners.Contains(onPlayerDisconnected)) return;
-            _onPlayerDisconnectedListeners.Add(onPlayerDisconnected);
-        }
-
+        private int _requestIdCounter;
+        private readonly Settings _settings;
         private readonly GameSparksRTUnity _gameSparksRtUnity;
         private readonly List<Action<bool>> _onRtReady = new List<Action<bool>>();
-        private readonly List<Action<int>> _onPlayerConnectedListeners = new List<Action<int>>();
-        private readonly List<Action<int>> _onPlayerDisconnectedListeners = new List<Action<int>>();
-        private readonly List<Action<RTPacket>> _onPacketReceivedListeners = new List<Action<RTPacket>>();
+        private readonly List<Action<LogEntry>> _onLogEntryReceivedListeners = new List<Action<LogEntry>>();
+        
+        [Serializable]
+        public class Settings
+        {
+            public GameSparksRT.DeliveryIntent Protocol;
+        }
     }
 }

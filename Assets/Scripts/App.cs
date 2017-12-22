@@ -18,11 +18,9 @@ public class App : IInitializable
     
     public App(
         GuiController guiController,
-        PacketService packetService,
         SparkRtService sparkRtService)
     {
         _guiController = guiController;
-        _packetService = packetService;
         _sparkRtService = sparkRtService;
     }
 
@@ -31,22 +29,16 @@ public class App : IInitializable
      **/
     public void Initialize()
     {
-        //_sparkRtService.SubscribeToOnPlayerConnected();
-        //_sparkRtService.SubscribeToOnPlayerDisconnected();
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
-        _sparkRtService.SubscribeToOnPacketReceived(_packetService.OnPacketReceived);
-        
         _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
-        _guiController.SubscribeToOnSendBlankPacket(_packetService.SendBlankPacket);
+        _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
         _guiController.SubscribeToOnStartSession(r => { _sparkRtService.ConnectSession(r); });
-        _guiController.SubscribeToOnSendTimestampPacket(_packetService.SendTimestampPingPacket);
-        
-        _packetService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
+        _guiController.SubscribeToOnSendTimestampPacket(_sparkRtService.SendTimestampPingPacket);
+        _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
         
         _guiController.Initialize();
     }
 
     private readonly GuiController _guiController;
-    private readonly PacketService _packetService;
     private readonly SparkRtService _sparkRtService;
 }

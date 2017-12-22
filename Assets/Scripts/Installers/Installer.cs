@@ -13,16 +13,19 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            InstallServices(Container, GameSettings.GameSparksRtUnity);
+            InstallServices(Container, GameSettings.GameSparksRtUnity, GameSettings.RtServiceSettings);
             InstallGui(Container, GameSettings.GuiSettings);
-            InstallPacketController(Container, GameSettings.PacketServiceSettings);
             InstallApp(Container);
         }
 
-        private static void InstallServices(DiContainer container, GameSparksRTUnity gs)
+        private static void InstallServices(
+            DiContainer container,
+            GameSparksRTUnity gs,
+            SparkRtService.Settings s)
         {
             container.Bind<PrefabBuilder>().AsSingle();
             container.Bind<SparkRtService>().AsSingle();
+            container.Bind<SparkRtService.Settings>().FromInstance(s).AsSingle();
             container.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
         }
 
@@ -33,12 +36,6 @@ namespace Installers
             container.Bind<SessionGui>().FromInstance(gui.SessionGui).AsSingle();
             container.Bind<ConnectionGui>().FromInstance(gui.ConnectionGui).AsSingle();
             container.Bind<GuiController>().AsSingle();
-        }
-
-        private static void InstallPacketController(DiContainer container, PacketService.Settings settings)
-        {
-            container.Bind<PacketService.Settings>().FromInstance(settings).AsSingle();
-            container.Bind<PacketService>().AsSingle();
         }
 
         private static void InstallApp(DiContainer container)
@@ -52,7 +49,7 @@ namespace Installers
         {
             public Gui GuiSettings;
             public GameSparksRTUnity GameSparksRtUnity;
-            public PacketService.Settings PacketServiceSettings;
+            public SparkRtService.Settings RtServiceSettings;
 
             [Serializable]
             public class Gui
