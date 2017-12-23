@@ -10,22 +10,22 @@ namespace Factory
                 LogEntry.Directions.Outbound, new PacketDetails(0, 0, 0, 0));
         }
         
-        public static LogEntry CreatePingSentEntryLog(int opCode)
+        public static LogEntry CreatePingSentEntryLog(int requestId, int opCode)
         {
             return new LogEntry("Sending Ping Packet", null,
-                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, 0));
+                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, requestId));
         }
 
-        public static LogEntry CreatePongSentEntryLog(int opCode)
+        public static LogEntry CreatePongSentEntryLog(int requestId, int opCode)
         {
             return new LogEntry("Sending Pong Packet", null, LogEntry.Directions.Outbound,
-                new PacketDetails(opCode, 0, 0, 0));
+                new PacketDetails(opCode, 0, 0, requestId));
         }
 
-        public static LogEntry CreateBlankPacketLogEntry(int opCode)
+        public static LogEntry CreateBlankSentLogEntry(int requestId, int opCode)
         {
             return new LogEntry("Sending Blank Packet", null,
-                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, 0));
+                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, requestId));
         }
 
         public static LogEntry CreatePeerConnectedLogEntry(int peerId)
@@ -46,7 +46,7 @@ namespace Factory
                 LogEntry.Directions.Inbound, new PacketDetails(0, 0, 0, 0));
         }
 
-        public static LogEntry CreateBlankPacketReceviedLogEntry(PacketDetails p)
+        public static LogEntry CreateBlankReceviedLogEntry(PacketDetails p)
         {
             return new LogEntry("Blank Packet Received",
                 new Latency(0, 0), LogEntry.Directions.Inbound, p);

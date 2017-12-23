@@ -12,6 +12,7 @@ namespace Services
     {
         public SparkRtService(Settings settings, GameSparksRTUnity gameSparksRtUnity)
         {
+            _rtConnected = false;
             _settings = settings;
             _gameSparksRtUnity = gameSparksRtUnity;
         }
@@ -21,6 +22,8 @@ namespace Services
          **/
         public void LeaveSession()
         {
+            if (!_rtConnected) return;
+            _rtConnected = false;
             _gameSparksRtUnity.Disconnect();
             OnLogEntry(LogEntryFactory.CreateLeaveSessionLogEntry());
         }
@@ -31,8 +34,10 @@ namespace Services
          **/
         public void SendBlankPacket(int opCode)
         {
-            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(GetNextRequestId()));
-            OnLogEntry(LogEntryFactory.CreateBlankPacketLogEntry(opCode));
+            if (!_rtConnected) return;
+            var r = GetNextRequestId();
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(r));
+            OnLogEntry(LogEntryFactory.CreateBlankSentLogEntry(r, opCode));
         }
         
         /**
@@ -40,8 +45,10 @@ namespace Services
          **/
         public void SendPing()
         {
-            SendPacket((int) OpCode.Ping, _settings.Protocol, PacketDataFactory.GetTimestampPing(GetNextRequestId()));
-            OnLogEntry(LogEntryFactory.CreatePingSentEntryLog((int) OpCode.Ping));
+            if (!_rtConnected) return;
+            var r = GetNextRequestId();
+            SendPacket((int) OpCode.Ping, _settings.Protocol, PacketDataFactory.GetTimestampPing(r));
+            OnLogEntry(LogEntryFactory.CreatePingSentEntryLog(r, (int) OpCode.Ping));
         }
         
         /**
@@ -103,6 +110,7 @@ namespace Services
                 });
             
             _gameSparksRtUnity.Connect(); // Connect
+            _rtConnected = true;
         }
         
         private enum OpCode
@@ -128,7 +136,7 @@ namespace Services
             SendPacket((int) OpCode.Pong, _settings.Protocol,
                 PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
             
-            OnLogEntry(LogEntryFactory.CreatePongSentEntryLog((int) OpCode.Pong));
+            OnLogEntry(LogEntryFactory.CreatePongSentEntryLog(pingRequestId, (int) OpCode.Pong));
         }
         
         private void OnBlankPacketReceived(RTPacket p)
@@ -136,7 +144,7 @@ namespace Services
             if (p.Data == null) return;
             var r = p.Data.GetInt(1);
             if (r == null) return;
-            OnLogEntry(LogEntryFactory.CreateBlankPacketReceviedLogEntry(new PacketDetails((int) r, p)));
+            OnLogEntry(LogEntryFactory.CreateBlankReceviedLogEntry(new PacketDetails((int) r, p)));
         }
         
         private void OnPingReceived(RTPacket p)
@@ -164,6 +172,7 @@ namespace Services
             foreach (var l in _onLogEntryReceivedListeners) l(e);
         }
 
+        private bool _rtConnected;
         private int _requestIdCounter;
         private readonly Settings _settings;
         private readonly GameSparksRTUnity _gameSparksRtUnity;

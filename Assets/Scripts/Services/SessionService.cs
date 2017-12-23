@@ -49,7 +49,7 @@ namespace Services
 
         private static string GetEntryTitle(LogEntry l)
         {
-            return l.Message + " " + l.Direction;
+            return l.Message + " :: " + l.Direction;
         }
 
         private static string GetInspectionText(LogEntry l)
@@ -71,9 +71,7 @@ namespace Services
 
         private static string GetLatencyDetails(Latency l)
         {
-            var s = "Ping: " + l.PingTime + "\n";
-            s += "Pong: " + l.PongTime + "\n";
-            s += "Speed: " + l.Speed + " kbits per second\n";
+            var s = "Speed: " + l.Speed + " kbit/s\n";
             s += "Latency: " + l.Lag + "\n";
             s += "Round Trip Time: " + l.RoundTrip + "\n\n";
             return s;

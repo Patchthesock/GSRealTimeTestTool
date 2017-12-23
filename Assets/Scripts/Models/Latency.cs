@@ -27,7 +27,7 @@ namespace Models
                 
                 // Convert 1400 bytes (Packet Limit / Window Size) to bits 1400 * 8 = 14400 bits
                 // Maximum network throughput equals the window size divided by the round trip time
-                // Divide by 1000 to convert to kilobits per second, round to two decimal places.
+                // Divide by 1000 to convert to kbits, round to two decimal places.
                 Speed = Math.Round(14400 / RoundTrip / 1000, 2);
             }
         }

@@ -20,7 +20,7 @@ namespace Services
         {
             Debug.Log("Creating: " + _path + _filename);
             WriteLine("Message,Direction,Size,OpCode,Sender,Request ID,"
-                + "Lag,Round Trip Time,kbits per Second,Ping,Pong,Created At\r");
+                + "Lag,Round Trip Time,kbit/s,Ping,Pong,Created At\r");
         }
 
         /**
