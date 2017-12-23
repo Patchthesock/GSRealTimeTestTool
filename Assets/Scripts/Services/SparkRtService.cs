@@ -10,9 +10,7 @@ namespace Services
 {
     public class SparkRtService
     {
-        public SparkRtService(
-            Settings settings,
-            GameSparksRTUnity gameSparksRtUnity)
+        public SparkRtService(Settings settings, GameSparksRTUnity gameSparksRtUnity)
         {
             _settings = settings;
             _gameSparksRtUnity = gameSparksRtUnity;
@@ -24,10 +22,7 @@ namespace Services
         public void LeaveSession()
         {
             _gameSparksRtUnity.Disconnect();
-            OnLogEntryReceived(new LogEntry(
-                "Disconnected From Session", null,
-                LogEntry.Directions.Outbound,
-                new PacketDetails(0, 0, 0, 0)));
+            OnLogEntry(LogEntryFactory.CreateLeaveSessionLogEntry());
         }
         
         /**
@@ -37,10 +32,7 @@ namespace Services
         public void SendBlankPacket(int opCode)
         {
             SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty());
-            OnLogEntryReceived(new LogEntry(
-                "Sending Blank Packet", null,
-                LogEntry.Directions.Outbound,
-                new PacketDetails(opCode, 0, 0, 0)));
+            OnLogEntry(LogEntryFactory.CreateBlankPacketLogEntry(opCode));
         }
         
         /**
@@ -48,13 +40,13 @@ namespace Services
          **/
         public void SendTimestampPingPacket()
         {
-            SendPacket(
-                (int) OpCode.TimestampPing,
-                _settings.Protocol, PacketDataFactory.GetTimestampPing(GetNextRequestId()));
-            OnLogEntryReceived(new LogEntry(
-                "Sending Ping Packet", null,
-                LogEntry.Directions.Outbound,
+            SendPacket((int) OpCode.TimestampPing, _settings.Protocol,
+                PacketDataFactory.GetTimestampPing(GetNextRequestId()));
+            
+            OnLogEntry(new LogEntry("Sending Ping Packet", null, LogEntry.Directions.Outbound,
                 new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
+            
+            // TODO: Maybe queue each sent
         }
         
         /**
@@ -82,41 +74,20 @@ namespace Services
          * <param name="s">RtSession details of the Real Time session to connect to</param>
          **/
         public void ConnectSession(RtSession s)
-        {
-            /**
-             * In order to create a new RtSession we need a 'FindMatchResponse'
-             * In our case, we wanted to capture these details and have them passed in
-             * this offers us greater flexibility.
-            **/
-            
+        {   
             _gameSparksRtUnity.Configure(
-                new FindMatchResponse(new GSRequestData()  // Construct a FindMatchResponse 
-                .AddNumber("port", (double)s.PortId)       // that we can then us to configure
-                .AddString("host", s.HostUrl)              // a Real Time Session from
-                .AddString("accessToken", s.AcccessToken)),
+                new FindMatchResponse(new GSRequestData()   // In order to create a new RtSession 
+                .AddNumber("port", (double)s.PortId)        // we need a 'FindMatchResponse' that 
+                .AddString("host", s.HostUrl)               // we can then us to configure a Real 
+                .AddString("accessToken", s.AcccessToken)), // Time Session from
 
-                peerId => // OnPlayerConnected Callback
-                {
-                    OnLogEntryReceived(new LogEntry(
-                        "Player " + peerId + " Connected", null,
-                        LogEntry.Directions.Inbound,
-                        new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
-                },
-                
-                peerId => // OnPlayerDisconnected Callback
-                {
-                    OnLogEntryReceived(new LogEntry(
-                        "Player " + peerId + " Disconnected", null,
-                        LogEntry.Directions.Inbound,
-                        new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
-                },
+                // OnPlayerConnected / Disconnected Callbacks
+                peerId => { OnLogEntry(LogEntryFactory.CreatePeerConnectedLogEntry(peerId)); },
+                peerId => { OnLogEntry(LogEntryFactory.CreatePeerDisconnectedLogEntry(peerId)); },
                 
                 state => // OnRtReady Callback
                 {
-                    OnLogEntryReceived(new LogEntry(
-                        "Real Time Ready: " + state, null,
-                        LogEntry.Directions.Inbound,
-                        new PacketDetails(0, 0, 0, 0)));
+                    OnLogEntry(LogEntryFactory.CreateRealTimeSessionStateLogEntry(state));
                     foreach (var l in _onRtReady) l(state);
                 },
                 
@@ -162,18 +133,14 @@ namespace Services
             SendPacket(
                 (int) OpCode.TimestampPong,
                 _settings.Protocol, PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
-            OnLogEntryReceived(new LogEntry(
-                "Sending Pong Packet", null,
-                LogEntry.Directions.Outbound,
+            OnLogEntry(new LogEntry("Sending Pong Packet", null, LogEntry.Directions.Outbound,
                 new PacketDetails((int) OpCode.TimestampPong, 0, 0, 0)));
         }
         
         private void OnReceivedBlankPacket(RTPacket packet)
         {
-            OnLogEntryReceived(LogEntryFactory.Create(
-                "Blank Packet Received",
-                new PacketDetails(packet),
-                LogEntry.Directions.Inbound));
+            OnLogEntry(LogEntryFactory.Create("Blank Packet Received",
+                new PacketDetails(packet), LogEntry.Directions.Inbound));
         }
         
         private void OnReceivedTimestampPingPacket(RTPacket packet)
@@ -183,10 +150,8 @@ namespace Services
             if (r == null) return;
             if (p == null) return;
             
-            OnLogEntryReceived(LogEntryFactory.Create(
-                "Ping Packet Received",
-                new PacketDetails(packet),
-                LogEntry.Directions.Inbound));
+            OnLogEntry(LogEntryFactory.Create("Ping Packet Received",
+                new PacketDetails(packet), LogEntry.Directions.Inbound));
             SendTimestampPongpacket((int) r, (long) p);
         }
         
@@ -196,14 +161,11 @@ namespace Services
             var j = packet.Data.GetLong(3);
             if (l == null || j == null) return;
             
-            OnLogEntryReceived(LogEntryFactory.Create(
-                "Pong Packet Received",
-                new PacketDetails(packet),
-                new Latency((long) l, (long) j),
-                LogEntry.Directions.Inbound));
+            OnLogEntry(LogEntryFactory.Create("Pong Packet Received", new PacketDetails(packet),
+                new Latency((long) l, (long) j), LogEntry.Directions.Inbound));
         }
         
-        private void OnLogEntryReceived(LogEntry e)
+        private void OnLogEntry(LogEntry e)
         {
             foreach (var l in _onLogEntryReceivedListeners) l(e);
         }
