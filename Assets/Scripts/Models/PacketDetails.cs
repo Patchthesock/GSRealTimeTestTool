@@ -8,22 +8,22 @@ namespace Models
         public readonly int Size;
         public readonly int OpCode;
         public readonly int Sender;
-        public readonly int StreamLength;
+        public readonly int RequestId;
         
-        public PacketDetails(RTPacket p)
+        public PacketDetails(int requestId, RTPacket p)
         {            
             OpCode = p.OpCode;
             Sender = p.Sender;
             Size = p.PacketSize;
-            StreamLength = p.StreamLength;
+            RequestId = requestId;
         }
 
-        public PacketDetails(int opCode, int sender, int size, int streamLength)
+        public PacketDetails(int opCode, int sender, int size, int requestId)
         {
             Size = size;
             OpCode = opCode;
             Sender = sender;
-            StreamLength = streamLength;
+            RequestId = requestId;
         }
     }
 }

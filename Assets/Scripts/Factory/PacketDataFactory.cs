@@ -1,17 +1,17 @@
 ﻿using System;
 using GameSparks.RT;
 
-namespace Services
+namespace Factory
 {
     public static class PacketDataFactory
     {
         /**
          * <summary>Returns Empty Packet Data<summary>
          **/
-        public static RTData GetEmpty()
+        public static RTData GetEmpty(int requestId)
         {
             var data = new RTData();
-            data.SetInt(1, 1); // Fixes WebGL build, can't send blank data.
+            data.SetInt(1, requestId); // Fixes WebGL build, can't send blank data.
             return data;
         }
         

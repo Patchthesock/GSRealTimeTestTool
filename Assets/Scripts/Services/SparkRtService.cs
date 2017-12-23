@@ -31,22 +31,17 @@ namespace Services
          **/
         public void SendBlankPacket(int opCode)
         {
-            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty());
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(GetNextRequestId()));
             OnLogEntry(LogEntryFactory.CreateBlankPacketLogEntry(opCode));
         }
         
         /**
          * <summary>Send Timestamp Ping Packet</summary>
          **/
-        public void SendTimestampPingPacket()
+        public void SendPing()
         {
-            SendPacket((int) OpCode.TimestampPing, _settings.Protocol,
-                PacketDataFactory.GetTimestampPing(GetNextRequestId()));
-            
-            OnLogEntry(new LogEntry("Sending Ping Packet", null, LogEntry.Directions.Outbound,
-                new PacketDetails((int) OpCode.TimestampPing, 0, 0, 0)));
-            
-            // TODO: Maybe queue each sent
+            SendPacket((int) OpCode.Ping, _settings.Protocol, PacketDataFactory.GetTimestampPing(GetNextRequestId()));
+            OnLogEntry(LogEntryFactory.CreatePingSentEntryLog((int) OpCode.Ping));
         }
         
         /**
@@ -74,11 +69,11 @@ namespace Services
          * <param name="s">RtSession details of the Real Time session to connect to</param>
          **/
         public void ConnectSession(RtSession s)
-        {   
+        {
             _gameSparksRtUnity.Configure(
                 new FindMatchResponse(new GSRequestData()   // In order to create a new RtSession 
-                .AddNumber("port", (double)s.PortId)        // we need a 'FindMatchResponse' that 
-                .AddString("host", s.HostUrl)               // we can then us to configure a Real 
+                .AddString("host", s.HostUrl)               // we need a 'FindMatchResponse' that 
+                .AddNumber("port", (double)s.PortId)        // we can then us to configure a Real 
                 .AddString("accessToken", s.AcccessToken)), // Time Session from
 
                 // OnPlayerConnected / Disconnected Callbacks
@@ -95,14 +90,14 @@ namespace Services
                 {
                     switch (packet.OpCode)
                     {
-                        case (int)OpCode.TimestampPing:
-                            OnReceivedTimestampPingPacket(packet);
+                        case (int) OpCode.Ping:
+                            OnPingReceived(packet);
                             break;
-                        case (int)OpCode.TimestampPong:
-                            OnReceivedTimestampPongPacket(packet);
+                        case (int) OpCode.Pong:
+                            OnPongReceived(packet);
                             break;
                         default:
-                            OnReceivedBlankPacket(packet);
+                            OnBlankPacketReceived(packet);
                             break;
                     }
                 });
@@ -112,8 +107,8 @@ namespace Services
         
         private enum OpCode
         {
-            TimestampPing = 998,
-            TimestampPong = 999
+            Ping = 998,
+            Pong = 999
         }
         
         private void SendPacket(int opCode, GameSparksRT.DeliveryIntent intent, RTData data)
@@ -128,41 +123,40 @@ namespace Services
             return _requestIdCounter;
         }
         
-        private void SendTimestampPongpacket(int pingRequestId, long pingTime)
+        private void SendPongpacket(int pingRequestId, long pingTime)
         {
-            SendPacket(
-                (int) OpCode.TimestampPong,
-                _settings.Protocol, PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
-            OnLogEntry(new LogEntry("Sending Pong Packet", null, LogEntry.Directions.Outbound,
-                new PacketDetails((int) OpCode.TimestampPong, 0, 0, 0)));
+            SendPacket((int) OpCode.Pong, _settings.Protocol,
+                PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
+            
+            OnLogEntry(LogEntryFactory.CreatePongSentEntryLog((int) OpCode.Pong));
         }
         
-        private void OnReceivedBlankPacket(RTPacket packet)
+        private void OnBlankPacketReceived(RTPacket p)
         {
-            OnLogEntry(LogEntryFactory.Create("Blank Packet Received",
-                new PacketDetails(packet), LogEntry.Directions.Inbound));
-        }
-        
-        private void OnReceivedTimestampPingPacket(RTPacket packet)
-        {
-            var r = packet.Data.GetInt(1);
-            var p = packet.Data.GetLong(2);
+            if (p.Data == null) return;
+            var r = p.Data.GetInt(1);
             if (r == null) return;
-            if (p == null) return;
-            
-            OnLogEntry(LogEntryFactory.Create("Ping Packet Received",
-                new PacketDetails(packet), LogEntry.Directions.Inbound));
-            SendTimestampPongpacket((int) r, (long) p);
+            OnLogEntry(LogEntryFactory.CreateBlankPacketReceviedLogEntry(new PacketDetails((int) r, p)));
         }
         
-        private void OnReceivedTimestampPongPacket(RTPacket packet)
+        private void OnPingReceived(RTPacket p)
         {
-            var l = packet.Data.GetLong(2);
-            var j = packet.Data.GetLong(3);
-            if (l == null || j == null) return;
-            
-            OnLogEntry(LogEntryFactory.Create("Pong Packet Received", new PacketDetails(packet),
-                new Latency((long) l, (long) j), LogEntry.Directions.Inbound));
+            if (p.Data == null) return;
+            var r = p.Data.GetInt(1);
+            var t = p.Data.GetLong(2);
+            if (r == null || t == null) return;
+            OnLogEntry(LogEntryFactory.CreatePingReceivedLogEntry(new PacketDetails((int) r, p)));
+            SendPongpacket((int) r, (long) t);
+        }
+        
+        private void OnPongReceived(RTPacket p)
+        {
+            if (p.Data == null) return;
+            var r = p.Data.GetInt(1);
+            var l = p.Data.GetLong(2);
+            var j = p.Data.GetLong(3);
+            if (r == null | l == null || j == null) return;
+            OnLogEntry(LogEntryFactory.CreatePongReceivedLogEntry((long) l, (long) j, new PacketDetails((int) r, p)));
         }
         
         private void OnLogEntry(LogEntry e)

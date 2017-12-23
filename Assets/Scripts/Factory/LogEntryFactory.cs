@@ -4,33 +4,22 @@ namespace Factory
 {
     public static class LogEntryFactory
     {
-        /**
-         * <summary>Create a Log</summary>
-         * <param name="message">Log Message</param>
-         * <param name="packetDetails">Packet Details</param>
-         * <param name="direction">Log Entry Direction</param>
-         **/
-        public static LogEntry Create(string message, PacketDetails packetDetails, LogEntry.Directions direction)
-        {
-            return new LogEntry(message, null, direction, packetDetails);
-        }
-        
-        /**
-         * <summary>Create a Log</summary>
-         * <param name="message">Log Message</param>
-         * <param name="packetDetails">Packet Details</param>
-         * <param name="latency">Latency</param>
-         * <param name="direction">Log Entry Direction</param>
-         **/
-        public static LogEntry Create(string message, PacketDetails packetDetails, Latency latency, LogEntry.Directions direction)
-        {
-            return new LogEntry(message, latency, direction, packetDetails);
-        }
-
         public static LogEntry CreateLeaveSessionLogEntry()
         {
             return new LogEntry("Disconnected From Session", null,
                 LogEntry.Directions.Outbound, new PacketDetails(0, 0, 0, 0));
+        }
+        
+        public static LogEntry CreatePingSentEntryLog(int opCode)
+        {
+            return new LogEntry("Sending Ping Packet", null,
+                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, 0));
+        }
+
+        public static LogEntry CreatePongSentEntryLog(int opCode)
+        {
+            return new LogEntry("Sending Pong Packet", null, LogEntry.Directions.Outbound,
+                new PacketDetails(opCode, 0, 0, 0));
         }
 
         public static LogEntry CreateBlankPacketLogEntry(int opCode)
@@ -55,6 +44,24 @@ namespace Factory
         {
             return new LogEntry("Real Time Ready: " + state, null,
                 LogEntry.Directions.Inbound, new PacketDetails(0, 0, 0, 0));
+        }
+
+        public static LogEntry CreateBlankPacketReceviedLogEntry(PacketDetails p)
+        {
+            return new LogEntry("Blank Packet Received",
+                new Latency(0, 0), LogEntry.Directions.Inbound, p);
+        }
+
+        public static LogEntry CreatePingReceivedLogEntry(PacketDetails packet)
+        {
+            return new LogEntry("Ping Packet Received",
+                new Latency(0, 0), LogEntry.Directions.Inbound, packet);
+        }
+
+        public static LogEntry CreatePongReceivedLogEntry(long pingTime, long pongTime, PacketDetails packet)
+        {
+            return new LogEntry("Pong Packet Received",
+                new Latency(pingTime, pongTime), LogEntry.Directions.Inbound, packet);
         }
     }
 }

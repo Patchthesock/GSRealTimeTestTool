@@ -34,11 +34,13 @@ public class App : IInitializable
     public void Initialize()
     {
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
+        _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
+        
         _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
+        _guiController.SubscribeToOnSendTimestampPacket(_sparkRtService.SendPing);
         _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
         _guiController.SubscribeToOnStartSession(r => { _sparkRtService.ConnectSession(r); });
-        _guiController.SubscribeToOnSendTimestampPacket(_sparkRtService.SendTimestampPingPacket);
-        _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
+        
         if (Application.isEditor && _settings.WriteLogFile) WriteLog();
         _guiController.Initialize();
     }

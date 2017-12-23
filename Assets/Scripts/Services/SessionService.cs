@@ -64,15 +64,16 @@ namespace Services
         {
             var s = "OpCode: " + d.OpCode + "\n";
             s += "Packet Size: " + d.Size + "\n";
-            s += "Sender: Player " + d.Sender + "\n";
-            s += "Stream Length: " + d.StreamLength + "\n\n";
+            s += "Sender: Peer " + d.Sender + "\n";
+            s += "Request ID: " + d.RequestId + "\n\n";
             return s;
         }
 
         private static string GetLatencyDetails(Latency l)
         {
-            var s = "Ping Time: " + l.PingTime + "\n";
-            s += "Pong Time: " + l.PongTime + "\n";
+            var s = "Ping: " + l.PingTime + "\n";
+            s += "Pong: " + l.PongTime + "\n";
+            s += "Speed: " + l.Speed + " kbits per second\n";
             s += "Latency: " + l.Lag + "\n";
             s += "Round Trip Time: " + l.RoundTrip + "\n\n";
             return s;
