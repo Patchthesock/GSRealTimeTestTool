@@ -41,7 +41,10 @@ namespace Services
         }
         
         /**
-         * <summary>Send Timestamp Ping Packet</summary>
+         * <summary>Send Ping</summary>
+         * <remark>This ping is intented to measure the latency and
+         * round trip of the active clients in the real time session.
+         * This is not a reflection of the client / server connection.</remark>
          **/
         public void SendPing()
         {

@@ -7,6 +7,9 @@ namespace Gui
     public class CommandGui : MonoBehaviour
     {
         public InputField OpCode;
+        public InputField Seconds;
+        public InputField PacketsPerSecond;
+        
         public Button LeaveSessionBtn;
         public Button SendTimePacketBtn;
         public Button SendBlankPacketBtn;
@@ -15,13 +18,13 @@ namespace Gui
         public void Initialize(
             Action onLeaveSession,
             Action onSendTimePacket,
-            Action onPacketThroughput,
-            Action<int> onSendBlankPacket)
+            Action<int> onSendBlankPacket,
+            Action<int, int> onStartPingTest)
         {
+            InitStartPingTestBtn(onStartPingTest);
             InitSendBlankPacketBtn(onSendBlankPacket);
             LeaveSessionBtn.onClick.AddListener(() => { onLeaveSession(); });
             SendTimePacketBtn.onClick.AddListener(() => { onSendTimePacket(); });
-            PacketThroughputTestBtn.onClick.AddListener(() => { onPacketThroughput(); });
         }
 
         private void InitSendBlankPacketBtn(Action<int> onSendBlankPacket)
@@ -35,6 +38,27 @@ namespace Gui
                     OpCode.text = "1";
                 }
                 onSendBlankPacket(n);
+            });
+        }
+
+        private void InitStartPingTestBtn(Action<int, int> onStartPingTest)
+        {
+            PacketThroughputTestBtn.onClick.AddListener(() =>
+            {
+                int packetsPerSecond, seconds;
+                if (Seconds.text == string.Empty || !int.TryParse(Seconds.text, out seconds) || seconds <= 0)
+                {
+                    seconds = 1;
+                    Seconds.text = "1";
+                }
+                if (PacketsPerSecond.text == string.Empty || !int.TryParse(PacketsPerSecond.text, out packetsPerSecond)
+                    || packetsPerSecond <= 0)
+                {
+                    packetsPerSecond = 1;
+                    PacketsPerSecond.text = "1";
+                }
+                
+                onStartPingTest(packetsPerSecond, seconds);
             });
         }
     }

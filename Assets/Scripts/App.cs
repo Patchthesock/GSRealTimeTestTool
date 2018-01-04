@@ -10,19 +10,17 @@ public class App : IInitializable
      * Steve Callaghan (stephen.callaghan@gamesparks.com)
      * https://github.com/Patchthesock/GSRealTimeTestTool
      * Created: 2017/09 (September, 2017)
-     *
-     * Features to add
-     * * Rapid packet test
-     * * Throughput Limiter
      **/
     
     public App(
         Settings settings,
+        RtQosService rtQosService,
         GuiController guiController,
         SparkRtService sparkRtService,
         CsvWriterService csvWriterService)
     {
         _settings = settings;
+        _rtQosService = rtQosService;
         _guiController = guiController;
         _sparkRtService = sparkRtService;
         _csvWriterService = csvWriterService;
@@ -34,14 +32,21 @@ public class App : IInitializable
     public void Initialize()
     {
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
+        _sparkRtService.SubscribeToOnLogEntryReceived(_rtQosService.OnLogEntryReceived);
         _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
         
+        _guiController.SubscribeToOnSendPingPacket(_sparkRtService.SendPing);
         _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
-        _guiController.SubscribeToOnSendTimestampPacket(_sparkRtService.SendPing);
+        _guiController.SubscribeToOnStartSession(_sparkRtService.ConnectSession);
         _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
-        _guiController.SubscribeToOnStartSession(r => { _sparkRtService.ConnectSession(r); });
         
-        if (Application.isEditor && _settings.WriteLogFile) WriteLog();
+        _rtQosService.OnSubscribeToPingTestResults(r => { _guiController.OnPingTestResultsReceived(r); });
+        _guiController.SubscribeToOnStartPingTest((p, s) =>
+        {
+            _rtQosService.StartPingTest(p, s, _sparkRtService.SendPing);
+        });
+        
+        if (Application.isEditor && _settings.WriteLog) WriteLog();
         _guiController.Initialize();
     }
 
@@ -52,6 +57,7 @@ public class App : IInitializable
     }
 
     private readonly Settings _settings;
+    private readonly RtQosService _rtQosService;
     private readonly GuiController _guiController;
     private readonly SparkRtService _sparkRtService;
     private readonly CsvWriterService _csvWriterService;
@@ -59,6 +65,6 @@ public class App : IInitializable
     [Serializable]
     public class Settings
     {
-        public bool WriteLogFile = false;
+        public bool WriteLog = false;
     }
 }

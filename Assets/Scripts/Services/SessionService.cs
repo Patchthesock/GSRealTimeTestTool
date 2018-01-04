@@ -16,26 +16,36 @@ namespace Services
         }
 
         public void Initialize(
+            Action onSendPing,
             Action onStopRtSession,
-            Action onSendTimestampPacket,
-            Action<int> onSendBlankPacket)
+            Action<int> onSendBlankPacket,
+            Action<int, int> onStartPingTest)
         {
-           _sessionGui.CommandGui.Initialize(onStopRtSession, onSendTimestampPacket, () => { }, onSendBlankPacket);
+           _sessionGui.CommandGui.Initialize(onStopRtSession, onSendPing, onSendBlankPacket, onStartPingTest);
         }
         
         /**
          * <summary>Set Active</summary>
          * <param name="state">State</param>
-         **/
+         */
         public void SetActive(bool state)
         {   
             _sessionGui.SetActive(state);
         }
 
         /**
+         * <summary>On Ping Test Result Received</summary>
+         * <param name="r">Ping Test Result</param>
+         */
+        public void OnPingTestResultReceived(PingTestResults r)
+        {
+            _sessionGui.SessionDetailsGui.Details.text = GetPingTestResultText(r);
+        }
+        
+        /**
          * <summary>On Log Entry Received</summary>
          * <param name="l">Log Entry</param>
-         **/
+         */
         public void OnLogEntryReceived(LogEntry l)
         {
             var e = _prefabBuilder.Instantiate(_sessionGui.LogGui.LogEntryPrefab);
@@ -74,6 +84,16 @@ namespace Services
             var s = "Speed: " + l.Speed + " kbit/s\n";
             s += "Latency: " + l.Lag + "\n";
             s += "Round Trip Time: " + l.RoundTrip + "\n\n";
+            return s;
+        }
+
+        private static string GetPingTestResultText(PingTestResults r)
+        {
+            var s = "Pings Sent: " + r.PingsSent + "\n";
+            s += "Pongs Received: " + r.PongsReceived + "\n";
+            s += "Average kbits: " + r.AverageKBits + "\n";
+            s += "Average Latency: " + r.AverageLatency + "\n";
+            s += "Average Round Trip Time: " + r.AverageRoundTripTime + "\n";
             return s;
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Gui;
 using Models;
 using Services;
-using UnityEngine;
 
 namespace Controllers
 {
@@ -27,11 +26,11 @@ namespace Controllers
             _connectionService.Initialize();
             _matchService.Initialize(OnStartRtSession);
             _authService.Initialize(
-                OnUserEndSession,
-                (name, userId) => { OnAuthenticationResponseReceived(name, userId, true); },
-                (name, userId) => { OnAuthenticationResponseReceived(name, userId); },
-                (name, userId) => { OnAuthenticationResponseReceived(name, userId); });
-            _sessionService.Initialize(OnStopRtSession, OnSendTimestampPacket, OnSendBlankPacket);
+                OnEndUserSession,
+                (name, userId) => { OnAuthentication(name, userId, true); },   // Registration
+                (name, userId) => { OnAuthentication(name, userId, false); },  // Authentication
+                (name, userId) => { OnAuthentication(name, userId, false); }); // Device Authentication
+            _sessionService.Initialize(OnSendPing, OnStopRtSession, OnSendBlankPacket, OnStartPingTest);
             
             // Initial Screen Order
             _authService.SetActive(true);
@@ -42,13 +41,20 @@ namespace Controllers
         /**
          * <summary>On Log Entry Received</summary>
          * <param name="l">LogEntry</param>
-         **/
+         */
         public void OnLogEntryReceived(LogEntry l)
         {
             _sessionService.OnLogEntryReceived(l);
         }
-        
-        #region GameSpark General Realtime
+
+        /**
+         * <summary>On Ping Test Results Received</summary>
+         * <param name="r">The Ping Test Results</param>
+         */
+        public void OnPingTestResultsReceived(PingTestResults r)
+        {
+            _sessionService.OnPingTestResultReceived(r);
+        }
         
         /**
          * <summary>Set Real Time Gui Active</summary>
@@ -58,7 +64,6 @@ namespace Controllers
         {
             _sessionService.SetActive(true);
         }
-        #endregion
         
         #region Subscriptions
         
@@ -96,24 +101,24 @@ namespace Controllers
          * <summary>Subscribe To On Send Timestamp Packet</summary>
          * <param name="onSendTimestampPacket">Delegate Action</param>
          **/
-        public void SubscribeToOnSendTimestampPacket(Action onSendTimestampPacket)
+        public void SubscribeToOnSendPingPacket(Action onSendPingPacket)
         {
-            if (_sendTimestampPacketListeners.Contains(onSendTimestampPacket)) return;
-            _sendTimestampPacketListeners.Add(onSendTimestampPacket);
+            if (_sendPingPacketListeners.Contains(onSendPingPacket)) return;
+            _sendPingPacketListeners.Add(onSendPingPacket);
         }
 
         /**
          * <summary>Subscribe To On Start Throughput Packet Test</summary>
          * <param name="onThroughputPacketTest>Delegate Action</param>
          **/
-        public void SubscribeToOnStartThroughputPacketTest(Action onThroughputPacketTest)
+        public void SubscribeToOnStartPingTest(Action<int, int> onStartPingTest)
         {
-            if (_throughputPacketTestListeners.Contains(onThroughputPacketTest)) return;
-            _throughputPacketTestListeners.Add(onThroughputPacketTest);
+            if (_onStartPingTestListeners.Contains(onStartPingTest)) return;
+            _onStartPingTestListeners.Add(onStartPingTest);
         }
         #endregion
         
-        private void OnAuthenticationResponseReceived(string name, string userId, bool isReg = false)
+        private void OnAuthentication(string name, string userId, bool isReg)
         {
             _authService.SetActive(false);
             _matchService.SetActive(true);
@@ -121,7 +126,7 @@ namespace Controllers
             else _connectionService.OnAuthentication(name, userId);
         }
         
-        private void OnUserEndSession()
+        private void OnEndUserSession()
         {
             OnStopRtSession();
             _authService.SetActive(true);
@@ -147,9 +152,14 @@ namespace Controllers
             foreach (var l in _sendBlankPacketListeners) l(opCode);
         }
         
-        private void OnSendTimestampPacket()
+        private void OnSendPing()
         {
-            foreach (var l in _sendTimestampPacketListeners) l();
+            foreach (var l in _sendPingPacketListeners) l();
+        }
+
+        private void OnStartPingTest(int packetsPerSecond, int seconds)
+        {
+            foreach (var l in _onStartPingTestListeners) l(packetsPerSecond, seconds);
         }
 
         private readonly AuthService _authService;
@@ -157,16 +167,9 @@ namespace Controllers
         private readonly SessionService _sessionService;
         private readonly ConnectionService _connectionService;
         private readonly List<Action> _stopSessionListeners = new List<Action>();
-        private readonly List<Action> _sendTimestampPacketListeners = new List<Action>();
-        private readonly List<Action> _throughputPacketTestListeners = new List<Action>();
+        private readonly List<Action> _sendPingPacketListeners = new List<Action>();
         private readonly List<Action<int>> _sendBlankPacketListeners = new List<Action<int>>();
         private readonly List<Action<RtSession>> _startSessionListeners = new List<Action<RtSession>>();
-        
-        [Serializable]
-        public class Settings
-        {
-            public GameObject LogContainer;
-            public GameObject LogEntryPrefab;
-        }
+        private readonly List<Action<int, int>> _onStartPingTestListeners = new List<Action<int, int>>();
     }
 }

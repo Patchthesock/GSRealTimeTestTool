@@ -12,16 +12,19 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            InstallServices(Container, GameSettings.GameSparksRtUnity, GameSettings.RtServiceSettings);
+            InstallServices(GameSettings.AsyncProc, Container, GameSettings.GameSparksRtUnity, GameSettings.RtServiceSettings);
             InstallGui(Container, GameSettings.GuiSettings);
             InstallApp(Container, GameSettings.AppSettings);
         }
 
         private static void InstallServices(
+            AsyncProcessor a,
             DiContainer c,
             GameSparksRTUnity gs,
             SparkRtService.Settings s)
         {
+            c.Bind<AsyncProcessor>().FromInstance(a);
+            c.Bind<RtQosService>().AsSingle();
             c.Bind<PrefabBuilder>().AsSingle();
             c.Bind<SparkRtService>().AsSingle();
             c.Bind<CsvWriterService>().AsSingle();
@@ -49,6 +52,7 @@ namespace Installers
         public class Settings
         {
             public Gui GuiSettings;
+            public AsyncProcessor AsyncProc;
             public App.Settings AppSettings;
             public GameSparksRTUnity GameSparksRtUnity;
             public SparkRtService.Settings RtServiceSettings;
