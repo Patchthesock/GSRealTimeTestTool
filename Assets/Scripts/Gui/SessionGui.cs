@@ -16,7 +16,10 @@ namespace Gui
             CommandGui.gameObject.SetActive(state);
             LogEntryInspGui.gameObject.SetActive(state);
             SessionDetailsGui.gameObject.SetActive(state);
-            if (!state) LogEntryInspGui.Inspection.text = "";
+            if (state) return;
+            LogEntryInspGui.Inspection.text = "";
+            for (var i = 0; i < LogGui.LogContainer.childCount; i++)
+                Destroy(LogGui.LogContainer.GetChild(i).gameObject);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Services
             {
                 _activeTest = false;
                 if (_currentTest != null) _asyncProcessor.StopCoroutine(_currentTest);
+                Reset();
                 return; // If Active, Kill current and return
             }
             
@@ -75,11 +76,18 @@ namespace Services
                 GetAverageKBits(_pongs),
                 GetAverageLatency(_pongs),
                 GetAverageRoundTripTime(_pongs)));
+            Reset();
         }
 
         private void WriteOutResults(PingTestResults r)
         {
             foreach (var l in _pingTestResultsListeners) l(r);
+        }
+
+        private void Reset()
+        {
+            _pings.Clear();
+            _pongs.Clear();
         }
 
         private static double GetAverageKBits(IEnumerable<LogEntry> entries)
