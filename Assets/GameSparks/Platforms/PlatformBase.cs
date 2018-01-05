@@ -262,7 +262,15 @@ namespace GameSparks.Platforms
 				for (var index = 0; index < count; ++index) {
 					var a = _currentActions [index];
 					if (a != null) {
-						a ();
+						try {
+							a ();
+						} catch (Exception e) {
+							if (ExceptionReporter != null) {
+								ExceptionReporter (e);
+							} else {
+								Debug.Log (e);
+							}
+						}
 					}
 				}
 
