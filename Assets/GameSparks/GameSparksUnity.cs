@@ -34,7 +34,7 @@ public class GameSparksUnity : MonoBehaviour
 #endif
     {
 
-#if ((UNITY_SWITCH || UNITY_XBOXONE || (WINDOWS_UWP && ENABLE_IL2CPP)) && !UNITY_EDITOR) || GS_FORCE_NATIVE_PLATFORM
+#if ((UNITY_SWITCH || UNITY_XBOXONE) && !UNITY_EDITOR) || GS_FORCE_NATIVE_PLATFORM
         this.gameObject.AddComponent<NativePlatform>();
 #elif UNITY_WEBGL && !UNITY_EDITOR
 		this.gameObject.AddComponent<WebGLPlatform>();

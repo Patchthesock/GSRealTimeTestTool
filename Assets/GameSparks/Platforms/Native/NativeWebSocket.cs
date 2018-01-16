@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace GameSparks.Platforms.Native
 {
-#if ((UNITY_SWITCH || UNITY_XBOXONE || (WINDOWS_UWP && ENABLE_IL2CPP)) && !UNITY_EDITOR) || GS_FORCE_NATIVE_PLATFORM
+#if ((UNITY_SWITCH || UNITY_XBOXONE) && !UNITY_EDITOR) || GS_FORCE_NATIVE_PLATFORM
     ///  <summary>
     /// iOS specific websocket. This is a wrapper for the native objective-c Websocket.
     /// </summary>

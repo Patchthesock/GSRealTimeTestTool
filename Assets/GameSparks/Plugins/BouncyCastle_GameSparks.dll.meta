@@ -46,7 +46,14 @@ PluginImporter:
     PS4:
       enabled: 1
       settings: {}
+    SamsungTV:
+      enabled: 0
+      settings:
+        STV_MODEL: STANDARD_13
     Switch:
+      enabled: 1
+      settings: {}
+    Tizen:
       enabled: 1
       settings: {}
     WebGL:
@@ -61,7 +68,7 @@ PluginImporter:
       settings:
         CPU: AnyCPU
     WindowsStoreApps:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
         DontProcess: False
@@ -75,9 +82,6 @@ PluginImporter:
       enabled: 1
       settings: {}
     tvOS:
-      enabled: 1
-      settings: {}
-    Tizen:
       enabled: 1
       settings: {}
   userData: 

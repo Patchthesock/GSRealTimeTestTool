@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Models;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace Services
                 _activeTest = false;
                 if (_currentTest != null) _asyncProcessor.StopCoroutine(_currentTest);
                 Reset();
-                return; // If Active, Kill current and return
+                return; // If Active, Kill, Reset & Return
             }
             
             if (seconds <= 0 || packetsPerSecond <= 0) return;
@@ -76,6 +77,7 @@ namespace Services
                 GetAverageKBits(_pongs),
                 GetAverageLatency(_pongs),
                 GetAverageRoundTripTime(_pongs)));
+            
             Reset();
         }
 
@@ -89,47 +91,31 @@ namespace Services
             _pings.Clear();
             _pongs.Clear();
         }
-
-        private static double GetAverageKBits(IEnumerable<LogEntry> entries)
+        
+        private static double GetAverage(IList<double> e)
         {
-            var sum = 0.0;
-            var count = 0;
-            foreach (var e in entries)
-                if (e.LatencyDetail != null && Math.Abs(e.LatencyDetail.Speed) > 0)
-                {
-                    count++;
-                    sum += e.LatencyDetail.Speed;
-                }
-            if (Math.Abs(sum) <= 0 || count == 0) return 0;
-            return sum / count;
+            return !e.Any() ? 0 : e.Average();
         }
 
-        private static double GetAverageLatency(IEnumerable<LogEntry> entries)
+        private static double GetAverageKBits(IEnumerable<LogEntry> e)
         {
-            var sum = 0.0;
-            var count = 0;
-            foreach (var e in entries)
-                if (e.LatencyDetail != null && Math.Abs(e.LatencyDetail.Lag) > 0)
-                {
-                    count++;
-                    sum += e.LatencyDetail.Lag;
-                }
-            if (Math.Abs(sum) <= 0 || count == 0) return 0;
-            return sum / count;
+            return GetAverage(e
+                .Where(i => i.LatencyDetail.Speed > 0)
+                .Select(i => i.LatencyDetail.Speed).ToList());
         }
 
-        private static double GetAverageRoundTripTime(IEnumerable<LogEntry> entries)
+        private static double GetAverageLatency(IEnumerable<LogEntry> e)
         {
-            var sum = 0.0;
-            var count = 0;
-            foreach (var e in entries)
-                if (e.LatencyDetail != null && Math.Abs(e.LatencyDetail.RoundTrip) > 0)
-                {
-                    count++;
-                    sum += e.LatencyDetail.RoundTrip;
-                }
-            if (Math.Abs(sum) <= 0 || count == 0) return 0;
-            return sum / count;
+            return GetAverage(e
+                .Where(i => i.LatencyDetail.Lag > 0)
+                .Select(i => i.LatencyDetail.Lag).ToList());
+        }
+
+        private static double GetAverageRoundTripTime(IEnumerable<LogEntry> e)
+        {
+            return GetAverage(e
+                .Where(i => i.LatencyDetail.RoundTrip > 0)
+                .Select(i => i.LatencyDetail.RoundTrip).ToList());
         }
 
         private bool _activeTest;

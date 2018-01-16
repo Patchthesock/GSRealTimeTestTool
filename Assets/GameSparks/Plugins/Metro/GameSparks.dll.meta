@@ -61,7 +61,7 @@ PluginImporter:
         CPU: AnyCPU
         DontProcess: False
         PlaceholderPath: 
-        SDK: AnySDK
+        SDK: SDK81
         ScriptingBackend: DotNet
     iOS:
       enabled: 0

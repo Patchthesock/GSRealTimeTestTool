@@ -59,7 +59,7 @@ namespace Services
 
         private static string GetEntryTitle(LogEntry l)
         {
-            return l.Message + " :: " + l.Direction;
+            return l.Message + " :: " + l.Direction + " :: " + l.CreatedAt;
         }
 
         private static string GetInspectionText(LogEntry l)

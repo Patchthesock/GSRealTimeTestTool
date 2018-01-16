@@ -42,7 +42,7 @@ PluginImporter:
       settings:
         STV_MODEL: STANDARD_13
     WP8:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: AnyCPU
         DontProcess: False
@@ -56,12 +56,12 @@ PluginImporter:
       settings:
         CPU: AnyCPU
     WindowsStoreApps:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
         DontProcess: False
         PlaceholderPath: 
-        SDK: AnySDK
+        SDK: PhoneSDK81
         ScriptingBackend: AnyScriptingBackend
     iOS:
       enabled: 0
