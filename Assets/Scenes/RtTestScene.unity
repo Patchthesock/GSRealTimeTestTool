@@ -2989,7 +2989,7 @@ MonoBehaviour:
       ConnectionGui: {fileID: 1546482915}
     AsyncProc: {fileID: 1146904263}
     AppSettings:
-      WriteLog: 1
+      WriteLog: 0
     GameSparksRtUnity: {fileID: 1146904261}
     RtServiceSettings:
       Protocol: 0
@@ -3176,7 +3176,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.5, y: 0}
+  m_AnchoredPosition: {x: -12.5, y: 0.000015258789}
   m_SizeDelta: {x: -25, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1241131467
