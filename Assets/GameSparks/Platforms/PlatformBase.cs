@@ -153,10 +153,12 @@ namespace GameSparks.Platforms
 					
 					break;
 
+#if !UNITY_2017_3_OR_NEWER
 				case "SAMSUNGTV":
 					manufacturer = "Samsung";
 					
 					break;
+#endif
 
 				case "WIIU":
 					manufacturer = "Nintendo";
@@ -409,8 +411,10 @@ namespace GameSparks.Platforms
                     case RuntimePlatform.XboxOne:
                         return "XBOXONE";
 
+#if !UNITY_2017_3_OR_NEWER
                     case RuntimePlatform.SamsungTVPlayer:
                         return "SAMSUNGTV";
+#endif
 
                     case RuntimePlatform.WiiU:
                         return "WIIU";

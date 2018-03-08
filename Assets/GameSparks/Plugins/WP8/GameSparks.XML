@@ -391,6 +391,11 @@
             
             </summary>
         </member>
+        <member name="M:GameSparks.GameSparksWebSocket.Initialize(System.String,System.Action{System.Byte[]},System.Action,System.Action,System.Action{System.String})">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:GameSparks.GameSparksWebSocket.Open">
             <summary>
             

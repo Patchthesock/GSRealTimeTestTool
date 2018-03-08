@@ -272,7 +272,7 @@
             Main entry point for the GameSparksRT SDK
             </summary>
         </member>
-        <member name="M:GameSparks.RT.GameSparksRT.GetSession(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:GameSparks.RT.GameSparksRT.GetSession(System.String,System.String,System.Int32,System.Int32,System.Boolean)">
             <summary>
             Get a session instance
             </summary>
