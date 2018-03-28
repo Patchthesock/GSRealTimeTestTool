@@ -3044,10 +3044,11 @@ MonoBehaviour:
   - {fileID: 1146904258}
   _installerPrefabs: []
   _scriptableObjectInstallers: []
+  _autoRun: 1
   _parentNewObjectsUnderRoot: 0
   _contractNames: []
   _parentContractName: 
-  _autoRun: 1
+  _parentContractNames: []
 --- !u!114 &1146904263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3176,7 +3177,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -12.5, y: 0.000015258789}
+  m_AnchoredPosition: {x: -12.5, y: 0}
   m_SizeDelta: {x: -25, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1241131467

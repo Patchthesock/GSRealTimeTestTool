@@ -34,15 +34,12 @@ namespace Services
 
         private void EndSession(Action onEndSession)
         {
+            onEndSession();
+            _authGui.LogoutBtn.gameObject.SetActive(false);
             new GameSparks.Api.Requests.EndSessionRequest()
                 .Send(endSessResponse =>
             {
                 if (endSessResponse.HasErrors) _authGui.AddLogEntry(GetError(endSessResponse.Errors));
-                else
-                {
-                    onEndSession();
-                    _authGui.LogoutBtn.gameObject.SetActive(false);
-                }
             });
         }
         
