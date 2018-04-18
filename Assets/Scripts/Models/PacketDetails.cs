@@ -40,8 +40,8 @@ namespace Models
         private static string GetPacketStream(RTPacket p)
         {
             if (p.Stream == null || !p.Stream.CanRead) return "\"\"";
-            var r = new StreamReader(p.Stream);
-            var m = r.ReadToEnd();
+            var r = new BinaryReader(p.Stream);
+            var m = r.ReadByte();
             return "\"" + m + "\"";
         }
     }

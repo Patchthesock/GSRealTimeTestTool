@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Text;
 using GameSparks.RT;
 
@@ -47,14 +48,11 @@ namespace Factory
          */
         public static ArraySegment<byte> GetUnstructuredData(int requestId)
         {
-            //var byteInt = BitConverter.GetBytes(1000);
-            var byteString = Encoding.ASCII.GetBytes("HelloWorld");
-
-            var b = new byte[1 + /*byteInt.Length +*/ byteString.Length];
+            var b = new byte[2];
             b[0] = (byte) requestId;
-            //Buffer.BlockCopy(byteInt, 0, b, 1, byteInt.Length);
-            Buffer.BlockCopy(byteString, 0, b, 1 /*+ byteInt.Length*/, byteString.Length);
+            b[1] = byte.MaxValue;
             return new ArraySegment<byte>(b);
         }
+
     }
 }
