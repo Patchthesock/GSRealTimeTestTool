@@ -39,6 +39,7 @@ public class App : IInitializable
         _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
         _guiController.SubscribeToOnStartSession(_sparkRtService.ConnectSession);
         _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
+        _guiController.SubscribeToOnSendUnstructuredPacket(_sparkRtService.SendUnstructuredDataPacket);
         
         _rtQosService.OnSubscribeToPingTestResults(r => { _guiController.OnPingTestResultsReceived(r); });
         _guiController.SubscribeToOnStartPingTest((p, s) =>

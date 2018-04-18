@@ -30,7 +30,8 @@ namespace Controllers
                 (name, userId) => { OnAuthentication(name, userId, true); },   // Registration
                 (name, userId) => { OnAuthentication(name, userId, false); },  // Authentication
                 (name, userId) => { OnAuthentication(name, userId, false); }); // Device Authentication
-            _sessionService.Initialize(OnSendPing, OnStopRtSession, OnSendBlankPacket, OnStartPingTest);
+            _sessionService.Initialize(
+                OnSendPing, OnStopRtSession, OnSendBlankPacket, OnStartPingTest, OnSendUnstructuredPacket);
             
             // Initial Screen Order
             _authService.SetActive(true);
@@ -96,6 +97,16 @@ namespace Controllers
             if (_sendBlankPacketListeners.Contains(onSendBlankPacket)) return;
             _sendBlankPacketListeners.Add(onSendBlankPacket);
         }
+
+        /**
+         * <summary>Subscribe to on send unstructured packet</summary>
+         * <param name="onSendUnstructuredPacket">Delegate Action with int param</param>
+         */
+        public void SubscribeToOnSendUnstructuredPacket(Action<int> onSendUnstructuredPacket)
+        {
+            if (_sendUnstructuredPacketListeners.Contains(onSendUnstructuredPacket)) return;
+            _sendUnstructuredPacketListeners.Add(onSendUnstructuredPacket);
+        }
         
         /**
          * <summary>Subscribe To On Send Timestamp Packet</summary>
@@ -151,6 +162,11 @@ namespace Controllers
         {
             foreach (var l in _sendBlankPacketListeners) l(opCode);
         }
+
+        private void OnSendUnstructuredPacket(int opCode)
+        {
+            foreach (var l in _sendUnstructuredPacketListeners) l(opCode);
+        }
         
         private void OnSendPing()
         {
@@ -169,6 +185,7 @@ namespace Controllers
         private readonly List<Action> _stopSessionListeners = new List<Action>();
         private readonly List<Action> _sendPingPacketListeners = new List<Action>();
         private readonly List<Action<int>> _sendBlankPacketListeners = new List<Action<int>>();
+        private readonly List<Action<int>> _sendUnstructuredPacketListeners = new List<Action<int>>();
         private readonly List<Action<RtSession>> _startSessionListeners = new List<Action<RtSession>>();
         private readonly List<Action<int, int>> _onStartPingTestListeners = new List<Action<int, int>>();
     }

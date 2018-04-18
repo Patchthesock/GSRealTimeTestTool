@@ -30,13 +30,25 @@ namespace Services
         
         /**
          * <summary>Send Blank Packet</summary>
-         * <param name="opCode">OpCode to send the blank packet with</param>
+         * <param name="opCode">OpCode to send the packet on</param>
          **/
         public void SendBlankPacket(int opCode)
         {
             if (!_rtConnected) return;
             var r = GetNextRequestId();
             SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(r));
+            OnLogEntry(LogEntryFactory.CreateBlankSentLogEntry(r, opCode));
+        }
+
+        /**
+         * <summary>Send Unstructured Packet</summary>
+         * <param name="opCode">OpCode to send the packet on</param>
+         */
+        public void SendUnstructuredDataPacket(int opCode)
+        {
+            if (!_rtConnected) return;
+            var r = GetNextRequestId();
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetUnstructuredData(r));
             OnLogEntry(LogEntryFactory.CreateBlankSentLogEntry(r, opCode));
         }
         
@@ -107,7 +119,7 @@ namespace Services
                             OnPongReceived(packet);
                             break;
                         default:
-                            OnBlankPacketReceived(packet);
+                            OnPacketReceived(packet);
                             break;
                     }
                 });
@@ -126,6 +138,11 @@ namespace Services
         {
             _gameSparksRtUnity.SendData(opCode, intent, data);
         }
+
+        private void SendPacket(int opCode, GameSparksRT.DeliveryIntent intent, ArraySegment<byte> data)
+        {
+            _gameSparksRtUnity.SendBytes(opCode, intent, data);
+        }
         
         private int GetNextRequestId()
         {
@@ -142,12 +159,20 @@ namespace Services
             OnLogEntry(LogEntryFactory.CreatePongSentEntryLog(pingRequestId, (int) OpCode.Pong));
         }
         
-        private void OnBlankPacketReceived(RTPacket p)
+        private void OnPacketReceived(RTPacket p)
         {
-            if (p.Data == null) return;
-            var r = p.Data.GetInt(1);
-            if (r == null) return;
-            OnLogEntry(LogEntryFactory.CreateBlankReceviedLogEntry(new PacketDetails((int) r, p)));
+             if (p.Data != null) OnStructuredPacketReceived(p);
+             else if (p.Stream != null && p.Stream.CanRead) OnUnstructuredPacketReceived(p); 
+        }
+
+        private void OnStructuredPacketReceived(RTPacket p)
+        {
+            OnLogEntry(LogEntryFactory.CreateBlankReceviedLogEntry(new PacketDetails(p)));
+        }
+
+        private void OnUnstructuredPacketReceived(RTPacket p)
+        {
+            OnLogEntry(LogEntryFactory.CreateBlankReceviedLogEntry(new PacketDetails(p)));
         }
         
         private void OnPingReceived(RTPacket p)
@@ -156,18 +181,17 @@ namespace Services
             var r = p.Data.GetInt(1);
             var t = p.Data.GetLong(2);
             if (r == null || t == null) return;
-            OnLogEntry(LogEntryFactory.CreatePingReceivedLogEntry(new PacketDetails((int) r, p)));
+            OnLogEntry(LogEntryFactory.CreatePingReceivedLogEntry(new PacketDetails(p)));
             SendPongpacket((int) r, (long) t);
         }
         
         private void OnPongReceived(RTPacket p)
         {
             if (p.Data == null) return;
-            var r = p.Data.GetInt(1);
             var l = p.Data.GetLong(2);
             var j = p.Data.GetLong(3);
-            if (r == null | l == null || j == null) return;
-            OnLogEntry(LogEntryFactory.CreatePongReceivedLogEntry((long) l, (long) j, new PacketDetails((int) r, p)));
+            if (l == null || j == null) return;
+            OnLogEntry(LogEntryFactory.CreatePongReceivedLogEntry((long) l, (long) j, new PacketDetails(p)));
         }
         
         private void OnLogEntry(LogEntry e)

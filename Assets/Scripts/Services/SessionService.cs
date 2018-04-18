@@ -19,9 +19,11 @@ namespace Services
             Action onSendPing,
             Action onStopRtSession,
             Action<int> onSendBlankPacket,
-            Action<int, int> onStartPingTest)
+            Action<int, int> onStartPingTest,
+            Action<int> onSendUnstructuredPacket)
         {
-           _sessionGui.CommandGui.Initialize(onStopRtSession, onSendPing, onSendBlankPacket, onStartPingTest);
+           _sessionGui.CommandGui.Initialize(
+               onStopRtSession, onSendPing, onSendBlankPacket, onStartPingTest, onSendUnstructuredPacket);
         }
         
         /**
@@ -75,7 +77,8 @@ namespace Services
             var s = "OpCode: " + d.OpCode + "\n";
             s += "Packet Size: " + d.Size + "\n";
             s += "Sender: Peer " + d.Sender + "\n";
-            s += "Request ID: " + d.RequestId + "\n\n";
+            s += "Request ID: " + d.RequestId + "\n";
+            s += "Stream: " + d.Stream + "\n";
             return s;
         }
 
