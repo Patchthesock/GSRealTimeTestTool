@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Text;
+﻿using System;
+using System.IO;
 using GameSparks.RT;
 
 namespace Models
@@ -42,7 +42,7 @@ namespace Models
             if (p.Stream == null || !p.Stream.CanRead) return "\"\"";
             var r = new BinaryReader(p.Stream);
             var m = r.ReadByte();
-            return "\"" + m + "\"";
+            return "\"" + Convert.ToString(m, 2).PadLeft(8, '0') + "\"";
         }
     }
 }
