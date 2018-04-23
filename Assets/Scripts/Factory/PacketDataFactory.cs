@@ -51,6 +51,5 @@ namespace Factory
             b[1] = byte.MaxValue;
             return new ArraySegment<byte>(b);
         }
-
     }
 }

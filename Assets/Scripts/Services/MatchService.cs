@@ -20,9 +20,7 @@ namespace Services
             InitialBtnState();
             MatchFoundMessage.Listener += OnMatchFound;
             MatchNotFoundMessage.Listener += OnMatchNotFound;
-            _matchGui.Initialize(OnFindMatchReceived,
-            () =>
-            {
+            _matchGui.Initialize(OnFindMatchReceived, () => {
                 InitialBtnState();
                 SetActive(false);
                 onStartRtSession(_rtSession);
@@ -80,12 +78,12 @@ namespace Services
         private static string GetMatchInformation(MatchFoundMessage m)
         {
             var s = new StringBuilder();
-            s.AppendLine("Host URL:" + m.Host);
-            s.AppendLine("Port:" + m.Port);
-            s.AppendLine("Access Token:" + m.AccessToken);
-            s.AppendLine("MatchId:" + m.MatchId);
-            s.AppendLine("Opponents:" + m.Participants.Count());
+            s.AppendLine("Host URL: " + m.Host);
+            s.AppendLine("Port: " + m.Port);
+            s.AppendLine("MatchId: " + m.MatchId);
+            s.AppendLine("Opponents: " + m.Participants.Count());
             foreach (var p in m.Participants) s.AppendLine("Player: " + p.PeerId + " User Name: " + p.DisplayName);
+            s.AppendLine("Access Token: " + m.AccessToken);
             return s.ToString();
         }
 

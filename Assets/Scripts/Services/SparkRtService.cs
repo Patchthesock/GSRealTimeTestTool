@@ -95,7 +95,7 @@ namespace Services
             _gameSparksRtUnity.Configure(
                 new FindMatchResponse(new GSRequestData()   // In order to create a new RtSession 
                 .AddString("host", s.HostUrl)               // we need a 'FindMatchResponse' that 
-                .AddNumber("port", (double)s.PortId)        // we can then us to configure a Real 
+                .AddNumber("port", (double) s.PortId)       // we can then us to configure a Real 
                 .AddString("accessToken", s.AcccessToken)), // Time Session from
 
                 // OnPlayerConnected / Disconnected Callbacks
