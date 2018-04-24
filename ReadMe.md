@@ -6,7 +6,7 @@
 ### Steps to build client ###
 1. Download and open in Unity.
 2. Setup a Real Time match configuration from the [GameSparks](https://portal2.gamesparks.net/) portal.
-3. From Unity edit the Gamesparks settings and place the API Key and Secret.
+3. From Unity edit the GameSparks settings and place the API Key and Secret.
 4. Build the application.
 
 ### Steps to use application ###
