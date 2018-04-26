@@ -7,10 +7,12 @@ using Zenject;
 public class App : IInitializable
 {
     /**
-     * Steve Callaghan (stephen.callaghan@gamesparks.com)
-     * https://github.com/Patchthesock/GSRealTimeTestTool
+     * Steve Callaghan (scalla@amazon.com)
      * Created: 2017/09 (September, 2017)
-     **/
+     * 
+     * https://github.com/Patchthesock/GSRealTimeTestTool
+     * https://s3-eu-west-1.amazonaws.com/gamesparks-ireland/GSRealTimeTestTool-master.zip
+     */
     
     public App(
         Settings settings,
@@ -28,13 +30,12 @@ public class App : IInitializable
 
     /**
      * <summary>Application Initialization</summary>
-     **/
+     */
     public void Initialize()
     {
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
         _sparkRtService.SubscribeToOnLogEntryReceived(_rtQosService.OnLogEntryReceived);
         _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
-        
         _guiController.SubscribeToOnSendPingPacket(_sparkRtService.SendPing);
         _guiController.SubscribeToOnStopSession(_sparkRtService.LeaveSession);
         _guiController.SubscribeToOnStartSession(_sparkRtService.ConnectSession);
