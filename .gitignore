@@ -41,9 +41,6 @@ sysinfo.txt
 *.exe
 *.app
 
-# Binary Save files
-*.domino
-
 # Max files
 *.max
 
