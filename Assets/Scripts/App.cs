@@ -11,7 +11,7 @@ public class App : IInitializable
      * Created: 2017/09 (September, 2017)
      * 
      * https://github.com/Patchthesock/GSRealTimeTestTool
-     * https://s3-eu-west-1.amazonaws.com/gamesparks-ireland/GSRealTimeTestTool-master.zip
+     * https://s3-eu-west-1.amazonaws.com/gamesparks-ireland/GSRealTimeTestTool.zip
      */
     
     public App(
