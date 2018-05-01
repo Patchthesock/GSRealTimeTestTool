@@ -29,6 +29,16 @@ namespace Models
             Sender = sender;
             RequestId = requestId;
         }
+        
+        public override string ToString()
+        {
+            var s = "OpCode: " + OpCode + "\n";
+            s += "Packet Size: " + Size + "\n";
+            s += "Sender: Peer " + Sender + "\n";
+            s += "Request ID: " + RequestId + "\n";
+            s += "Stream: " + Stream + "\n";
+            return s;
+        }
 
         private static int GetPacketRequestId(RTPacket p)
         {

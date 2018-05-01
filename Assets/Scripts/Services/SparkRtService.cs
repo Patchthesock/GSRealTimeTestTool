@@ -5,6 +5,7 @@ using GameSparks.Api.Responses;
 using GameSparks.Core;
 using GameSparks.RT;
 using Models;
+using Models.LogEntry;
 
 namespace Services
 {
@@ -19,7 +20,7 @@ namespace Services
         
         /**
          * <summary>Leave the Real Time Session</summary>
-         **/
+         */
         public void LeaveSession()
         {
             if (!_rtConnected) return;
@@ -31,7 +32,7 @@ namespace Services
         /**
          * <summary>Send Blank Packet</summary>
          * <param name="opCode">OpCode to send the packet on</param>
-         **/
+         */
         public void SendBlankPacket(int opCode)
         {
             if (!_rtConnected) return;
@@ -57,7 +58,7 @@ namespace Services
          * <remark>This ping is intented to measure the latency and
          * round trip of the active clients in the real time session.
          * This is not a reflection of the client / server connection.</remark>
-         **/
+         */
         public void SendPing()
         {
             if (!_rtConnected) return;
@@ -69,7 +70,7 @@ namespace Services
         /**
          * <summary>Subscribe to on Real Time Session ready</summary>
          * <param name="onRtReady">Delegate Action with a bool state param</param>
-         **/
+         */
         public void SubscribeToOnRtReady(Action<bool> onRtReady)
         {
             if (_onRtReady.Contains(onRtReady)) return;
@@ -79,8 +80,8 @@ namespace Services
         /**
          * <summary>Subscribe To On LogEntry Received</summary>
          * <param name="onTimestampPingReceived">Delegate Action with LogEntry param</param>
-         **/
-        public void SubscribeToOnLogEntryReceived(Action<LogEntry> onLogEntryReceived)
+         */
+        public void SubscribeToOnLogEntryReceived(Action<ILogEntry> onLogEntryReceived)
         {
             if (_onLogEntryReceivedListeners.Contains(onLogEntryReceived)) return;
             _onLogEntryReceivedListeners.Add(onLogEntryReceived);
@@ -96,7 +97,7 @@ namespace Services
                 new FindMatchResponse(new GSRequestData()   // In order to create a new RtSession 
                 .AddString("host", s.HostUrl)               // we need a 'FindMatchResponse' that 
                 .AddNumber("port", (double) s.PortId)       // we can then us to configure a Real 
-                .AddString("accessToken", s.AcccessToken)), // Time Session from
+                .AddString("accessToken", s.AccessToken)), // Time Session from
 
                 // OnPlayerConnected / Disconnected Callbacks
                 peerId => { OnLogEntry(LogEntryFactory.CreatePeerConnectedLogEntry(peerId)); },
@@ -104,7 +105,7 @@ namespace Services
                 
                 state => // OnRtReady Callback
                 {
-                    OnLogEntry(LogEntryFactory.CreateRealTimeSessionStateLogEntry(state));
+                    OnLogEntry(LogEntryFactory.CreateSessionStateLogEntry(state));
                     foreach (var l in _onRtReady) l(state);
                 },
                 
@@ -124,8 +125,9 @@ namespace Services
                     }
                 });
             
-            _gameSparksRtUnity.Connect(); // Connect
             _rtConnected = true;
+            _gameSparksRtUnity.Connect(); // Connect
+            OnLogEntry(LogEntryFactory.CreateSessionJoinLogEntry());
         }
         
         private enum OpCode
@@ -194,7 +196,7 @@ namespace Services
             OnLogEntry(LogEntryFactory.CreatePongReceivedLogEntry((long) l, (long) j, new PacketDetails(p)));
         }
         
-        private void OnLogEntry(LogEntry e)
+        private void OnLogEntry(ILogEntry e)
         {
             foreach (var l in _onLogEntryReceivedListeners) l(e);
         }
@@ -204,7 +206,7 @@ namespace Services
         private readonly Settings _settings;
         private readonly GameSparksRTUnity _gameSparksRtUnity;
         private readonly List<Action<bool>> _onRtReady = new List<Action<bool>>();
-        private readonly List<Action<LogEntry>> _onLogEntryReceivedListeners = new List<Action<LogEntry>>();
+        private readonly List<Action<ILogEntry>> _onLogEntryReceivedListeners = new List<Action<ILogEntry>>();
         
         [Serializable]
         public class Settings

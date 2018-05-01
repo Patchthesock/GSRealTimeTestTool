@@ -4,9 +4,9 @@ using Gui;
 
 namespace Services
 {
-    public class AuthService
+    public class AuthGuiService
     {
-        public AuthService(AuthGui authGui)
+        public AuthGuiService(AuthGui authGui)
         {
             _authGui = authGui;
         }
@@ -26,10 +26,10 @@ namespace Services
         /**
          * <summary>Set Active</summary>
          * <param name="state">State</param>
-         **/
+         */
         public void SetActive(bool state)
         {
-            _authGui.gameObject.SetActive(state);
+            _authGui.SetActive(state);
         }
 
         private void EndSession(Action onEndSession)

@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Factory;
 using Models;
+using Models.LogEntry;
 using UnityEngine;
 
 namespace Services
@@ -20,8 +22,7 @@ namespace Services
             {
                 _activeTest = false;
                 if (_currentTest != null) _asyncProcessor.StopCoroutine(_currentTest);
-                Reset();
-                return; // If Active, Kill, Reset & Return
+                Reset(); return; // If Active, Kill, Reset & Return
             }
             
             if (seconds <= 0 || packetsPerSecond <= 0) return;
@@ -29,26 +30,25 @@ namespace Services
             _asyncProcessor.StartCoroutine(_currentTest);
         }
         
-        public void OnLogEntryReceived(LogEntry l)
+        public void OnLogEntryReceived(ILogEntry l)
         {
             if (!_activeTest) return;
-            switch (l.Direction)
+            switch (l.GetLogEntryType())
             {
-                case LogEntry.Directions.Outbound: // Ping 
+                case LogEntryTypes.PingPacket:
                 {
-                    _pings.Add(l);
+                    _pingCount++;
                     break;
                 }
-                case LogEntry.Directions.Inbound:  // Pong
+                case LogEntryTypes.PongPacket:
                 {
-                    _pongs.Add(l);
+                    _pongs.Add((PongPacketLog) l);
                     break;
                 }
-                default: throw new ArgumentOutOfRangeException();
             }
         }
 
-        public void OnSubscribeToPingTestResults(Action<PingTestResults> onPingTestResult)
+        public void OnSubscribeToPingTestResults(Action<ILogEntry> onPingTestResult)
         {
             if (_pingTestResultsListeners.Contains(onPingTestResult)) return;
             _pingTestResultsListeners.Add(onPingTestResult);
@@ -72,7 +72,7 @@ namespace Services
             _activeTest = false;
             
             WriteOutResults(new PingTestResults(
-                _pings.Count,
+                _pingCount,
                 _pongs.Count,
                 GetAverageKBits(_pongs),
                 GetAverageLatency(_pongs),
@@ -83,12 +83,13 @@ namespace Services
 
         private void WriteOutResults(PingTestResults r)
         {
-            foreach (var l in _pingTestResultsListeners) l(r);
+            var e = LogEntryFactory.CreateQosTestResultsLogEntry(r);
+            foreach (var l in _pingTestResultsListeners) l(e);
         }
 
         private void Reset()
         {
-            _pings.Clear();
+            _pingCount = 0;
             _pongs.Clear();
         }
         
@@ -97,32 +98,33 @@ namespace Services
             return !e.Any() ? 0 : e.Average();
         }
 
-        private static double GetAverageKBits(IEnumerable<LogEntry> e)
+        private static double GetAverageKBits(IEnumerable<PongPacketLog> e)
         {
             return GetAverage(e
-                .Where(i => i.LatencyDetail.Speed > 0)
-                .Select(i => i.LatencyDetail.Speed).ToList());
+                .Where(i => i.GetLatency().Speed > 0)
+                .Select(i => i.GetLatency().Speed).ToList());
         }
 
-        private static double GetAverageLatency(IEnumerable<LogEntry> e)
+        private static double GetAverageLatency(IEnumerable<PongPacketLog> e)
         {
             return GetAverage(e
-                .Where(i => i.LatencyDetail.Lag > 0)
-                .Select(i => i.LatencyDetail.Lag).ToList());
+                .Where(i => i.GetLatency().Lag > 0)
+                .Select(i => i.GetLatency().Lag).ToList());
         }
 
-        private static double GetAverageRoundTripTime(IEnumerable<LogEntry> e)
+        private static double GetAverageRoundTripTime(IEnumerable<PongPacketLog> e)
         {
             return GetAverage(e
-                .Where(i => i.LatencyDetail.RoundTrip > 0)
-                .Select(i => i.LatencyDetail.RoundTrip).ToList());
+                .Where(i => i.GetLatency().RoundTrip > 0)
+                .Select(i => i.GetLatency().RoundTrip).ToList());
         }
 
+        private int _pingCount;
         private bool _activeTest;
         private IEnumerator _currentTest;
+        
         private readonly AsyncProcessor _asyncProcessor;
-        private readonly List<LogEntry> _pings = new List<LogEntry>();
-        private readonly List<LogEntry> _pongs = new List<LogEntry>();
-        private readonly List<Action<PingTestResults>> _pingTestResultsListeners = new List<Action<PingTestResults>>();
+        private readonly List<PongPacketLog> _pongs = new List<PongPacketLog>();
+        private readonly List<Action<ILogEntry>> _pingTestResultsListeners = new List<Action<ILogEntry>>();
     }
 }

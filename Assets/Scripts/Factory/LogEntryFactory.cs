@@ -1,67 +1,100 @@
 ﻿using Models;
+using Models.LogEntry;
 
 namespace Factory
 {
     public static class LogEntryFactory
     {
-        public static LogEntry CreateLeaveSessionLogEntry()
+        public static ILogEntry CreateMatchMakingRequestLogEntry(int skill, string shortCode)
         {
-            return new LogEntry("Disconnected From Session", null,
-                LogEntry.Directions.Outbound, new PacketDetails(0, 0, 0, 0));
+            return new SimpleLogEntry(
+                "Match Making Request :: Skill " + skill + " - ShortCode " + shortCode,
+                Directions.Outbound, LogEntryTypes.MatchMakingRequest);
+        }
+
+        public static ILogEntry CreateMatchFoundLogEntry(RtSession rtSession)
+        {
+            return new MatchFoundLog(rtSession);
+        }
+
+        public static ILogEntry CreateMatchNotFoundLogEntry()
+        {
+            return new SimpleLogEntry("Match Not Found", Directions.Inbound, LogEntryTypes.MatchNotFound);
         }
         
-        public static LogEntry CreatePingSentEntryLog(int requestId, int opCode)
+        
+        
+        public static ILogEntry CreatePingSentEntryLog(int requestId, int opCode)
         {
-            return new LogEntry("Sending Ping Packet", null,
-                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, requestId));
+            return new SimpleLogEntry(
+                new PacketDetails(opCode, 0, 0, requestId).ToString(),
+                Directions.Outbound, LogEntryTypes.PingPacket);
         }
 
-        public static LogEntry CreatePongSentEntryLog(int requestId, int opCode)
+        public static ILogEntry CreatePongSentEntryLog(int requestId, int opCode)
         {
-            return new LogEntry("Sending Pong Packet", null, LogEntry.Directions.Outbound,
-                new PacketDetails(opCode, 0, 0, requestId));
+            return new SimpleLogEntry(
+                new PacketDetails(opCode, 0, 0, requestId).ToString(),
+                Directions.Outbound, LogEntryTypes.PongPacket);
         }
 
-        public static LogEntry CreateBlankSentLogEntry(int requestId, int opCode)
+        public static ILogEntry CreateBlankSentLogEntry(int requestId, int opCode)
         {
-            return new LogEntry("Sending Blank Packet", null,
-                LogEntry.Directions.Outbound, new PacketDetails(opCode, 0, 0, requestId));
+            return new SimpleLogEntry(
+                new PacketDetails(opCode, 0, 0, requestId).ToString(),
+                Directions.Outbound, LogEntryTypes.BlankPacket);
         }
 
-        public static LogEntry CreatePeerConnectedLogEntry(int peerId)
+
+        public static ILogEntry CreateSessionJoinLogEntry()
         {
-            return new LogEntry("Peer " + peerId + " Connected", null,
-                LogEntry.Directions.Inbound, new PacketDetails(0, 0, 0, 0));
+            return new SimpleLogEntry("Joining Real Time Session", Directions.Outbound, LogEntryTypes.OnSessionJoin);
+        }
+        
+        public static ILogEntry CreateSessionStateLogEntry(bool state)
+        {
+            var m = "Real Time Ready: " + state;
+            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnSessionReady);
+        }
+        
+        public static ILogEntry CreatePeerConnectedLogEntry(int peerId)
+        {
+            var m = "Peer " + peerId + " Connected";
+            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnPlayerConnect);
         }
 
-        public static LogEntry CreatePeerDisconnectedLogEntry(int peerId)
+        public static ILogEntry CreatePeerDisconnectedLogEntry(int peerId)
         {
-            return new LogEntry("Peer " + peerId + " Disconnected", null,
-                LogEntry.Directions.Inbound, new PacketDetails(0, 0, 0, 0));
+            var m = "Peer " + peerId + " Disconnected";
+            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnPlayerDisconnect);
         }
 
-        public static LogEntry CreateRealTimeSessionStateLogEntry(bool state)
+        public static ILogEntry CreateLeaveSessionLogEntry()
         {
-            return new LogEntry("Real Time Ready: " + state, null,
-                LogEntry.Directions.Inbound, new PacketDetails(0, 0, 0, 0));
+            return new SimpleLogEntry(
+                "Disconnected From Session", Directions.Outbound, LogEntryTypes.OnSessionLeave);
+        }
+        
+        
+
+        public static ILogEntry CreateBlankReceviedLogEntry(PacketDetails p)
+        {
+            return new SimpleLogEntry(p.ToString(), Directions.Inbound, LogEntryTypes.BlankPacket);
         }
 
-        public static LogEntry CreateBlankReceviedLogEntry(PacketDetails p)
+        public static ILogEntry CreatePingReceivedLogEntry(PacketDetails p)
         {
-            return new LogEntry("Blank Packet Received",
-                new Latency(0, 0), LogEntry.Directions.Inbound, p);
+            return new SimpleLogEntry(p.ToString(), Directions.Inbound, LogEntryTypes.PingPacket);
         }
 
-        public static LogEntry CreatePingReceivedLogEntry(PacketDetails packet)
+        public static ILogEntry CreatePongReceivedLogEntry(long pingTime, long pongTime, PacketDetails packet)
         {
-            return new LogEntry("Ping Packet Received",
-                new Latency(0, 0), LogEntry.Directions.Inbound, packet);
+            return new PongPacketLog(new Latency(pingTime, pongTime), Directions.Inbound, packet);
         }
 
-        public static LogEntry CreatePongReceivedLogEntry(long pingTime, long pongTime, PacketDetails packet)
+        public static ILogEntry CreateQosTestResultsLogEntry(PingTestResults r)
         {
-            return new LogEntry("Pong Packet Received",
-                new Latency(pingTime, pongTime), LogEntry.Directions.Inbound, packet);
+            return new SimpleLogEntry(r.ToString(), Directions.Inbound, LogEntryTypes.QualityOfServiceTestResult);
         }
     }
 }

@@ -7,5 +7,10 @@ namespace Gui
     {
         public Text UserId;
         public Text ConnectionStatus;
+
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
+        }
     }
 }

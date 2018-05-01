@@ -21,5 +21,15 @@
             AverageLatency = averageLatency;
             AverageRoundTripTime = averageRoundTripTime;
         }
+
+        public override string ToString()
+        {
+            var s = "Pings Sent: " + PingsSent + "\n";
+            s += "Pongs Received: " + PongsReceived + "\n";
+            s += "Average kbits: " + AverageKBits + "\n";
+            s += "Average Latency: " + AverageLatency + "\n";
+            s += "Average Round Trip Time: " + AverageRoundTripTime + "\n";
+            return s;
+        }
     }
 }

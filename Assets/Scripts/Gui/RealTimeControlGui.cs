@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Gui
 {
-    public class CommandGui : MonoBehaviour
+    public class RealTimeControlGui : MonoBehaviour
     {
         public InputField OpCode;
         public InputField Seconds;
@@ -24,20 +24,15 @@ namespace Gui
             Action<int> onSendUnstructuredPacket)
         {
             InitStartPingTestBtn(onStartPingTest);
-            InitSendBlankPacketBtn(onSendBlankPacket);
-            InitSendUnstructuredPacketBtn(onSendUnstructuredPacket);
             LeaveSessionBtn.onClick.AddListener(() => { onLeaveSession(); });
             SendTimePacketBtn.onClick.AddListener(() => { onSendTimePacket(); });
-        }
-
-        private void InitSendBlankPacketBtn(Action<int> onSendBlankPacket)
-        {
             SendBlankPacketBtn.onClick.AddListener(() => { onSendBlankPacket(GetOpCode()); });
+            SendUnstructuredPacketBtn.onClick.AddListener(() => { onSendUnstructuredPacket(GetOpCode()); });
         }
 
-        private void InitSendUnstructuredPacketBtn(Action<int> onSendUnstructuredPacket)
+        public void SetActive(bool state)
         {
-            SendUnstructuredPacketBtn.onClick.AddListener(() => { onSendUnstructuredPacket(GetOpCode()); });
+            gameObject.SetActive(state);
         }
 
         private void InitStartPingTestBtn(Action<int, int> onStartPingTest)

@@ -35,7 +35,6 @@ namespace Installers
         private static void InstallGui(DiContainer c, Settings.Gui g)
         {
             c.Bind<AuthGui>().FromInstance(g.AuthGui).AsSingle();
-            c.Bind<MatchGui>().FromInstance(g.MatchGui).AsSingle();
             c.Bind<SessionGui>().FromInstance(g.SessionGui).AsSingle();
             c.Bind<ConnectionGui>().FromInstance(g.ConnectionGui).AsSingle();
             c.Bind<GuiController>().AsSingle();
@@ -61,7 +60,6 @@ namespace Installers
             public class Gui
             {
                 public AuthGui AuthGui;
-                public MatchGui MatchGui;
                 public SessionGui SessionGui;
                 public ConnectionGui ConnectionGui;
             }

@@ -9,9 +9,7 @@ public class App : IInitializable
     /**
      * Steve Callaghan (scalla@amazon.com)
      * Created: 2017/09 (September, 2017)
-     * 
      * https://github.com/Patchthesock/GSRealTimeTestTool
-     * https://s3-eu-west-1.amazonaws.com/gamesparks-ireland/GSRealTimeTestTool.zip
      */
     
     public App(
@@ -42,7 +40,8 @@ public class App : IInitializable
         _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
         _guiController.SubscribeToOnSendUnstructuredPacket(_sparkRtService.SendUnstructuredDataPacket);
         
-        _rtQosService.OnSubscribeToPingTestResults(r => { _guiController.OnPingTestResultsReceived(r); });
+        _rtQosService.OnSubscribeToPingTestResults(_guiController.OnLogEntryReceived);
+        
         _guiController.SubscribeToOnStartPingTest((p, s) =>
         {
             _rtQosService.StartPingTest(p, s, _sparkRtService.SendPing);

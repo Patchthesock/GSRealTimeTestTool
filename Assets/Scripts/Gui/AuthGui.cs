@@ -25,8 +25,16 @@ namespace Gui
         }
 
         /**
+         * <summary>Set Active</summary>
+         */
+        public void SetActive(bool state)
+        {
+            gameObject.SetActive(state);
+        }
+        
+        /**
          * <summary>Clear Log</summary>
-         **/
+         */
         public void ClearLog()
         {
             Log.text = "";
@@ -35,7 +43,7 @@ namespace Gui
         /**
          * <summary>Add Log Entry</summary>
          * <param name="msg">The log message to add</param>
-         **/
+         */
         public void AddLogEntry(string msg)
         {
             Log.text += msg + "\n";

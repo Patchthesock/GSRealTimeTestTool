@@ -1,11 +1,12 @@
 ﻿using GameSparks.Core;
 using Gui;
+using UnityEngine;
 
 namespace Services
 {
-    public class ConnectionService
+    public class ConnectionGuiService
     {
-        public ConnectionService(ConnectionGui connectionGui)
+        public ConnectionGuiService(ConnectionGui connectionGui)
         {
             _connectionGui = connectionGui;
         }
@@ -18,8 +19,16 @@ namespace Services
         }
 
         /**
+         * <summary>Set Active</summary>
+         */
+        public void SetActive(bool state)
+        {
+            _connectionGui.SetActive(state);
+        }
+        
+        /**
          * <summary>On End Session</summary>
-         **/
+         */
         public void OnEndSession()
         {
             _connectionGui.UserId.text = "No User Logged In...";
@@ -30,7 +39,7 @@ namespace Services
          * <summary>On Registration, display reg details</summary>
          * <param name="name">Name</param>
          * <param name="userId">User Id</param>
-         **/
+         */
         public void OnRegistration(string name, string userId)
         {
             _connectionGui.UserId.text = name + " (" + userId + ")";
@@ -41,7 +50,7 @@ namespace Services
          * <summary>On Authentication, display auth details</summary>
          * <param name="name">Name</param>
          * <param name="userId">User Id</param>
-         **/
+         */
         public void OnAuthentication(string name, string userId)
         {
             _connectionGui.UserId.text = name + " (" + userId + ")";

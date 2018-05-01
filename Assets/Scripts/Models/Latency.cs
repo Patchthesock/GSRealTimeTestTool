@@ -31,5 +31,13 @@ namespace Models
                 Speed = Math.Round(14400 / RoundTrip / 1000, 2);
             }
         }
+        
+        public override string ToString()
+        {
+            var s = "Speed: " + Speed + " kbit/s\n";
+            s += "Latency: " + Lag + "\n";
+            s += "Round Trip Time: " + RoundTrip + "\n\n";
+            return s;
+        }
     }
 }
