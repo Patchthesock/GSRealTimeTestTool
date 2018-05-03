@@ -42,17 +42,15 @@ namespace Gui.Service
         {
             onEndSession();
             _authGui.LogoutBtn.gameObject.SetActive(false);
-            new GameSparks.Api.Requests.EndSessionRequest()
-                .Send(endSessResponse =>
+            new GameSparks.Api.Requests.EndSessionRequest().Send(r =>
             {
-                if (endSessResponse.HasErrors) _authGui.AddLogEntry(GetError(endSessResponse.Errors));
+                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
             });
         }
         
         private void DeviceAuthenticate(Action<string, string> onAuth)
         {
-            new GameSparks.Api.Requests.DeviceAuthenticationRequest()
-                .Send(r =>
+            new GameSparks.Api.Requests.DeviceAuthenticationRequest().Send(r =>
             {
                 if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
                 else

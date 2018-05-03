@@ -15,12 +15,17 @@ namespace Gui
 
         public Dropdown RealTimeSessionDropDown;
 
+        /**
+         * <summary>Initialize</summary>
+         * <param name="onJoinSession"></param>
+         * <param name="onFindMatch"></param>
+         */
         public void Initialize(
-            Action<string> joinSession,
-            Action<int, string> findMatch)
+            Action<string> onJoinSession,
+            Action<int, string> onFindMatch)
         {
-            SetupMatchMakingBtn(findMatch);
-            SetupJoinRealTimeSessionBtn(joinSession);
+            SetupMatchMakingBtn(onFindMatch);
+            SetupJoinRealTimeSessionBtn(onJoinSession);
         }
 
         /**
@@ -48,24 +53,25 @@ namespace Gui
             RealTimeSessionDropDown.AddOptions(new List<string> { rtKey });
         }
 
-        private void SetupMatchMakingBtn(Action<int, string> findMatch)
+        private void SetupMatchMakingBtn(Action<int, string> onFindMatch)
         {
             MatchMakingBtn.onClick.AddListener(() =>
             {
                 int d;
-                if (int.TryParse(SkillIpt.text, out d)) findMatch(d, MatchShortCodeIpt.text);
+                if (int.TryParse(SkillIpt.text, out d)) onFindMatch(d, MatchShortCodeIpt.text);
                 else {
                     SkillIpt.text = "0";
-                    findMatch(0, MatchShortCodeIpt.text);
+                    onFindMatch(0, MatchShortCodeIpt.text);
                 }
             });
         }
 
-        private void SetupJoinRealTimeSessionBtn(Action<string> joinSession)
+        private void SetupJoinRealTimeSessionBtn(Action<string> onJoinSession)
         {
             JoinRealTimeSessionBtn.onClick.AddListener(() =>
             {
-                joinSession(RealTimeSessionDropDown.options[RealTimeSessionDropDown.value].text);
+                if (RealTimeSessionDropDown.options.Count <= 0) return;
+                onJoinSession(RealTimeSessionDropDown.options[RealTimeSessionDropDown.value].text);
             });
         }
     }
