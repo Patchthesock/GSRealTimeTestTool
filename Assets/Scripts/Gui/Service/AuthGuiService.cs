@@ -1,8 +1,7 @@
 ﻿using System;
 using GameSparks.Core;
-using Gui;
 
-namespace Services
+namespace Gui.Service
 {
     public class AuthGuiService
     {
@@ -11,6 +10,13 @@ namespace Services
             _authGui = authGui;
         }
 
+        /**
+         * <summary>Initialize</summary>
+         * <param name="onEndSession">On End Session Logic</param>
+         * <param name="onReg">On Player Registration Logic</param>
+         * <param name="onAuth">On Player Authentication Logic</param>
+         * <param name="onDeviceAuth">On Device Authentication Logic</param>
+         */
         public void Initialize(
             Action onEndSession,
             Action<string, string> onReg,

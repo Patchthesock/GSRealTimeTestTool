@@ -60,18 +60,13 @@ namespace Services
                 case LogEntryTypes.OnPlayerDisconnect: return GetSimpleLogEntryCsvEntry(l);
                 
                 // Packet Entries
-                case LogEntryTypes.PingPacket: 
-                    break;
-                case LogEntryTypes.PongPacket:
-                    break;
-                case LogEntryTypes.BlankPacket:
-                    break;
-                case LogEntryTypes.UnstructuredPacket:
-                    break;
+                case LogEntryTypes.PingPacket: break;
+                case LogEntryTypes.PongPacket: break;
+                case LogEntryTypes.BlankPacket: break;
+                case LogEntryTypes.UnstructuredPacket: break;
                 
                 // Quality of Service Test Result Entry
-                case LogEntryTypes.QualityOfServiceTestResult:
-                    break;
+                case LogEntryTypes.QualityOfServiceTestResult: break;
                 default: return GetSimpleLogEntryCsvEntry(l);
             }
             //var s = l.Message + ",";

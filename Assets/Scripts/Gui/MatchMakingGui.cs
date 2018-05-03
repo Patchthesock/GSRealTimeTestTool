@@ -32,7 +32,16 @@ namespace Gui
         }
 
         /**
+         * <summary>Clear Real Time Session Keys</summary>
+         */
+        public void ClearRealTimeSessionKeys()
+        {
+            RealTimeSessionDropDown.ClearOptions();
+        }
+        
+        /**
          * <summary>Add Real Time Session Key</summary>
+         * <param name="rtKey">The Real Time Session Key</param>
          */
         public void AddRealTimeSessionKey(string rtKey)
         {

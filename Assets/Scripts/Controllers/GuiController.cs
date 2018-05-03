@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gui;
+using Gui.Service;
 using Models;
 using Models.LogEntry;
 using Services;
@@ -42,6 +43,7 @@ namespace Controllers
             // Initial Screen Order
             _authService.SetActive(true);
             _sessionService.SetActive(false);
+            _connectionService.SetActive(true);
         }
 
         /**

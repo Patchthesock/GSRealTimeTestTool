@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using GameSparks.Api.Messages;
-using GameSparks.Api.Responses;
-using Gui;
 using Models;
 
 namespace Services
@@ -53,7 +50,6 @@ namespace Services
             foreach (var l in _onMatchNotFoundListeners) l();
         }
 
-        private readonly MatchMakingGui _matchGui;
         private readonly List<Action> _onMatchNotFoundListeners = new List<Action>();
         private readonly List<Action<RtSession>> _onMatchFoundListeners = new List<Action<RtSession>>();
     }

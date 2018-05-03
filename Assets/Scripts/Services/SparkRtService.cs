@@ -90,7 +90,7 @@ namespace Services
         /**
          * <summary>Given RtSession details will establish the Real Time Session connection</summary>
          * <param name="s">RtSession details of the Real Time session to connect to</param>
-         **/
+         */
         public void ConnectSession(RtSession s)
         {
             _gameSparksRtUnity.Configure(

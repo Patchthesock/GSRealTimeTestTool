@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Factory;
-using Gui;
 using Models;
 using Models.LogEntry;
+using Services;
 using UnityEngine;
 
-namespace Services
+namespace Gui.Service
 {
     public class SessionGuiService
     {
@@ -45,6 +45,10 @@ namespace Services
         public void SetActive(bool state)
         {   
             _sessionGui.SetActive(state);
+            if (state) return;
+            _sessionGui.LogGui.ClearLog();
+            _sessionGui.LogEntryInspGui.SetInspectionText("");
+            _sessionGui.MatchMakingGui.ClearRealTimeSessionKeys();
         }
         
         /**

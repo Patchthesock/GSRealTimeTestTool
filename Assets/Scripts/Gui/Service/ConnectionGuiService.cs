@@ -1,8 +1,6 @@
 ﻿using GameSparks.Core;
-using Gui;
-using UnityEngine;
 
-namespace Services
+namespace Gui.Service
 {
     public class ConnectionGuiService
     {
