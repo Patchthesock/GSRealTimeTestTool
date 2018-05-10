@@ -60,13 +60,13 @@ namespace Services
                 case LogEntryTypes.OnPlayerDisconnect: return GetSimpleLogEntryCsvEntry(l);
                 
                 // Packet Entries
-                case LogEntryTypes.PingPacket: break;
-                case LogEntryTypes.PongPacket: break;
-                case LogEntryTypes.BlankPacket: break;
-                case LogEntryTypes.UnstructuredPacket: break;
+                case LogEntryTypes.PingPacket: return string.Empty;
+                case LogEntryTypes.PongPacket: return GetPongPacketCsvEntry(l);
+                case LogEntryTypes.BlankPacket: return string.Empty;
+                case LogEntryTypes.UnstructuredPacket: return string.Empty;
                 
                 // Quality of Service Test Result Entry
-                case LogEntryTypes.QualityOfServiceTestResult: break;
+                case LogEntryTypes.QualityOfServiceTestResult: return string.Empty;
                 default: return GetSimpleLogEntryCsvEntry(l);
             }
             //var s = l.Message + ",";
@@ -82,16 +82,20 @@ namespace Services
             //s += l.LatencyDetail.PingTime + ",";
             //s += l.LatencyDetail.PongTime + ",";
             //return s + l.CreatedAt + "\r";
-            return string.Empty;
         }
 
         private static string GetSimpleLogEntryCsvEntry(ILogEntry l)
         {
-            var s = l.GetCreatedAt() + ",";
-            s += l.GetLogEntryType() + ",";
-            s += l.GetFullInfo() + ",";
-            s += l.GetDirection() + ",";
-            return s;
+            return string.Format("{0},{1},{2},{3}" + ',' * 11,
+                l.GetCreatedAt(), l.GetLogEntryType(), l.GetFullInfo(), l.GetDirection());
+        }
+
+        private static string GetPongPacketCsvEntry(ILogEntry l)
+        {
+            var p = (PongPacketLog) l;
+            return string.Format("{0},{1},{2},{3},{4}" + ',' * 10,
+                p.GetCreatedAt(), p.GetLogEntryType(), p.GetFullInfo(), p.GetDirection(),
+                p.GetFullInfo());
         }
 
         private readonly string _path;
