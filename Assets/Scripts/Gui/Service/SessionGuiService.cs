@@ -84,6 +84,9 @@ namespace Gui.Service
                 _sessionGui.MatchMakingGui.AddRealTimeSessionKey(rtSession.MatchId);
                 OnLogEntryReceived(LogEntryFactory.CreateMatchFoundLogEntry(rtSession));
             });
+            
+            // TODO: This needs to be cleaned up
+            // Real Time Control should be active based on session status.
             _sessionGui.MatchMakingGui.Initialize(
                 rtSessionKey =>
                 {

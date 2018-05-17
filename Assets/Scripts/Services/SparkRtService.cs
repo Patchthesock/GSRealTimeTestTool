@@ -94,10 +94,10 @@ namespace Services
         public void ConnectSession(RtSession s)
         {
             _gameSparksRtUnity.Configure(
-                new FindMatchResponse(new GSRequestData()   // In order to create a new RtSession 
-                .AddString("host", s.HostUrl)               // we need a 'FindMatchResponse' that 
-                .AddNumber("port", (double) s.PortId)       // we can then us to configure a Real 
-                .AddString("accessToken", s.AccessToken)), // Time Session from
+                
+                // Note a MatchFoundMessage can also be used here.
+                // Gets the message needed to configure a real time session.
+                GetMatchFoundResponse(s),
 
                 // OnPlayerConnected / Disconnected Callbacks
                 peerId => { OnLogEntry(LogEntryFactory.CreatePeerConnectedLogEntry(peerId)); },
@@ -115,13 +115,13 @@ namespace Services
                     {
                         case (int) OpCode.Ping:
                             OnPingReceived(packet);
-                            break;
+                            return;
                         case (int) OpCode.Pong:
                             OnPongReceived(packet);
-                            break;
+                            return;
                         default:
                             OnPacketReceived(packet);
-                            break;
+                            return;
                     }
                 });
             
@@ -199,6 +199,14 @@ namespace Services
         private void OnLogEntry(ILogEntry e)
         {
             foreach (var l in _onLogEntryReceivedListeners) l(e);
+        }
+
+        private static FindMatchResponse GetMatchFoundResponse(RtSession s)
+        {
+            return new FindMatchResponse(new GSRequestData()
+                .AddString("host", s.HostUrl)
+                .AddNumber("port", (double) s.PortId)
+                .AddString("accessToken", s.AccessToken));
         }
 
         private bool _rtConnected;

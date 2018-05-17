@@ -10,7 +10,7 @@ namespace Controllers
 {
     public class GuiController
     {
-        // TODO: Better Initialization
+        // TODO: Better constructor initialization
         public GuiController(
             AuthGui authGui,
             SessionGui sessionGui,

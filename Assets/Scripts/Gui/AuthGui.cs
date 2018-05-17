@@ -31,13 +31,14 @@ namespace Gui
         {
             gameObject.SetActive(state);
         }
-        
+
         /**
-         * <summary>Clear Log</summary>
+         * <summary>Set Authenticated</summary>
          */
-        public void ClearLog()
+        public void SetAuthenticated(bool state)
         {
-            Log.text = "";
+            if (state) ClearLog();
+            LogoutBtn.gameObject.SetActive(state);
         }
         
         /**
@@ -47,6 +48,11 @@ namespace Gui
         public void AddLogEntry(string msg)
         {
             Log.text += msg + "\n";
+        }
+        
+        private void ClearLog()
+        {
+            Log.text = "";
         }
         
         private void InitLogoutBtn(Action onClick)

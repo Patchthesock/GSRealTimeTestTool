@@ -58,11 +58,12 @@ namespace Gui
             MatchMakingBtn.onClick.AddListener(() =>
             {
                 int d;
-                if (int.TryParse(SkillIpt.text, out d)) onFindMatch(d, MatchShortCodeIpt.text);
-                else {
+                if (!int.TryParse(SkillIpt.text, out d))
+                {
+                    d = 0;
                     SkillIpt.text = "0";
-                    onFindMatch(0, MatchShortCodeIpt.text);
                 }
+                onFindMatch(d, MatchShortCodeIpt.text);
             });
         }
 

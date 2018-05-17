@@ -47,8 +47,8 @@ namespace Factory
         public static ArraySegment<byte> GetUnstructuredData(int requestId)
         {
             var b = new byte[2];
-            b[0] = (byte) requestId;
             b[1] = byte.MaxValue;
+            b[0] = (byte) requestId;
             return new ArraySegment<byte>(b);
         }
     }

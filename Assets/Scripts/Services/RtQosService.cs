@@ -33,18 +33,21 @@ namespace Services
         public void OnLogEntryReceived(ILogEntry l)
         {
             if (!_activeTest) return;
+            // ReSharper disable once SwitchStatementMissingSomeCases
             switch (l.GetLogEntryType())
             {
                 case LogEntryTypes.PingPacket:
                 {
                     _pingCount++;
-                    break;
+                    return;
                 }
                 case LogEntryTypes.PongPacket:
                 {
-                    _pongs.Add((PongPacketLog) l);
-                    break;
+                    var i = (PongPacketLog) l;
+                    _pongs.Add(i.GetLatency());
+                    return;
                 }
+                default: return;
             }
         }
 
@@ -74,7 +77,7 @@ namespace Services
             WriteOutResults(new PingTestResults(
                 _pingCount,
                 _pongs.Count,
-                GetAverageKBits(_pongs),
+                GetAverageThroughput(_pongs),
                 GetAverageLatency(_pongs),
                 GetAverageRoundTripTime(_pongs)));
             
@@ -98,25 +101,25 @@ namespace Services
             return !e.Any() ? 0 : e.Average();
         }
 
-        private static double GetAverageKBits(IEnumerable<PongPacketLog> e)
+        private static double GetAverageLatency(IEnumerable<Latency> e)
         {
             return GetAverage(e
-                .Where(i => i.GetLatency().Speed > 0)
-                .Select(i => i.GetLatency().Speed).ToList());
+                .Where(i => i.Lag > 0)
+                .Select(i => i.Lag).ToList());
+        }
+        
+        private static double GetAverageThroughput(IEnumerable<Latency> e)
+        {
+            return GetAverage(e
+                .Where(i => i.Throughput > 0)
+                .Select(i => i.Throughput).ToList());
         }
 
-        private static double GetAverageLatency(IEnumerable<PongPacketLog> e)
+        private static double GetAverageRoundTripTime(IEnumerable<Latency> e)
         {
             return GetAverage(e
-                .Where(i => i.GetLatency().Lag > 0)
-                .Select(i => i.GetLatency().Lag).ToList());
-        }
-
-        private static double GetAverageRoundTripTime(IEnumerable<PongPacketLog> e)
-        {
-            return GetAverage(e
-                .Where(i => i.GetLatency().RoundTrip > 0)
-                .Select(i => i.GetLatency().RoundTrip).ToList());
+                .Where(i => i.RoundTrip > 0)
+                .Select(i => i.RoundTrip).ToList());
         }
 
         private int _pingCount;
@@ -124,7 +127,7 @@ namespace Services
         private IEnumerator _currentTest;
         
         private readonly AsyncProcessor _asyncProcessor;
-        private readonly List<PongPacketLog> _pongs = new List<PongPacketLog>();
+        private readonly List<Latency> _pongs = new List<Latency>();
         private readonly List<Action<ILogEntry>> _pingTestResultsListeners = new List<Action<ILogEntry>>();
     }
 }

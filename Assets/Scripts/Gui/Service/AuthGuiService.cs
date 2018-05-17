@@ -41,7 +41,7 @@ namespace Gui.Service
         private void EndSession(Action onEndSession)
         {
             onEndSession();
-            _authGui.LogoutBtn.gameObject.SetActive(false);
+            _authGui.SetAuthenticated(false);
             new GameSparks.Api.Requests.EndSessionRequest().Send(r =>
             {
                 if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
@@ -72,6 +72,7 @@ namespace Gui.Service
                 .SetPassword(password)
                 .Send(r =>
             {
+                // TODO: Check if error is timeout related; if so don't do registration
                 if (!r.HasErrors) OnAuth(r.DisplayName, r.UserId, onAuth);
                 else
                 {
@@ -92,9 +93,8 @@ namespace Gui.Service
 
         private void OnAuth(string name, string userId, Action<string, string> onAuth)
         {
-            _authGui.ClearLog();
             onAuth(name, userId);
-            _authGui.LogoutBtn.gameObject.SetActive(true);
+            _authGui.SetAuthenticated(true);
         }
         
         private static string GetError(GSData error)

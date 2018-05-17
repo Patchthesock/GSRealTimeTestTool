@@ -12,14 +12,17 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            InstallServices(GameSettings.AsyncProc, Container, GameSettings.GameSparksRtUnity, GameSettings.RtServiceSettings);
+            InstallServices(Container,
+                GameSettings.AsyncProc,
+                GameSettings.GameSparksRtUnity,
+                GameSettings.RtServiceSettings);
             InstallGui(Container, GameSettings.GuiSettings);
             InstallApp(Container, GameSettings.AppSettings);
         }
 
         private static void InstallServices(
-            AsyncProcessor a,
             DiContainer c,
+            AsyncProcessor a,
             GameSparksRTUnity gs,
             SparkRtService.Settings s)
         {
