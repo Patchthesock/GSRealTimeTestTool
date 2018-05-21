@@ -21,8 +21,11 @@ namespace Factory
         {
             return new SimpleLogEntry("Match Not Found", Directions.Inbound, LogEntryTypes.MatchNotFound);
         }
-        
-        
+
+        public static ILogEntry CreateMatchMakingErrorLogEntry()
+        {
+            return new SimpleLogEntry("Match Making Error", Directions.Inbound, LogEntryTypes.MatchNotFound);
+        }
         
         public static ILogEntry CreatePingSentEntryLog(int requestId, int opCode)
         {

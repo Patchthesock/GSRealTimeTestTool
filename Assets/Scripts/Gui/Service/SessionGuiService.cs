@@ -29,8 +29,8 @@ namespace Gui.Service
             Action<int> onSendUnstructuredPacket)
         {
             SetupMatchService(onStartRtSession);
-            _matchService.Initialize();
             _sessionGui.MatchMakingGui.SetActive(true);
+            _matchService.Initialize();
             
             _sessionGui.RealTimeControlGui.Initialize(
                 () => { OnStopRtSession(onStopRtSession); },
@@ -85,18 +85,22 @@ namespace Gui.Service
                 OnLogEntryReceived(LogEntryFactory.CreateMatchFoundLogEntry(rtSession));
             });
             
-            // TODO: This needs to be cleaned up
-            // Real Time Control should be active based on session status.
             _sessionGui.MatchMakingGui.Initialize(
                 rtSessionKey =>
                 {
                     if (!_sessionListDict.ContainsKey(rtSessionKey)) return;
                     onStartRtSession(_sessionListDict[rtSessionKey]);
+                    
+                    // TODO: This needs to be cleaned up
+                    // Real Time Control should be active based on session status.
                     _sessionGui.RealTimeControlGui.SetActive(true);
                 },
                 (skill, shortCode) =>
                 {
-                    _matchService.FindMatch(skill, shortCode);
+                    _matchService.FindMatch(skill, shortCode, () => // on match making Error
+                    {
+                        OnLogEntryReceived(LogEntryFactory.CreateMatchMakingErrorLogEntry());
+                    });
                     OnLogEntryReceived(LogEntryFactory.CreateMatchMakingRequestLogEntry(skill, shortCode));
                 });
         }

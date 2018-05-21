@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GameSparks.Api.Messages;
 using Models;
 
-namespace Services
+namespace Gui.Service
 {
     public class MatchService
     {
@@ -14,12 +14,15 @@ namespace Services
             MatchNotFoundMessage.Listener += OnMatchNotFound;
         }
         
-        public void FindMatch(int skill, string shortCode)
+        public void FindMatch(int skill, string shortCode, Action onError)
         {
             new GameSparks.Api.Requests.MatchmakingRequest()
                 .SetSkill(skill)    
                 .SetMatchShortCode(shortCode)
-                .Send(res => { });
+                .Send(res =>
+                {
+                    if (res.HasErrors) onError();
+                });
         }
 
         public void SubscribeToOnMatchFound(Action<RtSession> onMatchFound)
