@@ -26,12 +26,12 @@ namespace Models
         public override string ToString()
         {
             var s = new StringBuilder();
-            s.AppendLine("Host URL: " + HostUrl);
-            s.AppendLine("Port: " + PortId);
-            s.AppendLine("MatchId: " + MatchId);
-            s.AppendLine("Opponents: " + PlayerList.Count);
+            s.AppendLine(string.Format("Host URL: {0}", HostUrl));
+            s.AppendLine(string.Format("Port: {0}", PortId));
+            s.AppendLine(string.Format("MatchId: {0}", MatchId));
+            s.AppendLine(string.Format("Opponents: {0}", PlayerList.Count));
             foreach (var p in PlayerList) s.AppendLine(p.ToString());
-            s.AppendLine("Access Token: " + AccessToken);
+            s.AppendLine(string.Format("Access Token: {0}", AccessToken));
             return s.ToString();
         }
 
