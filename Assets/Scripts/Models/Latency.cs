@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Models
 {
@@ -30,8 +31,10 @@ namespace Models
         
         public override string ToString()
         {
-            return string.Format("Latency: {0}\nThroughput: {1}\nRound Trip Time: {2}",
-                Lag, Throughput, RoundTrip);
+            return new StringBuilder()
+                .AppendLine($"Latency: {Lag}")
+                .AppendLine($"Throughput: {Throughput}")
+                .AppendLine($"Round Trip Time: {RoundTrip}").ToString();
         }
     }
 }

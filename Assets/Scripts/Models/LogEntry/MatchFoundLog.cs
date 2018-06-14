@@ -15,7 +15,7 @@ namespace Models.LogEntry
         
         public string GetTitle()
         {
-            return "Match Found :: Inbound :: " + _rtSession.MatchId;
+            return $"Match Found :: Inbound :: {_rtSession.MatchId}";
         }
 
         public string GetFullInfo()

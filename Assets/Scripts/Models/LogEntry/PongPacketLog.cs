@@ -22,7 +22,7 @@ namespace Models.LogEntry
         
         public string GetTitle()
         {
-            return LogEntryTypes.PongPacket + " :: " + _direction + " :: " + _createdAt;
+            return $"{LogEntryTypes.PongPacket} :: {_direction} :: {_createdAt}";
         }
 
         public string GetFullInfo()

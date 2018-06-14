@@ -1,13 +1,9 @@
-﻿namespace Models
+﻿using System.Text;
+
+namespace Models
 {
     public class PingTestResults
     {
-        public readonly int PingsSent;
-        public readonly int PongsReceived;
-        public readonly double AverageKBits;
-        public readonly double AverageLatency;
-        public readonly double AverageRoundTripTime;
-
         public PingTestResults(
             int pingsSent,
             int pongsReceived,
@@ -15,21 +11,28 @@
             double averageLatency,
             double averageRoundTripTime)
         {
-            PingsSent = pingsSent;
-            AverageKBits = averageKBits;
-            PongsReceived = pongsReceived;
-            AverageLatency = averageLatency;
-            AverageRoundTripTime = averageRoundTripTime;
+            _pingsSent = pingsSent;
+            _averageKBits = averageKBits;
+            _pongsReceived = pongsReceived;
+            _averageLatency = averageLatency;
+            _averageRoundTripTime = averageRoundTripTime;
         }
 
         public override string ToString()
         {
-            var s = "Pings Sent: " + PingsSent + "\n";
-            s += "Pongs Received: " + PongsReceived + "\n";
-            s += "Average kbits: " + AverageKBits + "\n";
-            s += "Average Latency: " + AverageLatency + "\n";
-            s += "Average Round Trip Time: " + AverageRoundTripTime + "\n";
-            return s;
+            return new StringBuilder()
+                .AppendLine($"Pings Sent: {_pingsSent}")
+                .AppendLine($"Pongs Received: {_pongsReceived}")
+                .AppendLine($"Average kbits: {_averageKBits}")
+                .AppendLine($"Average Latency: {_averageLatency}")
+                .AppendLine($"Average Round Trip Time: {_averageRoundTripTime}")
+                .ToString();
         }
+        
+        private readonly int _pingsSent;
+        private readonly int _pongsReceived;
+        private readonly double _averageKBits;
+        private readonly double _averageLatency;
+        private readonly double _averageRoundTripTime;
     }
 }

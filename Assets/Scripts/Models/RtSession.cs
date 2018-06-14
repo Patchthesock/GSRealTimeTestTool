@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GameSparks.Api.Messages;
 
@@ -10,48 +10,56 @@ namespace Models
         public readonly string HostUrl;
         public readonly string MatchId;
         public readonly string AccessToken;
-        public readonly List<RtPlayer> PlayerList;
+        private readonly string _toString;
 
         public RtSession(MatchFoundMessage message)
         {
             HostUrl = message.Host;
             MatchId = message.MatchId;
-            PlayerList = new List<RtPlayer>();
+            PortId = message.Port ?? 0;
             AccessToken = message.AccessToken;
-            if (message.Port != null) PortId = (int) message.Port;
-            foreach (var p in message.Participants)
-                if (p.PeerId != null) PlayerList.Add(new RtPlayer(p.DisplayName, p.Id, (int) p.PeerId));
+            _toString = CreateToString(message);
         }
 
         public override string ToString()
         {
-            var s = new StringBuilder();
-            s.AppendLine(string.Format("Host URL: {0}", HostUrl));
-            s.AppendLine(string.Format("Port: {0}", PortId));
-            s.AppendLine(string.Format("MatchId: {0}", MatchId));
-            s.AppendLine(string.Format("Opponents: {0}", PlayerList.Count));
-            foreach (var p in PlayerList) s.AppendLine(p.ToString());
-            s.AppendLine(string.Format("Access Token: {0}", AccessToken));
-            return s.ToString();
+            return _toString;
         }
 
-        public class RtPlayer
+        private static string CreateToString(MatchFoundMessage m)
         {
-            public readonly string Id;
-            public readonly int PeerId;
-            public readonly string DisplayName;
-            
+            var s = new StringBuilder();
+            s.AppendLine($"Host URL: {m.Host}");
+            s.AppendLine($"Port: {m.Port}");
+            s.AppendLine($"MatchId: {m.MatchId}");
+            s.AppendLine($"Players: {m.Participants.Count()}");
+            foreach (var p in m.Participants) s.AppendLine(CreatePlayer(p).ToString());
+            s.AppendLine($"Access Token: {m.AccessToken}");
+            return s.ToString();
+        }
+        
+        private static RtPlayer CreatePlayer(MatchFoundMessage._Participant p)
+        {
+            return new RtPlayer(p.DisplayName, p.Id, p.PeerId ?? 0);
+        }
+        
+        private class RtPlayer
+        {
             public RtPlayer(string displayName, string id, int peerId)
             {
-                Id = id;
-                PeerId = peerId;
-                DisplayName = displayName;
+                _id = id;
+                _peerId = peerId;
+                _displayName = displayName;
             }
 
             public override string ToString()
             {
-                return DisplayName + " - PeerId: " + PeerId;
+                return $"{_displayName} - PeerId: {_peerId} - {_id}";
             }
+            
+            private readonly string _id;
+            private readonly int _peerId;
+            private readonly string _displayName;
         }
     }
 }

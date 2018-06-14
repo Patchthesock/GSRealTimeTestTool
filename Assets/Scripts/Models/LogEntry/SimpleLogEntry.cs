@@ -22,15 +22,11 @@ namespace Models.LogEntry
 
         public string GetTitle()
         {
-            return _logType + " :: " + _direction + " :: " + _createdAt;
+            return $"{_logType} :: {_direction} :: {_createdAt}";
         }
 
         public string GetFullInfo()
         {
-            //var s = Message + "\nDirection: " + Direction + "\n\n";
-            //if (PacketDetail != null) s += PacketDetail.ToString();
-            //if (LatencyDetail != null) s += LatencyDetail.ToString();
-            //return s;
             return _info;
         }
 
