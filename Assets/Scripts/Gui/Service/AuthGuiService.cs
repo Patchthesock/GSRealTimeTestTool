@@ -1,107 +1,141 @@
 ﻿using System;
+using System.Collections.Generic;
 using GameSparks.Core;
 
 namespace Gui.Service
 {
     public class AuthGuiService
     {
-        public AuthGuiService(AuthGui authGui)
+        public AuthGuiService(
+            AuthGui authGui,
+            SessionStatusGui sessionGui)
         {
             _authGui = authGui;
+            _sessionGui = sessionGui;
         }
 
         /**
          * <summary>Initialize</summary>
-         * <param name="onEndSession">On End Session Logic</param>
-         * <param name="onReg">On Player Registration Logic</param>
          * <param name="onAuth">On Player Authentication Logic</param>
-         * <param name="onDeviceAuth">On Device Authentication Logic</param>
+         * <param name="onEndSession">On End Session Logic</param>
          */
         public void Initialize(
-            Action onEndSession,
-            Action<string, string> onReg,
-            Action<string, string> onAuth,
-            Action<string, string> onDeviceAuth)
+            Action onAuth,
+            Action onEndSession)
         {
-            _authGui.Initialize(
-                () => { EndSession(onEndSession); },
-                () => { DeviceAuthenticate(onDeviceAuth); },
-                (u, p) => { Authenticate(u, p, onReg, onAuth); });
+            _authGui.SetActive(false);
+            _sessionGui.SetActive(false);
+            _authGui.Initialize( // Initialize Authentication Screen
+                () => { DeviceAuthenticate(onAuth); },
+                (u, p) => { Authenticate(onAuth, u, p); });
+            _sessionGui.Initialize(() => { EndSession(onEndSession); }); // Initialize Session Screen
+            
+            GS.GameSparksAvailable += r =>
+            {
+                if (!r) return;
+                if (!GS.Authenticated) _authGui.SetActive(true);
+                else
+                {
+                    OnAuthenticated();
+                    onAuth();
+                } 
+            };
         }
 
-        /**
-         * <summary>Set Active</summary>
-         * <param name="state">State</param>
-         */
-        public void SetActive(bool state)
+        private void OnAuthenticated()
         {
-            _authGui.SetActive(state);
+            new GameSparks.Api.Requests.AccountDetailsRequest().Send(r =>
+            {
+                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
+                else OnAuthenticated(r.UserId, r.DisplayName);
+            });
         }
 
+        private void OnAuthenticated(string userId, string username)
+        {
+            _authGui.ClearLog();
+            _authGui.SetActive(false);
+            _sessionGui.SetActive(true);
+            _sessionGui.DisplayName.text = $"{username} ({userId})";
+        }
+        
         private void EndSession(Action onEndSession)
         {
             onEndSession();
-            _authGui.SetAuthenticated(false);
+            _authGui.SetActive(true);
+            _sessionGui.SetActive(false);
             new GameSparks.Api.Requests.EndSessionRequest().Send(r =>
             {
+                GS.Reset();
                 if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
             });
         }
         
-        private void DeviceAuthenticate(Action<string, string> onAuth)
+        private void DeviceAuthenticate(Action onAuth)
         {
             new GameSparks.Api.Requests.DeviceAuthenticationRequest().Send(r =>
             {
                 if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
                 else
                 {
-                    onAuth(r.DisplayName, r.UserId);
-                    _authGui.LogoutBtn.gameObject.SetActive(true);
+                    OnAuthenticated(r.UserId, r.DisplayName);
+                    onAuth();
                 }
             });
         }
 
         private void Authenticate(
+            Action onAuth,
             string username,
-            string password,
-            Action<string, string> onReg,
-            Action<string, string> onAuth)
+            string password)
         {
             new GameSparks.Api.Requests.AuthenticationRequest()
                 .SetUserName(username)
                 .SetPassword(password)
                 .Send(r =>
             {
-                // TODO: Check if error is timeout related; if so don't do registration
-                if (!r.HasErrors) OnAuth(r.DisplayName, r.UserId, onAuth);
-                else
+                if (!r.HasErrors)
                 {
-                    _authGui.AddLogEntry(GetError(r.Errors));
-                    
-                    new GameSparks.Api.Requests.RegistrationRequest()
-                        .SetDisplayName(username)
-                        .SetUserName(username)
-                        .SetPassword(password)
-                        .Send(r2 =>
-                    {
-                        if (r2.HasErrors) _authGui.AddLogEntry(GetError(r2.Errors));
-                        else OnAuth(r2.DisplayName, r2.UserId, onReg);
-                    });
+                    OnAuthenticated(r.UserId, r.DisplayName);
+                    onAuth();
+                    return;
                 }
+
+                _authGui.AddLogEntry(GetError(r.Errors));
+                if (string.Equals(GetError(r.Errors), "timeout")) return;
+                new GameSparks.Api.Requests.RegistrationRequest()
+                    .SetDisplayName(username)
+                    .SetUserName(username)
+                    .SetPassword(password)
+                    .Send(r2 =>
+                {
+                    if (r2.HasErrors) _authGui.AddLogEntry(GetError(r2.Errors));
+                    else
+                    {
+                        OnAuthenticated(r2.UserId, r2.DisplayName);
+                        onAuth();
+                    }
+                });
             });
         }
-
-        private void OnAuth(string name, string userId, Action<string, string> onAuth)
+        
+        private static string GetError(GSData e)
         {
-            onAuth(name, userId);
-            _authGui.SetAuthenticated(true);
+            var l = new List<string> {"DETAILS", "USERNAME"};
+            foreach (var i in l)
+            {
+                if (e.GetString(i) == null) continue;
+                switch (i)
+                {
+                    case "DETAILS": return "Incorrect Username & Password";
+                    case "USERNAME": return "Username has already been registered";
+                    default: return "Unknown Error";
+                }
+            }
+            return string.Empty;
         }
         
-        private static string GetError(GSData error)
-        {
-            return error.JSON + "\n";
-        }
-
         private readonly AuthGui _authGui;
+        private readonly SessionStatusGui _sessionGui;
     }
 }

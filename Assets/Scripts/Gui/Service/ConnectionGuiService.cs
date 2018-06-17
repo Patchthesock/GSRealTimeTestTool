@@ -1,4 +1,5 @@
-﻿using GameSparks.Core;
+﻿using System.Text;
+using GameSparks.Core;
 
 namespace Gui.Service
 {
@@ -12,8 +13,8 @@ namespace Gui.Service
         public void Initialize()
         {
             GS.GameSparksAvailable += OnGsAvailable;
-            _connectionGui.UserId.text = "No User Logged In...";
-            _connectionGui.ConnectionStatus.text = "Connecting To GameSparks...";
+            //_connectionGui.UserId.text = "No User Logged In...";
+            //_connectionGui.ConnectionStatus.text = "Connecting To GameSparks...";
         }
 
         /**
@@ -29,8 +30,8 @@ namespace Gui.Service
          */
         public void OnEndSession()
         {
-            _connectionGui.UserId.text = "No User Logged In...";
-            _connectionGui.ConnectionStatus.text = "GameSparks Connected...";
+           // _connectionGui.UserId.text = "No User Logged In...";
+            //_connectionGui.ConnectionStatus.text = "GameSparks Connected...";
         }
         
         /**
@@ -40,8 +41,8 @@ namespace Gui.Service
          */
         public void OnRegistration(string name, string userId)
         {
-            _connectionGui.UserId.text = name + " (" + userId + ")";
-            _connectionGui.ConnectionStatus.text = "New User Registered...";
+           // _connectionGui.UserId.text = $"{name} ({userId})";
+           // _connectionGui.ConnectionStatus.text = "New User Registered...";
         }
 
         /**
@@ -51,15 +52,15 @@ namespace Gui.Service
          */
         public void OnAuthentication(string name, string userId)
         {
-            _connectionGui.UserId.text = name + " (" + userId + ")";
-            _connectionGui.ConnectionStatus.text = "User Authenticated...";
+          //  _connectionGui.UserId.text = $"{name} ({userId})";
+          //  _connectionGui.ConnectionStatus.text = "User Authenticated...";
         }
         
         private void OnGsAvailable(bool state)
         {
-            var s = "GameSparks ";
-            s += state ? "Connected..." : "Disconnected...";
-            _connectionGui.ConnectionStatus.text = s;
+          //  _connectionGui.ConnectionStatus.text = new StringBuilder()
+          //      .Append("GameSparks ")
+          //      .AppendLine(state ? "Connected..." : "Disconnected...").ToString();
         }
         
         private readonly ConnectionGui _connectionGui;
