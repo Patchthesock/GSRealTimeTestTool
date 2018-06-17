@@ -1,49 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using GameSparks.Core;
 using Gui;
 using Gui.Service;
 using Models;
 using Models.LogEntry;
-using Services;
 
 namespace Controllers
 {
     public class GuiController
     {
-        // TODO: Better constructor initialization
         public GuiController(
-            AuthGui authGui,
-            SessionGui sessionGui,
             ConnectionGui connectionGui,
-            PrefabBuilder prefabBuilder)
+            AuthGuiService authGuiService,
+            SessionGuiService sessionGuiService)
         {
-            _authService = new AuthGuiService(authGui);
-            _connectionService = new ConnectionGuiService(connectionGui);
-            _sessionService = new SessionGuiService(sessionGui, new MatchService(), prefabBuilder);
+            _connectionGui = connectionGui;
+            _authGuiService = authGuiService;
+            _sessionGuiService = sessionGuiService;
         }
 
         public void Initialize()
         {
-            _connectionService.Initialize();
+            SetInitialScreenDisplay();
+            InitializeSessionService();
+            InitializeConnectionStatusOverlay();
             
-            _authService.Initialize(
-                OnEndUserSession,
-                (name, userId) => { OnAuthentication(name, userId, true); },   // Registration
-                (name, userId) => { OnAuthentication(name, userId, false); },  // Authentication
-                (name, userId) => { OnAuthentication(name, userId, false); }); // Device Authentication
-            
-            _sessionService.Initialize(
-                OnSendPing,
-                OnStopRtSession,
-                OnSendBlankPacket,
-                OnStartPingTest,
-                OnStartRtSession,
-                OnSendUnstructuredPacket);
-            
-            // Initial Screen Order
-            _authService.SetActive(true);
-            _sessionService.SetActive(false);
-            _connectionService.SetActive(true);
+            _authGuiService.Initialize(() =>
+            { // OnAuthentication
+                _sessionGuiService.SetActive(true);
+            }, () => 
+            { // OnLogOut
+                OnStopRtSession();
+                _sessionGuiService.SetActive(false);
+            });
         }
 
         /**
@@ -52,7 +42,7 @@ namespace Controllers
          */
         public void OnLogEntryReceived(ILogEntry l)
         {
-            _sessionService.OnLogEntryReceived(l);
+            _sessionGuiService.OnLogEntryReceived(l);
         }
         
         /**
@@ -61,7 +51,7 @@ namespace Controllers
          */
         public void SetRealTimeActive(bool state)
         {
-            _sessionService.SetActive(true);
+            _sessionGuiService.SetActive(true);
         }
         
         #region Subscriptions
@@ -126,21 +116,33 @@ namespace Controllers
             _onStartPingTestListeners.Add(onStartPingTest);
         }
         #endregion
-        
-        private void OnAuthentication(string name, string userId, bool isReg)
+
+        private void SetInitialScreenDisplay()
         {
-            _authService.SetActive(false);
-            _sessionService.SetActive(true);
-            if (isReg) _connectionService.OnRegistration(name, userId);
-            else _connectionService.OnAuthentication(name, userId);
+            _sessionGuiService.SetActive(false);
+            _connectionGui.gameObject.SetActive(false);
+        }
+
+        private void InitializeSessionService()
+        {
+            _sessionGuiService.Initialize(
+                OnSendPing,
+                OnStopRtSession,
+                OnSendBlankPacket,
+                OnStartPingTest,
+                OnStartRtSession,
+                OnSendUnstructuredPacket);
+        }
+
+        private void InitializeConnectionStatusOverlay()
+        {
+            _connectionGui.gameObject.SetActive(true);
+            GS.GameSparksAvailable += r => { _connectionGui.SetActive(!r); };
         }
         
-        private void OnEndUserSession()
+        private void OnSendPing()
         {
-            OnStopRtSession();
-            _authService.SetActive(true);
-            _sessionService.SetActive(false);
-            _connectionService.OnEndSession();
+            foreach (var l in _sendPingPacketListeners) l();
         }
         
         private void OnStopRtSession()
@@ -162,20 +164,15 @@ namespace Controllers
         {
             foreach (var l in _sendUnstructuredPacketListeners) l(opCode);
         }
-        
-        private void OnSendPing()
-        {
-            foreach (var l in _sendPingPacketListeners) l();
-        }
 
         private void OnStartPingTest(int packetsPerSecond, int seconds)
         {
             foreach (var l in _onStartPingTestListeners) l(packetsPerSecond, seconds);
         }
 
-        private readonly AuthGuiService _authService;
-        private readonly SessionGuiService _sessionService;
-        private readonly ConnectionGuiService _connectionService;
+        private readonly ConnectionGui _connectionGui;
+        private readonly AuthGuiService _authGuiService;
+        private readonly SessionGuiService _sessionGuiService;
         private readonly List<Action> _stopSessionListeners = new List<Action>();
         private readonly List<Action> _sendPingPacketListeners = new List<Action>();
         private readonly List<Action<int>> _sendBlankPacketListeners = new List<Action<int>>();

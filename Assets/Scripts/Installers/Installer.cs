@@ -1,6 +1,7 @@
 ﻿using System;
 using Controllers;
 using Gui;
+using Gui.Service;
 using Services;
 using Zenject;
 
@@ -28,6 +29,7 @@ namespace Installers
         {
             c.Bind<AsyncProcessor>().FromInstance(a);
             c.Bind<RtQosService>().AsSingle();
+            c.Bind<MatchService>().AsSingle();
             c.Bind<PrefabBuilder>().AsSingle();
             c.Bind<SparkRtService>().AsSingle();
             c.Bind<CsvWriterService>().AsSingle();
@@ -37,9 +39,14 @@ namespace Installers
 
         private static void InstallGui(DiContainer c, Settings.Gui g)
         {
+            // Gui Components
             c.Bind<AuthGui>().FromInstance(g.AuthGui).AsSingle();
             c.Bind<SessionGui>().FromInstance(g.SessionGui).AsSingle();
             c.Bind<ConnectionGui>().FromInstance(g.ConnectionGui).AsSingle();
+            c.Bind<SessionStatusGui>().FromInstance(g.SessionStatusGui).AsSingle();
+            
+            c.Bind<AuthGuiService>().AsSingle();
+            c.Bind<SessionGuiService>().AsSingle();          
             c.Bind<GuiController>().AsSingle();
         }
 
@@ -65,6 +72,7 @@ namespace Installers
                 public AuthGui AuthGui;
                 public SessionGui SessionGui;
                 public ConnectionGui ConnectionGui;
+                public SessionStatusGui SessionStatusGui;
             }
         }
     }
