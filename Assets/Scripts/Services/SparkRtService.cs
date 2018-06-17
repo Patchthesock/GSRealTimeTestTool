@@ -164,7 +164,7 @@ namespace Services
         private void OnPacketReceived(RTPacket p)
         {
              if (p.Data != null) OnStructuredPacketReceived(p);
-             else if (p.Stream != null && p.Stream.CanRead) OnUnstructuredPacketReceived(p); 
+             else if (p.Stream != null && p.Stream.CanRead) OnUnstructuredPacketReceived(p);
         }
 
         private void OnStructuredPacketReceived(RTPacket p)
