@@ -14,14 +14,10 @@ namespace GameSparks.Editor
     /// </summary>
     public class GameSparksRestApi {
 
-    	private static string HOST = "https://portal.gamesparks.net/";
+		private static string HOST = "https://config2.gamesparks.net/restv2/game/";
 		private static string HOST2 = "http://repo.gamesparks.net/unity-sdk/";
-        private static string HOST3 = "https://config2.gamesparks.net/restv2/game/";
-
-    	private static string REST_URL = HOST + "rest/";
 
     	static GameSparksRestApi() {
-
     		System.Net.ServicePointManager.ServerCertificateValidationCallback +=
     			delegate(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certificate,
     			         System.Security.Cryptography.X509Certificates.X509Chain chain,
@@ -29,12 +25,10 @@ namespace GameSparks.Editor
     		{
     			return true; // **** Always accept
     		};
-
-
     	}
 
     	public static String getDownloadable(string apiKey, string username, string password, string shortCode){
-    		string url = REST_URL + apiKey + "/binarycontent/" + shortCode;
+			string url = HOST + apiKey + "/config/~downloadables/" + shortCode + "/file";
     		WebClient wc = new WebClient();
     		NetworkCredential myCreds = new NetworkCredential(username, password);
     		wc.Credentials = myCreds;
@@ -48,7 +42,7 @@ namespace GameSparks.Editor
     	}
 
     	public static String setDownloadable(string apiKey, string username, string password, string shortCode, string fileName){
-    		string url = REST_URL + apiKey + "/binarycontent/" + shortCode;
+			string url = HOST + apiKey + "/config/~downloadables/" + shortCode + "/file";
     		String ret = null;
 			string extension = Path.GetExtension (shortCode);
 			if (extension != null && extension.Length > 0) {
@@ -64,7 +58,7 @@ namespace GameSparks.Editor
     	}
 
     	public static String getApi(){
-    		string url = HOST3 + GameSparksSettings.ApiKey + "/sdk/" + GameSparksSettings.ApiSecret + "/GameSparksCustomSDK501.cs";
+    		string url = HOST + GameSparksSettings.ApiKey + "/sdk/" + GameSparksSettings.ApiSecret + "/GameSparksCustomSDK501.cs";
     		Debug.Log(url);
     		WebClient wc = new WebClient();
     		String ret = null;

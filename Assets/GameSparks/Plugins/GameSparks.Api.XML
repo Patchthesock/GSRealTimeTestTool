@@ -849,6 +849,52 @@
             Indicates which player has changed the challenge
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData">
+            <summary>
+            Leaderboard entry data
+            As well as the parameters below there may be others depending on your game's configuration.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.City">
+            <summary>
+            The city where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.Country">
+            <summary>
+            The country code where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.ExternalIds">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.Rank">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.UserId">
+            <summary>
+            The unique player id for this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.UserName">
+            <summary>
+            The players display name.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.When">
+            <summary>
+            The date when this leaderboard entry was created.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Messages.ChallengeChangedMessage._Challenge">
             <summary>
             A nested object that represents the challenge data.
@@ -1013,52 +1059,6 @@
         <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._Challenge._PlayerTurnCount.PlayerId">
             <summary>
             The unique player id.
-            </summary>
-        </member>
-        <member name="T:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData">
-            <summary>
-            Leaderboard entry data
-            As well as the parameters below there may be others depending on your game's configuration.
-            </summary>
-        </member>
-        <member name="M:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.City">
-            <summary>
-            The city where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.Country">
-            <summary>
-            The country code where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.ExternalIds">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.Rank">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.UserId">
-            <summary>
-            The unique player id for this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.UserName">
-            <summary>
-            The players display name.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeChangedMessage._LeaderboardData.When">
-            <summary>
-            The date when this leaderboard entry was created.
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.ChallengeChatMessage.Challenge">
@@ -1508,6 +1508,52 @@
             A textual title for the message.
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData">
+            <summary>
+            Leaderboard entry data
+            As well as the parameters below there may be others depending on your game's configuration.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.City">
+            <summary>
+            The city where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.Country">
+            <summary>
+            The country code where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.ExternalIds">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.Rank">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.UserId">
+            <summary>
+            The unique player id for this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.UserName">
+            <summary>
+            The players display name.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.When">
+            <summary>
+            The date when this leaderboard entry was created.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Messages.ChallengeDrawnMessage._Challenge">
             <summary>
             A nested object that represents the challenge data.
@@ -1672,52 +1718,6 @@
         <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._Challenge._PlayerTurnCount.PlayerId">
             <summary>
             The unique player id.
-            </summary>
-        </member>
-        <member name="T:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData">
-            <summary>
-            Leaderboard entry data
-            As well as the parameters below there may be others depending on your game's configuration.
-            </summary>
-        </member>
-        <member name="M:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.City">
-            <summary>
-            The city where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.Country">
-            <summary>
-            The country code where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.ExternalIds">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.Rank">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.UserId">
-            <summary>
-            The unique player id for this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.UserName">
-            <summary>
-            The players display name.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeDrawnMessage._LeaderboardData.When">
-            <summary>
-            The date when this leaderboard entry was created.
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.ChallengeExpiredMessage.Challenge">
@@ -2564,6 +2564,52 @@
             The winning players name
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData">
+            <summary>
+            Leaderboard entry data
+            As well as the parameters below there may be others depending on your game's configuration.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.City">
+            <summary>
+            The city where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.Country">
+            <summary>
+            The country code where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.ExternalIds">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.Rank">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.UserId">
+            <summary>
+            The unique player id for this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.UserName">
+            <summary>
+            The players display name.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.When">
+            <summary>
+            The date when this leaderboard entry was created.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Messages.ChallengeLostMessage._Challenge">
             <summary>
             A nested object that represents the challenge data.
@@ -2728,52 +2774,6 @@
         <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._Challenge._PlayerTurnCount.PlayerId">
             <summary>
             The unique player id.
-            </summary>
-        </member>
-        <member name="T:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData">
-            <summary>
-            Leaderboard entry data
-            As well as the parameters below there may be others depending on your game's configuration.
-            </summary>
-        </member>
-        <member name="M:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.City">
-            <summary>
-            The city where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.Country">
-            <summary>
-            The country code where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.ExternalIds">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.Rank">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.UserId">
-            <summary>
-            The unique player id for this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.UserName">
-            <summary>
-            The players display name.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeLostMessage._LeaderboardData.When">
-            <summary>
-            The date when this leaderboard entry was created.
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.ChallengeStartedMessage.Challenge">
@@ -3650,6 +3650,52 @@
             The winning player's name.
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData">
+            <summary>
+            Leaderboard entry data
+            As well as the parameters below there may be others depending on your game's configuration.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.City">
+            <summary>
+            The city where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.Country">
+            <summary>
+            The country code where the player was located when they logged this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.ExternalIds">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.Rank">
+            <summary>
+            The players rank.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.UserId">
+            <summary>
+            The unique player id for this leaderboard entry.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.UserName">
+            <summary>
+            The players display name.
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.When">
+            <summary>
+            The date when this leaderboard entry was created.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Messages.ChallengeWonMessage._Challenge">
             <summary>
             A nested object that represents the challenge data.
@@ -3816,52 +3862,6 @@
             The unique player id.
             </summary>
         </member>
-        <member name="T:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData">
-            <summary>
-            Leaderboard entry data
-            As well as the parameters below there may be others depending on your game's configuration.
-            </summary>
-        </member>
-        <member name="M:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.#ctor(GameSparks.Core.GSData)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.City">
-            <summary>
-            The city where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.Country">
-            <summary>
-            The country code where the player was located when they logged this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.ExternalIds">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.Rank">
-            <summary>
-            The players rank.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.UserId">
-            <summary>
-            The unique player id for this leaderboard entry.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.UserName">
-            <summary>
-            The players display name.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Messages.ChallengeWonMessage._LeaderboardData.When">
-            <summary>
-            The date when this leaderboard entry was created.
-            </summary>
-        </member>
         <member name="P:GameSparks.Api.Messages.FriendMessage.FromId">
             <summary>
             The player's id who is sending the message.
@@ -4010,7 +4010,7 @@
         </member>
         <member name="P:GameSparks.Api.Messages.MatchFoundMessage.MatchData">
             <summary>
-            MatchData is arbitrary data that can be stored in a Match instance by a Cloud Code script.
+            The arbitrary data that is stored on a match instance in the matchData field
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.MatchFoundMessage.MatchGroup">
@@ -4041,6 +4041,11 @@
         <member name="P:GameSparks.Api.Messages.MatchFoundMessage.Participants">
             <summary>
             The participants in this match
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Messages.MatchFoundMessage.PendingMatchData">
+            <summary>
+            The arbitrary data that is stored on a pendingMatch in the matchData field
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.MatchFoundMessage.Port">
@@ -4115,7 +4120,7 @@
         </member>
         <member name="P:GameSparks.Api.Messages.MatchNotFoundMessage.MatchData">
             <summary>
-            MatchData is arbitrary data that can be stored in a Match instance by a Cloud Code script.
+            The arbitrary data that is stored on a pendingMatch in the matchData field.
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.MatchNotFoundMessage.MatchGroup">
@@ -4220,7 +4225,7 @@
         </member>
         <member name="P:GameSparks.Api.Messages.MatchUpdatedMessage.MatchData">
             <summary>
-            MatchData is arbitrary data that can be stored in a Match instance by a Cloud Code script.
+            The arbitrary data that is stored on a pendingMatch in the matchData field
             </summary>
         </member>
         <member name="P:GameSparks.Api.Messages.MatchUpdatedMessage.MatchGroup">
@@ -5193,6 +5198,11 @@
             The access token is used by the client to make authenticated requests on behalf of the end user.
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.AmazonConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.AmazonConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -5615,7 +5625,7 @@
         </member>
         <member name="M:GameSparks.Api.Requests.CreateChallengeRequest.SetEndTime(System.DateTime)">
             <summary>
-            The time at which this challenge will end
+            The time at which this challenge will end. This is required when the challenge is not linked to an achievement
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.CreateChallengeRequest.SetExpiryTime(System.DateTime)">
@@ -5856,6 +5866,11 @@
             The client application sends the authorization code to the authorization server to obtain an access token and, optionally, a refresh token.
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.FacebookConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.FacebookConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -6016,6 +6031,11 @@
         <member name="M:GameSparks.Api.Requests.GameCenterConnectRequest.SetDisplayName(System.String)">
             <summary>
             The display of the current player from GameCenter. This will be used as the displayName of the gamesparks player if created (or syncDisplayname is true)
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.GameCenterConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.GameCenterConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -6396,6 +6416,11 @@
             The display of the current player from Google Play. This will be used as the displayName of the gamesparks player if created (or syncDisplayname is true)
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.GooglePlayConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.GooglePlayConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -6466,6 +6491,11 @@
         <member name="M:GameSparks.Api.Requests.GooglePlusConnectRequest.SetCode(System.String)">
             <summary>
             The access code is used by the client to make authenticated requests on behalf of the end user. Requires clientId and clientsecret to be set
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.GooglePlusConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.GooglePlusConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -6650,6 +6680,11 @@
         <member name="M:GameSparks.Api.Requests.KongregateConnectRequest.#ctor(GameSparks.Core.GSInstance)">
             <summary>
             Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.KongregateConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.KongregateConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -7368,6 +7403,11 @@
             The display name of the current player from NX. This will be used as the displayName of the gamesparks player if created (or syncDisplayname is true)
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.NXConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.NXConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -7399,8 +7439,72 @@
             Indicates that the associated players displayName should be kept in syn with this profile when it's updated by the external provider.
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Requests.PSNAccountConnectRequest">
+            <summary>
+            Allows a PSN account to be used as an authentication mechanism.}
+            Once authenticated the platform can determine the current players details from the PSN platform and store them within GameSparks.}
+            GameSparks will determine the player's friends and whether any of them are currently registered with the game.}
+            If the PSN user is already linked to a player, the current session will switch to the linked player.}
+            If the current player has previously created an account using either DeviceAuthentictionRequest or RegistrationRequest AND the PSN user is not already registered with the game, the PSN user will be linked to the current player.}
+            If the current player has not authenticated and the PSN user is not known, a new player will be created using the PSN details and the session will be authenticated against the new player.}
+            If the PSN user is already known, the session will switch to being the previously created user.}
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.#ctor(GameSparks.Core.GSInstance)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetAuthorizationCode(System.String)">
+            <summary>
+            The authorization code obtained from PSN, as described here https://ps4.scedev.net/resources/documents/SDK/latest/NpAuth-Reference/0008.html
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
+            <summary>
+            Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetErrorOnSwitch(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if an account switch would have occurred, rather than switching automatically.  Defaults to false.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetRedirectUri(System.String)">
+            <summary>
+            When using the authorization code obtained from PlayStation®4/PlayStation®Vita/PlayStation®3, this is not required.
+            When using the authorization code obtained with the PC authentication gateway, set the URI issued from the Developer Network website.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetSegments(GameSparks.Core.GSRequestData)">
+            <summary>
+            An optional segment configuration for this request.
+            If this request creates a new player on the gamesparks platform, the segments of the new player will match the values provided
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetSwitchIfPossible(System.Boolean)">
+            <summary>
+            Indicates that the server should switch to the supplied profile if it isalready associated to a player. Defaults to false.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNAccountConnectRequest.SetSyncDisplayName(System.Boolean)">
+            <summary>
+            Indicates that the associated players displayName should be kept in syn with this profile when it's updated by the external provider.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Requests.PSNConnectRequest">
             <summary>
+            DEPRECATED - Use PSNAccountConnectRequest instead.}
             Allows a PSN account to be used as an authentication mechanism.}
             Once authenticated the platform can determine the current players details from the PSN platform and store them within GameSparks.}
             GameSparks will determine the player's friends and whether any of them are currently registered with the game.}
@@ -7423,6 +7527,11 @@
         <member name="M:GameSparks.Api.Requests.PSNConnectRequest.SetAuthorizationCode(System.String)">
             <summary>
             The authorization code obtained from PSN, as described here https://ps4.scedev.net/resources/documents/SDK/latest/NpAuth-Reference/0008.html
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.PSNConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.PSNConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -7557,6 +7666,11 @@
             <summary>
             The access token is used by the client to make authenticated requests on behalf of the end user.
             When the access token expires, attempts to use it will fail, and a new access token must be obtained using the refresh token.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.QQConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.QQConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -7924,6 +8038,11 @@
             Constructor
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.SteamConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.SteamConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -7978,6 +8097,11 @@
         <member name="M:GameSparks.Api.Requests.TwitchConnectRequest.SetAccessToken(System.String)">
             <summary>
             The access token is used by the client to make authenticated requests on behalf of the end user.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.TwitchConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.TwitchConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -8037,6 +8161,11 @@
             The accessToken represents a player's permission to share access to their account with your application.
             To obtain an accessToken for the player see https://dev.twitter.com/docs/auth/obtaining-access-tokens.
             Currently, Twitter accessTokens do not expire but they can be revoked by the player.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.TwitterConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.TwitterConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -8117,6 +8246,11 @@
             The accessToken represents a player's permission to share access to their account with your application.
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.ViberConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.ViberConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -8172,6 +8306,11 @@
             <summary>
             The access token sould be obtained from WeChat
             It is used by the client to make authenticated requests on behalf of the end user.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.WeChatConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.WeChatConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -8300,6 +8439,11 @@
             The displayName to set for the player in GameSparks
             </summary>
         </member>
+        <member name="M:GameSparks.Api.Requests.XBOXLiveConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
+            </summary>
+        </member>
         <member name="M:GameSparks.Api.Requests.XBOXLiveConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
             <summary>
             Indicates that the server should not try to link the external profile with the current player.  If false, links the external profile to the currently signed in player.  If true, creates a new player and links the external profile to them.  Defaults to false.
@@ -8333,6 +8477,47 @@
             Indicates that the associated players displayName should be kept in syn with this profile when it's updated by the external provider.
             </summary>
         </member>
+        <member name="T:GameSparks.Api.Requests.XboxOneBuyGoodsRequest">
+            <summary>
+            Consumes a consumable item from Xbox Live}
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.#ctor(GameSparks.Core.GSInstance)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.SetCurrencyCode(System.String)">
+            <summary>
+            The ISO 4217 currency code representing the real-world currency used for this transaction.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.SetItemId(System.String)">
+            <summary>
+            The ID of the inventory item to consume. This should match the Xbox One product code on the virtual good.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.SetItemsConsumed(System.Int64)">
+            <summary>
+            The quantity of the inventory item to consume.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.SetSubUnitPrice(System.Double)">
+            <summary>
+            The price of this purchase
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneBuyGoodsRequest.SetUniqueTransactionByPlayer(System.Boolean)">
+            <summary>
+            If set to true, the transactionId from this receipt will not be globally valdidated, this will mean replays between players are possible.
+            It will only validate the transactionId has not been used by this player before.
+            </summary>
+        </member>
         <member name="T:GameSparks.Api.Requests.XboxOneConnectRequest">
             <summary>
             Allows an Xbox One XSTS token to be used as an authentication mechanism.}
@@ -8351,6 +8536,11 @@
         <member name="M:GameSparks.Api.Requests.XboxOneConnectRequest.#ctor(GameSparks.Core.GSInstance)">
             <summary>
             Constructor
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Requests.XboxOneConnectRequest.SetDoNotCreateNewPlayer(System.Boolean)">
+            <summary>
+            Indicates whether the server should return an error if a new player would have been registered, rather than creating the player.  Defaults to false.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Requests.XboxOneConnectRequest.SetDoNotLinkToCurrentPlayer(System.Boolean)">
@@ -8497,6 +8687,7 @@
         <member name="T:GameSparks.Api.Responses.AccountDetailsResponse._Location">
             <summary>
             Location details.
+            This product includes GeoLite data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
             </summary>
         </member>
         <member name="M:GameSparks.Api.Responses.AccountDetailsResponse._Location.#ctor(GameSparks.Core.GSData)">
@@ -9452,11 +9643,6 @@
             The download URL
             </summary>
         </member>
-        <member name="P:GameSparks.Api.Responses.GetLeaderboardEntriesResponse.Results">
-            <summary>
-            The leaderboard entry data
-            </summary>
-        </member>
         <member name="P:GameSparks.Api.Responses.GetMessageResponse.Message">
             <summary>
             The message data
@@ -9587,46 +9773,6 @@
             A JSON array of teams.
             </summary>
         </member>
-        <member name="T:GameSparks.Api.Responses.GetTeamResponse._Player">
-            <summary>
-            A nested object that represents a player.
-            </summary>
-        </member>
-        <member name="M:GameSparks.Api.Responses.GetTeamResponse._Player.#ctor(GameSparks.Core.GSData)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Achievements">
-            <summary>
-            The achievements of the Player
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.DisplayName">
-            <summary>
-            The display name of the Player
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.ExternalIds">
-            <summary>
-            The external Id's of the Player
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Id">
-            <summary>
-            The Id of the Player
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Online">
-            <summary>
-            The online status of the Player
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.VirtualGoods">
-            <summary>
-            The virtual goods of the Player
-            </summary>
-        </member>
         <member name="T:GameSparks.Api.Responses.GetTeamResponse._Team">
             <summary>
             A nested object that represents the team.
@@ -9698,6 +9844,46 @@
             </summary>
         </member>
         <member name="P:GameSparks.Api.Responses.GetTeamResponse._Team._Player.VirtualGoods">
+            <summary>
+            The virtual goods of the Player
+            </summary>
+        </member>
+        <member name="T:GameSparks.Api.Responses.GetTeamResponse._Player">
+            <summary>
+            A nested object that represents a player.
+            </summary>
+        </member>
+        <member name="M:GameSparks.Api.Responses.GetTeamResponse._Player.#ctor(GameSparks.Core.GSData)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Achievements">
+            <summary>
+            The achievements of the Player
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.DisplayName">
+            <summary>
+            The display name of the Player
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.ExternalIds">
+            <summary>
+            The external Id's of the Player
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Id">
+            <summary>
+            The Id of the Player
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.Online">
+            <summary>
+            The online status of the Player
+            </summary>
+        </member>
+        <member name="P:GameSparks.Api.Responses.GetTeamResponse._Player.VirtualGoods">
             <summary>
             The virtual goods of the Player
             </summary>
@@ -9931,11 +10117,6 @@
         <member name="P:GameSparks.Api.Responses.LeaderboardDataResponse._LeaderboardData.When">
             <summary>
             The date when this leaderboard entry was created.
-            </summary>
-        </member>
-        <member name="P:GameSparks.Api.Responses.LeaderboardsEntriesResponse.Results">
-            <summary>
-            The leaderboard entry data
             </summary>
         </member>
         <member name="P:GameSparks.Api.Responses.LeaveTeamResponse.Members">

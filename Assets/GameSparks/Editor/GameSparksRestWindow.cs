@@ -71,12 +71,12 @@ namespace GameSparks.Editor
     	string result="";
 
     	// Add menu item named "My Window" to the Window menu
-    	[MenuItem("GameSparks/REST Api")]
+    	/*[MenuItem("GameSparks/REST Api")]
     	public static void ShowWindow()
     	{
     		//Show existing window instance. If one doesn't exist, make one.
     		EditorWindow.GetWindow(typeof(GameSparksRestWindow));
-    	}
+    	}*/
     	
     	void OnGUI()
     	{
