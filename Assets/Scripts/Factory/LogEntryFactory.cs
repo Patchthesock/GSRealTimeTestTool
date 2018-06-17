@@ -8,7 +8,7 @@ namespace Factory
         public static ILogEntry CreateMatchMakingRequestLogEntry(int skill, string shortCode)
         {
             return new SimpleLogEntry(
-                "Match Making Request :: Skill " + skill + " - ShortCode " + shortCode,
+                $"Match Making Request :: Skill {skill} - ShortCode {shortCode}",
                 Directions.Outbound, LogEntryTypes.MatchMakingRequest);
         }
 
@@ -48,28 +48,28 @@ namespace Factory
                 Directions.Outbound, LogEntryTypes.BlankPacket);
         }
 
-
         public static ILogEntry CreateSessionJoinLogEntry()
         {
-            return new SimpleLogEntry("Joining Real Time Session", Directions.Outbound, LogEntryTypes.OnSessionJoin);
+            return new SimpleLogEntry(
+                "Joining Real Time Session", Directions.Outbound, LogEntryTypes.OnSessionJoin);
         }
         
         public static ILogEntry CreateSessionStateLogEntry(bool state)
         {
-            var m = "Real Time Ready: " + state;
-            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnSessionReady);
+            return new SimpleLogEntry(
+                $"Real Time Ready: {state}", Directions.Inbound, LogEntryTypes.OnSessionReady);
         }
         
         public static ILogEntry CreatePeerConnectedLogEntry(int peerId)
         {
-            var m = "Peer " + peerId + " Connected";
-            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnPlayerConnect);
+            return new SimpleLogEntry(
+                $"Peer {peerId} Connected",Directions.Inbound, LogEntryTypes.OnPlayerConnect);
         }
 
         public static ILogEntry CreatePeerDisconnectedLogEntry(int peerId)
         {
-            var m = "Peer " + peerId + " Disconnected";
-            return new SimpleLogEntry(m, Directions.Inbound, LogEntryTypes.OnPlayerDisconnect);
+            return new SimpleLogEntry(
+                $"Peer {peerId} Disconnected", Directions.Inbound, LogEntryTypes.OnPlayerDisconnect);
         }
 
         public static ILogEntry CreateLeaveSessionLogEntry()
@@ -78,8 +78,6 @@ namespace Factory
                 "Disconnected From Session", Directions.Outbound, LogEntryTypes.OnSessionLeave);
         }
         
-        
-
         public static ILogEntry CreateBlankReceviedLogEntry(PacketDetails p)
         {
             return new SimpleLogEntry(p.ToString(), Directions.Inbound, LogEntryTypes.BlankPacket);
