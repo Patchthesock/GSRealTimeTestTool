@@ -33,8 +33,8 @@ namespace Installers
             c.Bind<PrefabBuilder>().AsSingle();
             c.Bind<SparkRtService>().AsSingle();
             c.Bind<CsvWriterService>().AsSingle();
-            c.Bind<SparkRtService.Settings>().FromInstance(s).AsSingle();
             c.Bind<GameSparksRTUnity>().FromInstance(gs).AsSingle();
+            c.Bind<SparkRtService.Settings>().FromInstance(s).AsSingle();
         }
 
         private static void InstallGui(DiContainer c, Settings.Gui g)
@@ -54,7 +54,6 @@ namespace Installers
         {
             c.Bind<App.Settings>().FromInstance(s).AsSingle();
             c.Bind<IInitializable>().To<App>().AsSingle();
-            c.Bind<App>().AsSingle();
         }
 
         [Serializable]
