@@ -9,8 +9,8 @@ namespace Services
     {
         public CsvWriterService()
         {
+            _filename = string.Empty;
             _path = Application.dataPath + "/Log/";
-            _filename = DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
         }
         
         /**
@@ -18,9 +18,8 @@ namespace Services
          */
         public void CreateFile()
         {
-            Debug.Log("Creating: " + _path + _filename);
-            WriteLine("Created At,Log Type,Direction,Information,Size,OpCode,Sender,Request ID,"
-                + "Lag,Round Trip Time,kbit/s,Ping,Pong\r");
+            _filename = DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
+            WriteLine(GetFileTitle());
         }
 
         /**
@@ -55,6 +54,7 @@ namespace Services
                 // Session Control Entries
                 case LogEntryTypes.OnSessionJoin: return GetSimpleLogEntryCsvEntry(l);
                 case LogEntryTypes.OnSessionReady: return GetSimpleLogEntryCsvEntry(l);
+                case LogEntryTypes.OnSessionNotReady: return GetSimpleLogEntryCsvEntry(l);
                 case LogEntryTypes.OnSessionLeave: return GetSimpleLogEntryCsvEntry(l);
                 case LogEntryTypes.OnPlayerConnect: return GetSimpleLogEntryCsvEntry(l);
                 case LogEntryTypes.OnPlayerDisconnect: return GetSimpleLogEntryCsvEntry(l);
@@ -84,21 +84,28 @@ namespace Services
             //return s + l.CreatedAt + "\r";
         }
 
+        private static string GetFileTitle()
+        {
+            return "Created At,Log Type,Direction,Information,Size,OpCode,Sender,Request ID,"
+                   + "Lag,Round Trip Time,kbit/s,Ping,Pong\r\n";
+        }
+        
         private static string GetSimpleLogEntryCsvEntry(ILogEntry l)
         {
-            return string.Format("{0},{1},{2},{3}" + ',' * 11,
-                l.GetCreatedAt(), l.GetLogEntryType(), l.GetFullInfo(), l.GetDirection());
+            return string.Format(
+                $"{l.GetCreatedAt()},{l.GetLogEntryType()},{l.GetFullInfo()},{l.GetDirection()}" +
+                ',' * 11 + "\r\n");
         }
 
         private static string GetPongPacketCsvEntry(ILogEntry l)
         {
             var p = (PongPacketLog) l;
-            return string.Format("{0},{1},{2},{3},{4}" + ',' * 10,
-                p.GetCreatedAt(), p.GetLogEntryType(), p.GetFullInfo(), p.GetDirection(),
-                p.GetFullInfo());
+            return string.Format(
+                $"{p.GetCreatedAt()},{p.GetLogEntryType()},{p.GetFullInfo()},{p.GetDirection()},{p.GetFullInfo()}" +
+                ',' * 10 + "\r\n");
         }
 
+        private string _filename;
         private readonly string _path;
-        private readonly string _filename;
     }
 }

@@ -16,6 +16,12 @@ namespace Services
             _asyncProcessor = asyncProcessor;
         }
         
+        /**
+         * <summary>Begin a Ping Test</summary>
+         * <param name="seconds">How long to run the ping test for</param>
+         * <param name="packetsPerSecond">How many packets to send per second of the ping test</param>
+         * <param name="sendPing">The method of sending a ping</param>
+         */
         public void StartPingTest(int seconds, int packetsPerSecond, Action sendPing)
         {
             if (_activeTest)
@@ -30,6 +36,10 @@ namespace Services
             _asyncProcessor.StartCoroutine(_currentTest);
         }
         
+        /**
+         * <summary>On Packet Log Entry Received</summary>
+         * <param name="l">The Log Entry Received</param>
+         */
         public void OnLogEntryReceived(ILogEntry l)
         {
             if (!_activeTest) return;
@@ -51,7 +61,11 @@ namespace Services
             }
         }
 
-        public void OnSubscribeToPingTestResults(Action<ILogEntry> onPingTestResult)
+        /**
+         * <summary>Subscribe to the ping test results</summary>
+         * <param name="onPingTestResult">The delegate to receive the ping test result ILogEntry</param>
+         */
+        public void SubscribeToPingTestResults(Action<ILogEntry> onPingTestResult)
         {
             if (_pingTestResultsListeners.Contains(onPingTestResult)) return;
             _pingTestResultsListeners.Add(onPingTestResult);

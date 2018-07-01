@@ -37,8 +37,8 @@ namespace Services
         {
             if (!_rtConnected) return;
             var r = GetNextRequestId();
-            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(r));
             OnLogEntry(LogEntryFactory.CreateBlankSentLogEntry(r, opCode));
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetEmpty(r));
         }
 
         /**
@@ -49,8 +49,8 @@ namespace Services
         {
             if (!_rtConnected) return;
             var r = GetNextRequestId();
-            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetUnstructuredData(r));
             OnLogEntry(LogEntryFactory.CreateBlankSentLogEntry(r, opCode));
+            SendPacket(opCode, _settings.Protocol, PacketDataFactory.GetUnstructuredData(r));
         }
         
         /**
@@ -63,10 +63,11 @@ namespace Services
         {
             if (!_rtConnected) return;
             var r = GetNextRequestId();
-            SendPacket((int) OpCode.Ping, _settings.Protocol, PacketDataFactory.GetTimestampPing(r));
             OnLogEntry(LogEntryFactory.CreatePingSentEntryLog(r, (int) OpCode.Ping));
+            SendPacket((int) OpCode.Ping, _settings.Protocol, PacketDataFactory.GetTimestampPing(r));
         }
         
+        #region Subscriptions
         /**
          * <summary>Subscribe to on Real Time Session ready</summary>
          * <param name="onRtReady">Delegate Action with a bool state param</param>
@@ -86,6 +87,7 @@ namespace Services
             if (_onLogEntryReceivedListeners.Contains(onLogEntryReceived)) return;
             _onLogEntryReceivedListeners.Add(onLogEntryReceived);
         }
+        #endregion
         
         /**
          * <summary>Given RtSession details will establish the Real Time Session connection</summary>
@@ -105,8 +107,9 @@ namespace Services
                 
                 state => // OnRtReady Callback
                 {
-                    OnLogEntry(LogEntryFactory.CreateSessionStateLogEntry(state));
+                    _rtConnected = state;
                     foreach (var l in _onRtReady) l(state);
+                    OnLogEntry(LogEntryFactory.CreateSessionStateLogEntry(state));
                 },
                 
                 packet => // OnPacketReceived Callback
@@ -125,7 +128,6 @@ namespace Services
                     }
                 });
             
-            _rtConnected = true;
             _gameSparksRtUnity.Connect(); // Connect
             OnLogEntry(LogEntryFactory.CreateSessionJoinLogEntry());
         }
