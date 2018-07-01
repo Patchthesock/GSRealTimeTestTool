@@ -21,6 +21,7 @@ namespace Models.LogEntry
         // Real Time Session Messages
         OnSessionJoin,
         OnSessionReady,
+        OnSessionNotReady,
         OnSessionLeave,
         OnPlayerConnect,
         OnPlayerDisconnect,

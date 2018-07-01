@@ -27,7 +27,7 @@ namespace Factory
             data.SetLong(2, DateTime.UtcNow.Ticks);
             return data;
         }
-
+        
         /**
          * <summary>Returns Timestamp Pong Packet Data</summary>
          * <param name="requestId">Request Id</param>
