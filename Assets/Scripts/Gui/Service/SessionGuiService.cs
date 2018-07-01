@@ -43,7 +43,7 @@ namespace Gui.Service
          * <param name="state">State</param>
          */
         public void SetActive(bool state)
-        {   
+        {
             _sessionGui.SetActive(state);
             if (state) return;
             _sessionGui.LogGui.ClearLog();
@@ -57,13 +57,11 @@ namespace Gui.Service
          */
         public void OnLogEntryReceived(ILogEntry l)
         {
-            var e = _prefabBuilder.Instantiate(_sessionGui.LogGui.LogEntryPrefab);
-            e.transform.SetParent(_sessionGui.LogGui.LogContainer);
-            e.transform.localScale = new Vector3(1, 1, 1);
-            e.GetComponent<LogEntryBtn>().Initialize(l.GetTitle(), () =>
+            CreateLogEntry(l);
+            if (l.GetLogEntryType() == LogEntryTypes.OnSessionReady)
             {
-                _sessionGui.LogEntryInspGui.SetInspectionText(l.GetFullInfo());
-            });
+                _sessionGui.RealTimeControlGui.SetActive(true);
+            }
         }
 
         private void OnStopRtSession(Action onStop)
@@ -73,6 +71,15 @@ namespace Gui.Service
         }
         
         private void SetupMatchService(Action<RtSession> onStartRtSession)
+        {
+            InitializeMatchServiceSubscriptions();
+            _sessionGui.MatchMakingGui.Initialize(rtSessionKey =>
+            {
+                OnJoinSession(rtSessionKey, onStartRtSession);
+            }, OnFindMatch);
+        }
+
+        private void InitializeMatchServiceSubscriptions()
         {
             _matchService.SubscribeToOnMatchNotFound(() =>
             {
@@ -84,25 +91,32 @@ namespace Gui.Service
                 _sessionGui.MatchMakingGui.AddRealTimeSessionKey(rtSession.MatchId);
                 OnLogEntryReceived(LogEntryFactory.CreateMatchFoundLogEntry(rtSession));
             });
-            
-            _sessionGui.MatchMakingGui.Initialize(
-                rtSessionKey =>
-                {
-                    if (!_sessionListDict.ContainsKey(rtSessionKey)) return;
-                    onStartRtSession(_sessionListDict[rtSessionKey]);
-                    
-                    // TODO: This needs to be cleaned up
-                    // Real Time Control should be active based on session status.
-                    _sessionGui.RealTimeControlGui.SetActive(true);
-                },
-                (skill, shortCode) =>
-                {
-                    _matchService.FindMatch(skill, shortCode, () => // on match making Error
-                    {
-                        OnLogEntryReceived(LogEntryFactory.CreateMatchMakingErrorLogEntry());
-                    });
-                    OnLogEntryReceived(LogEntryFactory.CreateMatchMakingRequestLogEntry(skill, shortCode));
-                });
+        }
+
+        private void OnFindMatch(int skill, string shortCode)
+        {
+            _matchService.FindMatch(skill, shortCode, (err) => // on match making Error
+            {
+                OnLogEntryReceived(LogEntryFactory.CreateMatchMakingErrorLogEntry(err));
+            });
+            OnLogEntryReceived(LogEntryFactory.CreateMatchMakingRequestLogEntry(skill, shortCode));
+        }
+
+        private void OnJoinSession(string rtSessionKey, Action<RtSession> onStartRtSession)
+        {
+            if (!_sessionListDict.ContainsKey(rtSessionKey)) return;
+            onStartRtSession(_sessionListDict[rtSessionKey]);
+        }
+        
+        private void CreateLogEntry(ILogEntry l)
+        {
+            var e = _prefabBuilder.Instantiate(_sessionGui.LogGui.LogEntryPrefab);
+            e.transform.SetParent(_sessionGui.LogGui.LogContainer);
+            e.transform.localScale = new Vector3(1, 1, 1);
+            e.GetComponent<LogEntryBtn>().Initialize(l.GetTitle(), () =>
+            {
+                _sessionGui.LogEntryInspGui.SetInspectionText(l.GetFullInfo());
+            });
         }
         
         private readonly SessionGui _sessionGui;

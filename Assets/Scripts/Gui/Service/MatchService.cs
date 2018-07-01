@@ -14,14 +14,23 @@ namespace Gui.Service
             MatchNotFoundMessage.Listener += OnMatchNotFound;
         }
         
-        public void FindMatch(int skill, string shortCode, Action onError)
+        public void FindMatch(int skill, string shortCode, Action<string> onError)
         {
             new GameSparks.Api.Requests.MatchmakingRequest()
                 .SetSkill(skill)    
                 .SetMatchShortCode(shortCode)
                 .Send(res =>
                 {
-                    if (res.HasErrors) onError();
+                    if (!res.HasErrors) return;
+                    switch (res.Errors.JSON.ToString())
+                    {
+                        case "{\"matchShortCode\":\"NOT_FOUND\"}":
+                            onError("Match Type/Shortcode Not Found");
+                            break;
+                        default:
+                            onError("Unknown Error");
+                            break;
+                    }
                 });
         }
 

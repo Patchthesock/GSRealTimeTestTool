@@ -36,8 +36,8 @@ namespace Gui.Service
                 if (!GS.Authenticated) _authGui.SetActive(true);
                 else
                 {
-                    OnAuthenticated();
                     onAuth();
+                    OnAuthenticated();
                 } 
             };
         }
@@ -46,8 +46,8 @@ namespace Gui.Service
         {
             new GameSparks.Api.Requests.AccountDetailsRequest().Send(r =>
             {
-                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
-                else OnAuthenticated(r.UserId, r.DisplayName);
+                if (!r.HasErrors) OnAuthenticated(r.UserId, r.DisplayName);
+                else _authGui.AddLogEntry(GetError(r.Errors, _authErrors).Description);
             });
         }
 
@@ -67,7 +67,7 @@ namespace Gui.Service
             new GameSparks.Api.Requests.EndSessionRequest().Send(r =>
             {
                 GS.Reset();
-                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
+                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors, _authErrors).Description);
             });
         }
         
@@ -75,7 +75,7 @@ namespace Gui.Service
         {
             new GameSparks.Api.Requests.DeviceAuthenticationRequest().Send(r =>
             {
-                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors));
+                if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors, _authErrors).Description);
                 else
                 {
                     OnAuthenticated(r.UserId, r.DisplayName);
@@ -89,6 +89,7 @@ namespace Gui.Service
             string username,
             string password)
         {
+            _authErrors.Clear();
             new GameSparks.Api.Requests.AuthenticationRequest()
                 .SetUserName(username)
                 .SetPassword(password)
@@ -101,15 +102,18 @@ namespace Gui.Service
                     return;
                 }
 
-                _authGui.AddLogEntry(GetError(r.Errors));
-                if (string.Equals(GetError(r.Errors), "timeout")) return;
+                // If it's a timeout issue return
+                _authGui.AddLogEntry(GetError(r.Errors, _authErrors).Description);
+                if (string.Equals(GetError(r.Errors, _authErrors).Id, "TIMEOUT")) return;
+                
+                _authGui.AddLogEntry("Attempting Registration");
                 new GameSparks.Api.Requests.RegistrationRequest()
                     .SetDisplayName(username)
                     .SetUserName(username)
                     .SetPassword(password)
                     .Send(r2 =>
                 {
-                    if (r2.HasErrors) _authGui.AddLogEntry(GetError(r2.Errors));
+                    if (r2.HasErrors) _authGui.AddLogEntry(GetError(r2.Errors, _authErrors).Description);
                     else
                     {
                         OnAuthenticated(r2.UserId, r2.DisplayName);
@@ -119,23 +123,36 @@ namespace Gui.Service
             });
         }
         
-        private static string GetError(GSData e)
+        private static Error GetError(GSData e, IEnumerable<Error> errors)
         {
-            var l = new List<string> {"DETAILS", "USERNAME"};
-            foreach (var i in l)
+            foreach (var i in errors)
             {
-                if (e.GetString(i) == null) continue;
-                switch (i)
-                {
-                    case "DETAILS": return "Incorrect Username & Password";
-                    case "USERNAME": return "Username has already been registered";
-                    default: return "Unknown Error";
-                }
+                if (e.GetString(i.Id) == null) continue;
+                return i;
             }
-            return string.Empty;
+            return new Error("UNKNOWN", "Unknown Error");
         }
         
         private readonly AuthGui _authGui;
         private readonly SessionStatusGui _sessionGui;
+
+        private readonly List<Error> _authErrors = new List<Error>
+        {
+            new Error("TIMEOUT", "Timeout occured"),
+            new Error("DETAILS", "Incorrect Username &/or Password"),
+            new Error("USERNAME", "Username has already been registered")
+        };
+
+        private class Error
+        {
+            public readonly string Id;
+            public readonly string Description;
+
+            public Error(string id, string description)
+            {
+                Id = id;
+                Description = description;
+            }
+        }
     }
 }

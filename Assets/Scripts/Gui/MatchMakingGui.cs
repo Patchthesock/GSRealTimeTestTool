@@ -26,6 +26,8 @@ namespace Gui
         {
             SetupMatchMakingBtn(onFindMatch);
             SetupJoinRealTimeSessionBtn(onJoinSession);
+            JoinRealTimeSessionBtn.interactable = false;
+            RealTimeSessionDropDown.interactable = false;
         }
 
         /**
@@ -42,6 +44,8 @@ namespace Gui
         public void ClearRealTimeSessionKeys()
         {
             RealTimeSessionDropDown.ClearOptions();
+            JoinRealTimeSessionBtn.interactable = false;
+            RealTimeSessionDropDown.interactable = false;
         }
         
         /**
@@ -50,6 +54,8 @@ namespace Gui
          */
         public void AddRealTimeSessionKey(string rtKey)
         {
+            JoinRealTimeSessionBtn.interactable = true;
+            RealTimeSessionDropDown.interactable = true;
             RealTimeSessionDropDown.AddOptions(new List<string> { rtKey });
         }
 
