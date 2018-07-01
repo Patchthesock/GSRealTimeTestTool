@@ -7,6 +7,7 @@ namespace Factory
     {
         /**
          * <summary>Returns Empty Packet Data<summary>
+         * <param name="requestId">Request Id</param>
          */
         public static RTData GetEmpty(int requestId)
         {
@@ -43,6 +44,7 @@ namespace Factory
         
         /**
          * <summary>Return a Byte Array Segement</summary>
+         * <param name="requestId">Request Id</param>
          */
         public static ArraySegment<byte> GetUnstructuredData(int requestId)
         {

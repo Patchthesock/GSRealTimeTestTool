@@ -22,9 +22,9 @@ namespace Factory
             return new SimpleLogEntry("Match Not Found", Directions.Inbound, LogEntryTypes.MatchNotFound);
         }
 
-        public static ILogEntry CreateMatchMakingErrorLogEntry()
+        public static ILogEntry CreateMatchMakingErrorLogEntry(string err)
         {
-            return new SimpleLogEntry("Match Making Error", Directions.Inbound, LogEntryTypes.MatchNotFound);
+            return new SimpleLogEntry(err, Directions.Inbound, LogEntryTypes.MatchNotFound);
         }
         
         public static ILogEntry CreatePingSentEntryLog(int requestId, int opCode)
@@ -57,7 +57,8 @@ namespace Factory
         public static ILogEntry CreateSessionStateLogEntry(bool state)
         {
             return new SimpleLogEntry(
-                $"Real Time Ready: {state}", Directions.Inbound, LogEntryTypes.OnSessionReady);
+                $"Real Time Ready: {state}", Directions.Inbound,
+                state ? LogEntryTypes.OnSessionReady : LogEntryTypes.OnSessionNotReady);
         }
         
         public static ILogEntry CreatePeerConnectedLogEntry(int peerId)
