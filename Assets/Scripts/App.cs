@@ -33,7 +33,7 @@ public class App : IInitializable
     {
         SetupGuiController();
         SetupSparkRtService();
-        _rtQosService.OnSubscribeToPingTestResults(_guiController.OnLogEntryReceived);
+        
         if (Application.isEditor && _settings.WriteLog) WriteLog();
         _guiController.Initialize();
     }
@@ -43,6 +43,7 @@ public class App : IInitializable
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
         _sparkRtService.SubscribeToOnLogEntryReceived(_rtQosService.OnLogEntryReceived);
         _sparkRtService.SubscribeToOnLogEntryReceived(_guiController.OnLogEntryReceived);
+        _rtQosService.SubscribeToPingTestResults(_guiController.OnLogEntryReceived);
     }
 
     private void SetupGuiController()
