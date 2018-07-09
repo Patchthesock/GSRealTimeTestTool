@@ -23,9 +23,12 @@ namespace Models
             return new StringBuilder()
                 .AppendLine($"Pings Sent: {_pingsSent}")
                 .AppendLine($"Pongs Received: {_pongsReceived}")
-                .AppendLine($"Average kbits: {_averageKBits}")
+                .AppendLine("---   ---   ---")
+                .AppendLine($"Average kbit/s: {_averageKBits}")
                 .AppendLine($"Average Latency: {_averageLatency}")
                 .AppendLine($"Average Round Trip Time: {_averageRoundTripTime}")
+                .AppendLine()
+                .AppendLine("* Times are between clients in a given session *")
                 .ToString();
         }
         

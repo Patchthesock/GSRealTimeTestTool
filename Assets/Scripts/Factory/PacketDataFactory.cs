@@ -53,5 +53,18 @@ namespace Factory
             b[0] = (byte) requestId;
             return new ArraySegment<byte>(b);
         }
+
+        /**
+         * <summary>Get byte Array Segment from string</summary>
+         * <param name="requestId">Request Id</param>
+         * <param name="s>String data</param>
+         */
+        public static ArraySegment<byte> GetStringData(int requestId, string s)
+        {
+            var b = new byte[s.Length+1];
+            b[0] = (byte) requestId;
+            for (var i = 0; i < s.Length; i++) b[i+1] = Convert.ToByte(s[i]);
+            return new ArraySegment<byte>(b);
+        }
     }
 }

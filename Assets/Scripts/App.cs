@@ -61,7 +61,8 @@ public class App : IInitializable
 
     private void WriteLog()
     {
-        _csvWriterService.CreateFile();
+        _csvWriterService.CreateFile($"{Application.dataPath}/Log/", $"{DateTime.UtcNow:yyyyMMddHHmmss}.csv");
+        _rtQosService.SubscribeToPingTestResults(_csvWriterService.WriteLogEntry);
         _sparkRtService.SubscribeToOnLogEntryReceived(_csvWriterService.WriteLogEntry);
     }
 

@@ -28,11 +28,12 @@ namespace Models
 
         private static string CreateToString(MatchFoundMessage m)
         {
-            var s = new StringBuilder();
-            s.AppendLine($"Host URL: {m.Host}");
-            s.AppendLine($"Port: {m.Port}");
-            s.AppendLine($"MatchId: {m.MatchId}");
-            s.AppendLine($"Players: {m.Participants.Count()}");
+            var s = new StringBuilder()
+                .AppendLine($"Port: {m.Port}")
+                .AppendLine($"Host URL: {m.Host}")
+                .AppendLine("---   ---   ---")
+                .AppendLine($"MatchId: {m.MatchId}")
+                .AppendLine($"Players: {m.Participants.Count()}");
             foreach (var p in m.Participants) s.AppendLine(CreatePlayer(p).ToString());
             s.AppendLine($"Access Token: {m.AccessToken}");
             return s.ToString();
