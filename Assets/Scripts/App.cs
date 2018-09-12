@@ -15,11 +15,13 @@ public class App : IInitializable
     public App(
         Settings settings,
         RtQosService rtQosService,
+        EnvironmentHooks envHooks,
         GuiController guiController,
         SparkRtService sparkRtService,
         CsvWriterService csvWriterService)
     {
         _settings = settings;
+        _envHooks = envHooks;
         _rtQosService = rtQosService;
         _guiController = guiController;
         _sparkRtService = sparkRtService;
@@ -31,6 +33,7 @@ public class App : IInitializable
      */
     public void Initialize()
     {
+        SetupEnvHooks();
         SetupGuiController();
         SetupSparkRtService();
         
@@ -65,9 +68,22 @@ public class App : IInitializable
         _rtQosService.SubscribeToPingTestResults(_csvWriterService.WriteLogEntry);
         _sparkRtService.SubscribeToOnLogEntryReceived(_csvWriterService.WriteLogEntry);
     }
+    
+    private void SetupEnvHooks()
+    {
+        _envHooks.SubscribeToOnApplicationFocus(hasFocus =>
+        {
+            Debug.Log($"App Focus: {hasFocus}");
+        });
+        _envHooks.SubscribeToOnApplicationPause(pauseStatus =>
+        {
+            Debug.Log($"App Pause: {pauseStatus}");
+        });
+    }
 
     private readonly Settings _settings;
     private readonly RtQosService _rtQosService;
+    private readonly EnvironmentHooks _envHooks;
     private readonly GuiController _guiController;
     private readonly SparkRtService _sparkRtService;
     private readonly CsvWriterService _csvWriterService;
