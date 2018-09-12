@@ -1,5 +1,6 @@
 ﻿using System;
 using Controllers;
+using GameSparks.Core;
 using Services;
 using UnityEngine;
 using Zenject;
@@ -71,12 +72,14 @@ public class App : IInitializable
     
     private void SetupEnvHooks()
     {
-        _envHooks.SubscribeToOnApplicationFocus(hasFocus =>
+        _envHooks.SubscribeToOnApplicationFocusChange(hasFocus =>
         {
+            GS.Reset();
             Debug.Log($"App Focus: {hasFocus}");
         });
-        _envHooks.SubscribeToOnApplicationPause(pauseStatus =>
+        _envHooks.SubscribeToOnApplicationPauseChange(pauseStatus =>
         {
+            GS.Reset();
             Debug.Log($"App Pause: {pauseStatus}");
         });
     }

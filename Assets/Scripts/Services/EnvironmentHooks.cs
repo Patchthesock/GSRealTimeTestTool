@@ -6,13 +6,13 @@ namespace Services
 {
     public class EnvironmentHooks : MonoBehaviour
     {
-        public void SubscribeToOnApplicationFocus(Action<bool> onAppFocus)
+        public void SubscribeToOnApplicationFocusChange(Action<bool> onAppFocus)
         {
             if (!_onAppFocusListeners.Contains(onAppFocus)) return;
             _onAppFocusListeners.Add(onAppFocus);
         }
 
-        public void SubscribeToOnApplicationPause(Action<bool> onAppPause)
+        public void SubscribeToOnApplicationPauseChange(Action<bool> onAppPause)
         {
             if (!_onAppPauseListeners.Contains(onAppPause)) return;
             _onAppPauseListeners.Add(onAppPause);

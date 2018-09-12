@@ -3519,6 +3519,7 @@ GameObject:
   - component: {fileID: 1146904262}
   - component: {fileID: 1146904258}
   - component: {fileID: 1146904263}
+  - component: {fileID: 1146904264}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3546,6 +3547,7 @@ MonoBehaviour:
     AsyncProc: {fileID: 1146904263}
     AppSettings:
       WriteLog: 0
+    EnvHooks: {fileID: 1146904264}
     GameSparksRtUnity: {fileID: 1146904261}
     RtServiceSettings:
       Protocol: 0
@@ -3613,6 +3615,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39a1e2e543fc4f8a9981edc9527eb495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1146904264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1146904257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d4192141374cc6af159e1d3b898e84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1157905525
@@ -4759,7 +4772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -57.500732, y: -65}
+  m_AnchoredPosition: {x: -57.500854, y: -65}
   m_SizeDelta: {x: -124.998344, y: 30}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1558245108
@@ -6664,7 +6677,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -61.69751, y: -93.8999}
+  m_AnchoredPosition: {x: -61.69763, y: -93.8999}
   m_SizeDelta: {x: -135.005, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2033516779

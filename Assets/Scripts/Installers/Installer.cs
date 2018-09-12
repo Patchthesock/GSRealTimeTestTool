@@ -15,6 +15,7 @@ namespace Installers
         {
             InstallServices(Container,
                 GameSettings.AsyncProc,
+                GameSettings.EnvHooks,
                 GameSettings.GameSparksRtUnity,
                 GameSettings.RtServiceSettings);
             InstallGui(Container, GameSettings.GuiSettings);
@@ -24,10 +25,12 @@ namespace Installers
         private static void InstallServices(
             DiContainer c,
             AsyncProcessor a,
+            EnvironmentHooks e,
             GameSparksRTUnity gs,
             SparkRtService.Settings s)
         {
             c.Bind<AsyncProcessor>().FromInstance(a);
+            c.Bind<EnvironmentHooks>().FromInstance(e);
             c.Bind<RtQosService>().AsSingle();
             c.Bind<MatchService>().AsSingle();
             c.Bind<PrefabBuilder>().AsSingle();
@@ -62,6 +65,7 @@ namespace Installers
             public Gui GuiSettings;
             public AsyncProcessor AsyncProc;
             public App.Settings AppSettings;
+            public EnvironmentHooks EnvHooks;
             public GameSparksRTUnity GameSparksRtUnity;
             public SparkRtService.Settings RtServiceSettings;
 
