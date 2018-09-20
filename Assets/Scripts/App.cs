@@ -74,13 +74,13 @@ public class App : IInitializable
     {
         _envHooks.SubscribeToOnApplicationFocusChange(hasFocus =>
         {
-            GS.Reset();
             Debug.Log($"App Focus: {hasFocus}");
+            if (hasFocus) GS.Reset();
         });
         _envHooks.SubscribeToOnApplicationPauseChange(pauseStatus =>
         {
-            GS.Reset();
             Debug.Log($"App Pause: {pauseStatus}");
+            if (!pauseStatus) GS.Reset();
         });
     }
 

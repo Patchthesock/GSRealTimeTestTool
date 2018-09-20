@@ -5,7 +5,6 @@ using Gui;
 using Gui.Service;
 using Models;
 using Models.LogEntry;
-using UnityEngine;
 
 namespace Controllers
 {
@@ -26,7 +25,7 @@ namespace Controllers
             SetInitialScreenDisplay();
             InitializeSessionService();
             _connectionGui.gameObject.SetActive(true);
-            GS.GameSparksAvailable += r => { _connectionGui.SetActive(!r); Debug.Log(string.Format($"GameSparksAvailable: {r}")); };
+            GS.GameSparksAvailable += r => { _connectionGui.SetActive(!r); };
             
             _authGuiService.Initialize(() =>
             { // OnAuthentication
