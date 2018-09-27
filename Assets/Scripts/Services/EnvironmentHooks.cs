@@ -25,7 +25,6 @@ namespace Services
     
         private void OnApplicationPause(bool pauseStatus)
         {
-            Debug.Log("Fired");
             foreach (var l in _onAppPauseListeners) l(pauseStatus);
         }
 
