@@ -6,6 +6,7 @@ namespace Zenject
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(SceneContext))]
+    [NoReflectionBaking]
     public class SceneContextEditor : RunnableContextEditor
     {
         SerializedProperty _contractNameProperty;

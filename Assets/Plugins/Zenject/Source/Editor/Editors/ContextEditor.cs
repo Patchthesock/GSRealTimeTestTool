@@ -2,6 +2,7 @@
 
 namespace Zenject
 {
+    [NoReflectionBaking]
     public class ContextEditor : UnityInspectorListEditor
     {
         protected override string[] PropertyNames
