@@ -6272,7 +6272,7 @@ GameObject:
   - component: {fileID: 1983292989}
   - component: {fileID: 1983292991}
   m_Layer: 5
-  m_Name: UserNameInput
+  m_Name: UsernameInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
