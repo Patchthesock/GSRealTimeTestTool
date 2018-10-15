@@ -6160,7 +6160,7 @@ GameObject:
   - component: {fileID: 1942299538}
   - component: {fileID: 1942299537}
   m_Layer: 5
-  m_Name: DeviceAuthentication
+  m_Name: DeviceAuthenticationBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
