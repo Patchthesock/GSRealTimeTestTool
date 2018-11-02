@@ -73,7 +73,7 @@ namespace Gui.Service
         
         private void DeviceAuthenticate(Action onAuth)
         {
-            new GameSparks.Api.Requests.DeviceAuthenticationRequest().Send(r =>
+            new GameSparks.Api.Requests.DeviceAuthenticationRequest().SetDurable(true).Send(r =>
             {
                 if (r.HasErrors) _authGui.AddLogEntry(GetError(r.Errors, _authErrors).Description);
                 else
