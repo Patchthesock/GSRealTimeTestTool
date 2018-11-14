@@ -57,10 +57,7 @@ public class App : IInitializable
         _guiController.SubscribeToOnStartSession(_sparkRtService.ConnectSession);
         _guiController.SubscribeToOnSendBlankPacket(_sparkRtService.SendBlankPacket);
         _guiController.SubscribeToOnSendUnstructuredPacket(_sparkRtService.SendUnstructuredDataPacket);
-        _guiController.SubscribeToOnStartPingTest((p, s) =>
-        {
-            _rtQosService.StartPingTest(p, s, _sparkRtService.SendPing);
-        });
+        _guiController.SubscribeToOnStartPingTest((p, s) => { _rtQosService.StartPingTest(p, s, _sparkRtService.SendPing); });
     }
 
     private void WriteLog()
@@ -94,6 +91,6 @@ public class App : IInitializable
     [Serializable]
     public class Settings
     {
-        public bool WriteLog = false;
+        public bool WriteLog;
     }
 }

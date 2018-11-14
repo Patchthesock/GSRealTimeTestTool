@@ -25,7 +25,7 @@ namespace Gui.Service
                     switch (res.Errors.JSON.ToString())
                     {
                         case "{\"matchShortCode\":\"NOT_FOUND\"}":
-                            onError("Match Type/Shortcode Not Found");
+                            onError("Match Type/Short Code Not Found");
                             break;
                         default:
                             onError("Unknown Error");
