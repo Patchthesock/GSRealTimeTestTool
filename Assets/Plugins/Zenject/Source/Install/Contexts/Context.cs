@@ -14,26 +14,27 @@ namespace Zenject
 {
     public abstract class Context : MonoBehaviour
     {
-        [FormerlySerializedAs("Installers")]
         [SerializeField]
-        List<MonoInstaller> _installers = new List<MonoInstaller>();
+        List<ScriptableObjectInstaller> _scriptableObjectInstallers = new List<ScriptableObjectInstaller>();
+
+        [FormerlySerializedAs("Installers")]
+        [FormerlySerializedAs("_installers")]
+        [SerializeField]
+        List<MonoInstaller> _monoInstallers = new List<MonoInstaller>();
 
         [SerializeField]
         List<MonoInstaller> _installerPrefabs = new List<MonoInstaller>();
-
-        [SerializeField]
-        List<ScriptableObjectInstaller> _scriptableObjectInstallers = new List<ScriptableObjectInstaller>();
 
         List<InstallerBase> _normalInstallers = new List<InstallerBase>();
         List<Type> _normalInstallerTypes = new List<Type>();
 
         public IEnumerable<MonoInstaller> Installers
         {
-            get { return _installers; }
+            get { return _monoInstallers; }
             set
             {
-                _installers.Clear();
-                _installers.AddRange(value);
+                _monoInstallers.Clear();
+                _monoInstallers.AddRange(value);
             }
         }
 
@@ -132,7 +133,7 @@ namespace Zenject
         protected void InstallInstallers()
         {
             InstallInstallers(
-                _normalInstallers, _normalInstallerTypes, _scriptableObjectInstallers, _installers, _installerPrefabs);
+                _normalInstallers, _normalInstallerTypes, _scriptableObjectInstallers, _monoInstallers, _installerPrefabs);
         }
 
         protected void InstallInstallers(

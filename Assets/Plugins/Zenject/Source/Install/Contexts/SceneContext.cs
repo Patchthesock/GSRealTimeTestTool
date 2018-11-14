@@ -24,9 +24,10 @@ namespace Zenject
         public static IEnumerable<DiContainer> ParentContainers;
 
         [FormerlySerializedAs("ParentNewObjectsUnderRoot")]
+        [FormerlySerializedAs("_parentNewObjectsUnderRoot")]
         [Tooltip("When true, objects that are created at runtime will be parented to the SceneContext")]
         [SerializeField]
-        bool _parentNewObjectsUnderRoot;
+        bool _parentNewObjectsUnderSceneContext;
 
         [Tooltip("Optional contract names for this SceneContext, allowing contexts in subsequently loaded scenes to depend on it and be parented to it, and also for previously loaded decorators to be included")]
         [SerializeField]
@@ -94,10 +95,10 @@ namespace Zenject
             }
         }
 
-        public bool ParentNewObjectsUnderRoot
+        public bool ParentNewObjectsUnderSceneContext
         {
-            get { return _parentNewObjectsUnderRoot; }
-            set { _parentNewObjectsUnderRoot = value; }
+            get { return _parentNewObjectsUnderSceneContext; }
+            set { _parentNewObjectsUnderSceneContext = value; }
         }
 
         public void Awake()
@@ -230,7 +231,7 @@ namespace Zenject
             Assert.That(_decoratorContexts.IsEmpty());
             _decoratorContexts.AddRange(LookupDecoratorContexts());
 
-            if (_parentNewObjectsUnderRoot)
+            if (_parentNewObjectsUnderSceneContext)
             {
                 _container.DefaultParent = transform;
             }
