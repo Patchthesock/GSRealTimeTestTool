@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GameSparks.Api.Messages;
 using Models;
+using UnityEngine;
 
 namespace Gui.Service
 {
@@ -17,7 +18,7 @@ namespace Gui.Service
         public void FindMatch(int skill, string shortCode, Action<string> onError)
         {
             new GameSparks.Api.Requests.MatchmakingRequest()
-                .SetSkill(skill)    
+                .SetSkill(skill)
                 .SetMatchShortCode(shortCode)
                 .Send(res =>
                 {
@@ -54,7 +55,7 @@ namespace Gui.Service
 
         private void OnMatchUpdated(MatchUpdatedMessage m)
         {
-            
+            Debug.Log(m.ToString());
         }
         
         private void OnMatchNotFound(MatchNotFoundMessage m)

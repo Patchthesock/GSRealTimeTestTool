@@ -5,6 +5,7 @@ using Gui;
 using Gui.Service;
 using Models;
 using Models.LogEntry;
+using UnityEngine;
 
 namespace Controllers
 {

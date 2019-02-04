@@ -155,7 +155,7 @@ namespace Services
             return _requestIdCounter;
         }
         
-        private void SendPongpacket(int pingRequestId, long pingTime)
+        private void SendPongPacket(int pingRequestId, long pingTime)
         {
             SendPacket((int) OpCode.Pong, _settings.Protocol,
                 PacketDataFactory.GetTimestampPong(pingRequestId, pingTime));
@@ -186,7 +186,7 @@ namespace Services
             var t = p.Data.GetLong(2);
             if (r == null || t == null) return;
             OnLogEntry(LogEntryFactory.CreatePingReceivedLogEntry(new PacketDetails(p)));
-            SendPongpacket((int) r, (long) t);
+            SendPongPacket((int) r, (long) t);
         }
         
         private void OnPongReceived(RTPacket p)

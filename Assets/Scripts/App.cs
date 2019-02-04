@@ -1,6 +1,5 @@
 ﻿using System;
 using Controllers;
-using GameSparks.Core;
 using Services;
 using UnityEngine;
 using Zenject;
@@ -16,13 +15,11 @@ public class App : IInitializable
     public App(
         Settings settings,
         RtQosService rtQosService,
-        EnvironmentHooks envHooks,
         GuiController guiController,
         SparkRtService sparkRtService,
         CsvWriterService csvWriterService)
     {
         _settings = settings;
-        _envHooks = envHooks;
         _rtQosService = rtQosService;
         _guiController = guiController;
         _sparkRtService = sparkRtService;
@@ -34,14 +31,13 @@ public class App : IInitializable
      */
     public void Initialize()
     {
-        SetupEnvHooks();
         SetupGuiController();
         SetupSparkRtService();
-        
         if (Application.isEditor && _settings.WriteLog) WriteLog();
         _guiController.Initialize();
     }
 
+    
     private void SetupSparkRtService()
     {
         _sparkRtService.SubscribeToOnRtReady(_guiController.SetRealTimeActive);
@@ -66,24 +62,9 @@ public class App : IInitializable
         _rtQosService.SubscribeToPingTestResults(_csvWriterService.WriteLogEntry);
         _sparkRtService.SubscribeToOnLogEntryReceived(_csvWriterService.WriteLogEntry);
     }
-    
-    private void SetupEnvHooks()
-    {
-        _envHooks.SubscribeToOnApplicationFocusChange(hasFocus =>
-        {
-            Debug.Log($"App Focus: {hasFocus}");
-            if (hasFocus) GS.Reset();
-        });
-        _envHooks.SubscribeToOnApplicationPauseChange(pauseStatus =>
-        {
-            Debug.Log($"App Pause: {pauseStatus}");
-            if (!pauseStatus) GS.Reset();
-        });
-    }
 
     private readonly Settings _settings;
     private readonly RtQosService _rtQosService;
-    private readonly EnvironmentHooks _envHooks;
     private readonly GuiController _guiController;
     private readonly SparkRtService _sparkRtService;
     private readonly CsvWriterService _csvWriterService;
